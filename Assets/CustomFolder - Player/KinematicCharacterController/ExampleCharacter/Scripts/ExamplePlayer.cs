@@ -22,7 +22,7 @@ namespace KinematicCharacterController.Examples
 
         private void Awake()
         {
-            _animator = GetComponent<Animator>();
+            _animator = Character.GetComponent<Animator>();
         }
         private void Start()
         {
@@ -105,6 +105,23 @@ namespace KinematicCharacterController.Examples
             characterInputs.JumpDown = Input.GetKeyDown(KeyCode.Space);
             characterInputs.Pickable = Input.GetKeyDown(KeyCode.E);
             characterInputs.CrouchUp = Input.GetKeyUp(KeyCode.C);
+
+            float axisCheck = Mathf.Abs(Input.GetAxisRaw(VerticalInput)) + Mathf.Abs(Input.GetAxisRaw(HorizontalInput));
+            if (axisCheck <= 0)
+            {
+                _animator.SetFloat("Speed", 0);
+            }
+            else if (axisCheck > 0)
+            {
+                if (characterInputs.Run)
+                {
+                    _animator.SetFloat("Speed", 1f);
+                }
+                else
+                {
+                    _animator.SetFloat("Speed", 0.5f);
+                }
+            }
 
             // Apply inputs to character
             Character.SetInputs(ref characterInputs);
