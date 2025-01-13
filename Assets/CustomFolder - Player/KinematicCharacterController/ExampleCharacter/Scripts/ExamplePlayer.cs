@@ -17,6 +17,13 @@ namespace KinematicCharacterController.Examples
         private const string HorizontalInput = "Horizontal";
         private const string VerticalInput = "Vertical";
 
+        [SerializeField] LayerMask _playerLayerMask;
+        Animator _animator;
+
+        private void Awake()
+        {
+            _animator = GetComponent<Animator>();
+        }
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -73,10 +80,16 @@ namespace KinematicCharacterController.Examples
             // Apply inputs to the camera
             CharacterCamera.UpdateWithInput(Time.deltaTime, scrollInput, lookInputVector);
 
-            // Handle toggling zoom level
-            if (Input.GetMouseButtonDown(1))
+            // 플레이어 Attack
+            if (Input.GetMouseButtonDown(0))
             {
-                CharacterCamera.TargetDistance = (CharacterCamera.TargetDistance == 0f) ? CharacterCamera.DefaultDistance : 0f;
+                RaycastHit hit;
+
+                if (Physics.SphereCast(transform.position, 0.5f,transform.forward, out hit, _playerLayerMask))
+                {
+                    hit.collider.gameObject.GetComponent<ExamplePlayer>();
+                    //TODO : Kickable 호출
+                }
             }
         }
 
@@ -88,8 +101,9 @@ namespace KinematicCharacterController.Examples
             characterInputs.MoveAxisForward = Input.GetAxisRaw(VerticalInput);
             characterInputs.MoveAxisRight = Input.GetAxisRaw(HorizontalInput);
             characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
+            characterInputs.Run = Input.GetKey(KeyCode.LeftShift);
             characterInputs.JumpDown = Input.GetKeyDown(KeyCode.Space);
-            characterInputs.CrouchDown = Input.GetKeyDown(KeyCode.C);
+            characterInputs.Pickable = Input.GetKeyDown(KeyCode.E);
             characterInputs.CrouchUp = Input.GetKeyUp(KeyCode.C);
 
             // Apply inputs to character

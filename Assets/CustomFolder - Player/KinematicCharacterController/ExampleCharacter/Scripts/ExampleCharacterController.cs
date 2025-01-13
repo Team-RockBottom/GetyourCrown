@@ -6,7 +6,7 @@ using System;
 
 namespace KinematicCharacterController.Examples
 {
-    public enum CharacterState
+    public enum CharacterState 
     {
         Default,
     }
@@ -23,8 +23,9 @@ namespace KinematicCharacterController.Examples
         public float MoveAxisRight;
         public Quaternion CameraRotation;
         public bool JumpDown;
-        public bool CrouchDown;
+        public bool Pickable;
         public bool CrouchUp;
+        public bool Run;
     }
 
     public struct AICharacterInputs
@@ -45,10 +46,12 @@ namespace KinematicCharacterController.Examples
         public KinematicCharacterMotor Motor;
 
         [Header("Stable Movement")]
-        public float MaxStableMoveSpeed = 10f;
+        public float MaxStableWalkSpeed = 10f;
+        public float MaxStableRunSpeed = 15f;
         public float StableMovementSharpness = 15f;
         public float OrientationSharpness = 10f;
         public OrientationMethod OrientationMethod = OrientationMethod.TowardsCamera;
+        private bool _isRun = false;
 
         [Header("Air Movement")]
         public float MaxAirMoveSpeed = 15f;
@@ -177,21 +180,23 @@ namespace KinematicCharacterController.Examples
                             _jumpRequested = true;
                         }
 
-                        // Crouching input
-                        if (inputs.CrouchDown)
+                        // 바닥에 떨어진 왕관 줍기실행
+                        if (inputs.Pickable)
                         {
-                            _shouldBeCrouching = true;
-
-                            if (!_isCrouching)
+                            if (Input.GetMouseButtonDown(0))
                             {
-                                _isCrouching = true;
-                                Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
-                                MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
+                                RaycastHit hit;
+
+                                if (Physics.SphereCast(transform.position, 0.5f, transform.forward, out hit,1f))
+                                {
+                                    //TODO : Pickable 호출
+                                }
                             }
                         }
-                        else if (inputs.CrouchUp)
+
+                        if (inputs.Run)
                         {
-                            _shouldBeCrouching = false;
+                            _isRun = !_isRun;
                         }
 
                         break;
@@ -297,7 +302,17 @@ namespace KinematicCharacterController.Examples
                             // Calculate target velocity
                             Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
                             Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
-                            Vector3 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
+                            Vector3 targetMovementVelocity;
+
+                            // TODO : 증강에따라 속도증감 구현
+                            if (!_isRun)
+                            {
+                                targetMovementVelocity = reorientedInput * MaxStableWalkSpeed;
+                            }
+                            else
+                            {
+                                targetMovementVelocity = reorientedInput * MaxStableRunSpeed;
+                            }
 
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
