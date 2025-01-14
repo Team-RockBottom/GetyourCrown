@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
 using System;
-using Practices.PhotonPunClient.Network;
+//using Practices.PhotonPunClient.Network;
 
 namespace KinematicCharacterController.Examples
 {
@@ -49,7 +49,7 @@ namespace KinematicCharacterController.Examples
         public static Dictionary<int, ExampleCharacterController> controllers
                 = new Dictionary<int, ExampleCharacterController>();
         
-        public Pickable pickable { get; set; }
+        //public Pickable pickable { get; set; }
 
         public KinematicCharacterMotor Motor;
 

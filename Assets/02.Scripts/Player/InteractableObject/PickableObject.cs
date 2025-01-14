@@ -2,15 +2,39 @@ using UnityEngine;
 
 public class PickableObject : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public Transform _parentPosition;
+
+    private bool _isPicking;
+    private bool _isPicked;
+
+    Rigidbody _rigidbody;
+    private void Awake()
     {
-        
+        _rigidbody = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PickUp()
     {
-        
+        if (_isPicked || _isPicking)
+        {
+            return;
+        }
+
+        _rigidbody.isKinematic = true;
+        transform.SetParent(_parentPosition);
+        transform.position = Vector3.zero;
+        transform.rotation = Quaternion.identity;
+        _isPicked = true;
+    }
+    public void Drop()
+    {
+        if (!_isPicked)
+        {
+            return;
+        }
+
+        _rigidbody.isKinematic = false;
+        transform.SetParent(null);
+        _isPicked = false;
     }
 }
