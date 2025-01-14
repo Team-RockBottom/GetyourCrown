@@ -18,7 +18,7 @@ namespace KinematicCharacterController.Examples
         private const string VerticalInput = "Vertical";
 
         [SerializeField] LayerMask _playerLayerMask;
-
+        
 
         Animator _animator;
 
@@ -100,6 +100,7 @@ namespace KinematicCharacterController.Examples
                 Debug.Log("RC Input in");
                 Character.TryKick();
             }
+
         }
 
         private void HandleCharacterInput()
@@ -142,6 +143,8 @@ namespace KinematicCharacterController.Examples
 
             if (characterInputs.Pickable)
             {
+                Debug.Log("LC Input in");
+                Character.TryPick();
                 _animator.SetInteger("State", 2);
                 _animator.SetBool("IsDirty",true);
                 //characterInputs.Pickable = false;
@@ -151,7 +154,7 @@ namespace KinematicCharacterController.Examples
                 _animator.SetInteger("State", 0);
                 _animator.SetBool("IsDirty", false);
             }
-
+            
 
 
             // Apply inputs to character

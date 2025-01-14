@@ -4,17 +4,21 @@ public class PickableObject : MonoBehaviour
 {
     public Transform _parentPosition;
 
-    private bool _isPicking;
-    private bool _isPicked;
+    private bool _isPicking = false;
+    private bool _isPicked = false;
 
+    Collider _collider;
     Rigidbody _rigidbody;
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _collider = GetComponent<SphereCollider>();
     }
 
     public void PickUp()
     {
+        Debug.Log("Call PickUp");
+
         if (_isPicked || _isPicking)
         {
             return;
@@ -22,8 +26,9 @@ public class PickableObject : MonoBehaviour
 
         _rigidbody.isKinematic = true;
         transform.SetParent(_parentPosition);
-        transform.position = Vector3.zero;
-        transform.rotation = Quaternion.identity;
+        transform.position = _parentPosition.position;
+        transform.rotation = _parentPosition.rotation;
+        _collider.isTrigger = true;
         _isPicked = true;
     }
     public void Drop()

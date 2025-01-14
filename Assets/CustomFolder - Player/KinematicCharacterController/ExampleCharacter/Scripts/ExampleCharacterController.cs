@@ -50,7 +50,7 @@ namespace KinematicCharacterController.Examples
                 = new Dictionary<int, ExampleCharacterController>();
 
         [SerializeField] LayerMask _crownLayer;
-
+        [SerializeField] Transform _crownPosition { get; set; }
         public KinematicCharacterMotor Motor;
 
         [Header("Stable Movement")]
@@ -567,6 +567,19 @@ namespace KinematicCharacterController.Examples
                 Debug.Log($"sphereCasting{hit.collider.name}");
                 KickableObject kickable = hit.collider.GetComponent<KickableObject>();
                 kickable.Kick((hit.point - transform.position) * _kickPower);
+            }
+        }
+        public void TryPick()
+        {
+            if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _crownLayer))
+            {
+                Debug.Log($"hit : {hit.collider.name}");
+                PickableObject pickable = hit.collider.GetComponent<PickableObject>();
+                pickable.PickUp();
+            }
+            else
+            {
+                Debug.Log("TryPick");
             }
         }
 
