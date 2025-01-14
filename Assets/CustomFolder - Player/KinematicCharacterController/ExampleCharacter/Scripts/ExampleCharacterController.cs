@@ -48,8 +48,8 @@ namespace KinematicCharacterController.Examples
 
         public static Dictionary<int, ExampleCharacterController> controllers
                 = new Dictionary<int, ExampleCharacterController>();
-        
-        //public Pickable pickable { get; set; }
+
+        [SerializeField] LayerMask _crownLayer;
 
         public KinematicCharacterMotor Motor;
 
@@ -191,12 +191,15 @@ namespace KinematicCharacterController.Examples
                         // 바닥에 떨어진 왕관 줍기실행
                         if (inputs.Pickable)
                         {
-                           RaycastHit hit;
+                            RaycastHit hit;
 
-                            if (Physics.SphereCast(transform.position, 0.5f, transform.forward, out hit,1f))
+                            //OnDrawGizmos();
+
+                            if (Physics.SphereCast(transform.position, 5f, transform.forward, out hit, 0.5f, _crownLayer))
                             {
+                                Debug.Log(hit.collider.gameObject.name);
                                 //TODO : Pickable 호출 맟 애니메이션
-                                //hit.collider.gameObject.GetComponent<Pickable>().Pick();
+                                hit.collider.gameObject.GetComponent<PickableObject>().PickUp();
                             }
                         }
 
@@ -209,7 +212,7 @@ namespace KinematicCharacterController.Examples
                         {
                             RaycastHit hit;
 
-                            if(Physics.SphereCast(transform.position,0.5f,transform.forward, out hit, 1f))
+                            if (Physics.SphereCast(transform.position, 0.5f, transform.forward, out hit, 1f))
                             {
                                 //TODO : Kickable 호출 및 애니메이션
                                 //hit.collider.gameObject.GetComponent<Kickable>().Kick();
@@ -548,7 +551,35 @@ namespace KinematicCharacterController.Examples
 
         public void Hit(GameObject gameObject)
         {
-            
+
+        }
+
+        public float radius = 1f; // SphereCast의 반지름
+        public float maxDistance = 10f; // SphereCast의 최대 거리
+
+        private void OnDrawGizmos()
+        {
+            // SphereCast의 시작 위치와 방향 설정
+            Vector3 startPosition = transform.position;
+            Vector3 direction = transform.forward;
+            RaycastHit hit;
+
+            // Gizmos 색상 설정
+            Gizmos.color = Color.yellow;
+
+            // SphereCast가 충돌한 경우와 아닌 경우를 나누어 표시
+            if (Physics.SphereCast(startPosition, radius, direction, out hit, maxDistance, _crownLayer))
+            {
+                // 충돌한 경우 충돌 지점까지의 경로와 충돌 지점 표시
+                Gizmos.DrawRay(startPosition, direction * hit.distance);
+                Gizmos.DrawWireSphere(startPosition + direction * hit.distance, radius);
+            }
+            else
+            {
+                // 충돌하지 않은 경우 최대 거리까지의 경로 표시
+                Gizmos.DrawRay(startPosition, direction * maxDistance);
+                Gizmos.DrawWireSphere(startPosition + direction * maxDistance, radius);
+            }
         }
     }
 }

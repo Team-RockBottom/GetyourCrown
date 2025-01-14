@@ -135,7 +135,7 @@ namespace KinematicCharacterController.Examples
             {
                 _animator.SetInteger("State", 2);
                 _animator.SetBool("IsDirty",true);
-                characterInputs.Pickable = false;
+                //characterInputs.Pickable = false;
             }
             else
             {
