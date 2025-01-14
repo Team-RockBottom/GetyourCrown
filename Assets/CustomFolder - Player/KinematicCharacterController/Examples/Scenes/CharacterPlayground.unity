@@ -2365,6 +2365,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76020eee813ed7844bcea94c5d5ce76a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _crownLayer:
+    serializedVersion: 2
+    m_Bits: 0
   Motor: {fileID: 97709160}
   MaxStableWalkSpeed: 10
   MaxStableRunSpeed: 15
@@ -2388,6 +2391,8 @@ MonoBehaviour:
   MeshRoot: {fileID: 8565536090553047369}
   CameraFollowPoint: {fileID: 1966996282}
   CrouchedCapsuleHeight: 1
+  radius: 1
+  maxDistance: 10
 --- !u!1 &107278484
 GameObject:
   m_ObjectHideFlags: 0
@@ -4725,6 +4730,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76020eee813ed7844bcea94c5d5ce76a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _crownLayer:
+    serializedVersion: 2
+    m_Bits: 0
   Motor: {fileID: 218902869}
   MaxStableWalkSpeed: 10
   MaxStableRunSpeed: 15
@@ -4746,6 +4754,8 @@ MonoBehaviour:
   MeshRoot: {fileID: 218902876}
   CameraFollowPoint: {fileID: 218902876}
   CrouchedCapsuleHeight: 1
+  radius: 1
+  maxDistance: 10
 --- !u!136 &218902871
 CapsuleCollider:
   m_ObjectHideFlags: 8
@@ -15633,6 +15643,10 @@ MonoBehaviour:
   _playerLayerMask:
     serializedVersion: 2
     m_Bits: 0
+  _kickableLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _kickPower: 3
 --- !u!4 &710533081
 Transform:
   m_ObjectHideFlags: 0
@@ -18854,6 +18868,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76020eee813ed7844bcea94c5d5ce76a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _crownLayer:
+    serializedVersion: 2
+    m_Bits: 0
   Motor: {fileID: 846437975}
   MaxStableWalkSpeed: 10
   MaxStableRunSpeed: 15
@@ -18875,6 +18892,8 @@ MonoBehaviour:
   MeshRoot: {fileID: 846437982}
   CameraFollowPoint: {fileID: 846437982}
   CrouchedCapsuleHeight: 1
+  radius: 1
+  maxDistance: 10
 --- !u!136 &846437973
 CapsuleCollider:
   m_ObjectHideFlags: 8
@@ -22993,6 +23012,10 @@ MonoBehaviour:
   _playerLayerMask:
     serializedVersion: 2
     m_Bits: 0
+  _kickableLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _kickPower: 3
 --- !u!4 &1004713170
 Transform:
   m_ObjectHideFlags: 0
@@ -47450,6 +47473,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76020eee813ed7844bcea94c5d5ce76a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _crownLayer:
+    serializedVersion: 2
+    m_Bits: 0
   Motor: {fileID: 2140252335}
   MaxStableWalkSpeed: 10
   MaxStableRunSpeed: 15
@@ -47471,6 +47497,8 @@ MonoBehaviour:
   MeshRoot: {fileID: 2140252326}
   CameraFollowPoint: {fileID: 2140252326}
   CrouchedCapsuleHeight: 1
+  radius: 1
+  maxDistance: 10
 --- !u!136 &2140252333
 CapsuleCollider:
   m_ObjectHideFlags: 8
@@ -58525,6 +58553,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76020eee813ed7844bcea94c5d5ce76a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _crownLayer:
+    serializedVersion: 2
+    m_Bits: 0
   Motor: {fileID: 6615662580611611646}
   MaxStableWalkSpeed: 10
   MaxStableRunSpeed: 15
@@ -58548,6 +58579,8 @@ MonoBehaviour:
   MeshRoot: {fileID: 6510422302040278518}
   CameraFollowPoint: {fileID: 6505238199867825826}
   CrouchedCapsuleHeight: 1
+  radius: 1
+  maxDistance: 10
 --- !u!114 &6615662580611611646
 MonoBehaviour:
   m_ObjectHideFlags: 0
