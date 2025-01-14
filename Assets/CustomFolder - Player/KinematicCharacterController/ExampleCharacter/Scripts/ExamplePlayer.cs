@@ -88,7 +88,7 @@ namespace KinematicCharacterController.Examples
                 if (Physics.SphereCast(transform.position, 0.5f,transform.forward, out hit, _playerLayerMask))
                 {
                     hit.collider.gameObject.GetComponent<ExamplePlayer>();
-                    //TODO : Kickable 호출
+                    //TODO : Kickable 호출 및 애니메이션
                 }
             }
         }
@@ -103,10 +103,13 @@ namespace KinematicCharacterController.Examples
             characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
             characterInputs.Run = Input.GetKey(KeyCode.LeftShift);
             characterInputs.JumpDown = Input.GetKeyDown(KeyCode.Space);
+            characterInputs.Attack  = Input.GetMouseButtonDown(0);
             characterInputs.Pickable = Input.GetKeyDown(KeyCode.E);
             characterInputs.CrouchUp = Input.GetKeyUp(KeyCode.C);
 
             float axisCheck = Mathf.Abs(Input.GetAxisRaw(VerticalInput)) + Mathf.Abs(Input.GetAxisRaw(HorizontalInput));
+            
+            //걷기 뛰기 애니메이션 세팅
             if (axisCheck <= 0)
             {
                 _animator.SetFloat("Speed", 0);
@@ -114,14 +117,33 @@ namespace KinematicCharacterController.Examples
             else if (axisCheck > 0)
             {
                 if (characterInputs.Run)
-                {
                     _animator.SetFloat("Speed", 1f);
-                }
                 else
-                {
                     _animator.SetFloat("Speed", 0.5f);
-                }
             }
+
+            if (characterInputs.JumpDown)
+            {
+                _animator.SetBool("IsGrounded", false);
+            }
+            else
+            {
+                _animator.SetBool("IsGrounded", true);
+            }
+
+            if (characterInputs.Pickable)
+            {
+                _animator.SetInteger("State", 2);
+                _animator.SetBool("IsDirty",true);
+                characterInputs.Pickable = false;
+            }
+            else
+            {
+                _animator.SetInteger("State", 0);
+                _animator.SetBool("IsDirty", false);
+            }
+
+
 
             // Apply inputs to character
             Character.SetInputs(ref characterInputs);

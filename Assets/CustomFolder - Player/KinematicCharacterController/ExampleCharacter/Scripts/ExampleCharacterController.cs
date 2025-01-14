@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
 using System;
+using Practices.PhotonPunClient.Network;
 
 namespace KinematicCharacterController.Examples
 {
@@ -22,6 +23,7 @@ namespace KinematicCharacterController.Examples
         public float MoveAxisForward;
         public float MoveAxisRight;
         public Quaternion CameraRotation;
+        public bool Attack;
         public bool JumpDown;
         public bool Pickable;
         public bool CrouchUp;
@@ -43,6 +45,12 @@ namespace KinematicCharacterController.Examples
 
     public class ExampleCharacterController : MonoBehaviour, ICharacterController
     {
+
+        public static Dictionary<int, ExampleCharacterController> controllers
+                = new Dictionary<int, ExampleCharacterController>();
+        
+        public Pickable pickable { get; set; }
+
         public KinematicCharacterMotor Motor;
 
         [Header("Stable Movement")]
@@ -183,20 +191,29 @@ namespace KinematicCharacterController.Examples
                         // 바닥에 떨어진 왕관 줍기실행
                         if (inputs.Pickable)
                         {
-                            if (Input.GetMouseButtonDown(0))
-                            {
-                                RaycastHit hit;
+                           RaycastHit hit;
 
-                                if (Physics.SphereCast(transform.position, 0.5f, transform.forward, out hit,1f))
-                                {
-                                    //TODO : Pickable 호출
-                                }
+                            if (Physics.SphereCast(transform.position, 0.5f, transform.forward, out hit,1f))
+                            {
+                                //TODO : Pickable 호출 맟 애니메이션
+                                //hit.collider.gameObject.GetComponent<Pickable>().Pick();
                             }
                         }
 
                         if (inputs.Run)
                         {
                             _isRun = !_isRun;
+                        }
+
+                        if (inputs.Attack)
+                        {
+                            RaycastHit hit;
+
+                            if(Physics.SphereCast(transform.position,0.5f,transform.forward, out hit, 1f))
+                            {
+                                //TODO : Kickable 호출 및 애니메이션
+                                //hit.collider.gameObject.GetComponent<Kickable>().Kick();
+                            }
                         }
 
                         break;
@@ -389,6 +406,7 @@ namespace KinematicCharacterController.Examples
                                 _jumpRequested = false;
                                 _jumpConsumed = true;
                                 _jumpedThisFrame = true;
+
                             }
                         }
 
@@ -526,6 +544,11 @@ namespace KinematicCharacterController.Examples
 
         public void OnDiscreteCollisionDetected(Collider hitCollider)
         {
+        }
+
+        public void Hit(GameObject gameObject)
+        {
+            
         }
     }
 }
