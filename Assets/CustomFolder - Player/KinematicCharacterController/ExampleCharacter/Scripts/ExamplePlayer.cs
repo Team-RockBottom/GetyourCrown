@@ -18,11 +18,7 @@ namespace KinematicCharacterController.Examples
         private const string VerticalInput = "Vertical";
 
         [SerializeField] LayerMask _playerLayerMask;
-        [SerializeField] LayerMask _kickableLayerMask;
 
-        private const float SPHERCAST_RADIUS = 1f;
-        private const float SPHERCAST_MAXDISTANCE = 1f;
-        [SerializeField] private float _kickPower = 3f;
 
         Animator _animator;
 
@@ -101,11 +97,8 @@ namespace KinematicCharacterController.Examples
             // 왕관 Kick
             if (Input.GetMouseButtonDown(1))
             {
-                if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _kickableLayerMask))
-                {
-                    KickableObject kickable = hit.collider.GetComponent<KickableObject>();
-                    kickable.Kick((hit.point - transform.position) * _kickPower);
-                }
+                Debug.Log("RC Input in");
+                Character.TryKick();
             }
         }
 

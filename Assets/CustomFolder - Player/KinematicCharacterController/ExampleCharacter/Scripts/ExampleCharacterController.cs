@@ -554,8 +554,24 @@ namespace KinematicCharacterController.Examples
 
         }
 
+
+        [SerializeField] LayerMask _kickableLayerMask;
+
+        private const float SPHERCAST_RADIUS = 1f;
+        private const float SPHERCAST_MAXDISTANCE = 1f;
+        [SerializeField] private float _kickPower = 3f;
+        public void TryKick()
+        {
+            if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _kickableLayerMask))
+            {
+                Debug.Log($"sphereCasting{hit.collider.name}");
+                KickableObject kickable = hit.collider.GetComponent<KickableObject>();
+                kickable.Kick((hit.point - transform.position) * _kickPower);
+            }
+        }
+
         public float radius = 1f; // SphereCast의 반지름
-        public float maxDistance = 10f; // SphereCast의 최대 거리
+        public float maxDistance = 1f; // SphereCast의 최대 거리
 
         private void OnDrawGizmos()
         {

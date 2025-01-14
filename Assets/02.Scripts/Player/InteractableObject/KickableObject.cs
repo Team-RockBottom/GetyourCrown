@@ -11,6 +11,7 @@ public class KickableObject : MonoBehaviour
 
     public void Kick(Vector3 force)
     {
+        Debug.Log("call kick");
         _rigidbody.AddForce(force, ForceMode.Impulse);
     }
 }
