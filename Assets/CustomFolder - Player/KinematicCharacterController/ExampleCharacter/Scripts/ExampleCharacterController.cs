@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
 using System;
+using Photon.Pun;
 //using Practices.PhotonPunClient.Network;
 
 namespace KinematicCharacterController.Examples
@@ -43,7 +44,7 @@ namespace KinematicCharacterController.Examples
         TowardsGroundSlopeAndGravity,
     }
 
-    public class ExampleCharacterController : MonoBehaviour, ICharacterController
+    public class ExampleCharacterController : MonoBehaviour, ICharacterController,IPunInstantiateMagicCallback
     {
 
         public static Dictionary<int, ExampleCharacterController> controllers
@@ -60,6 +61,7 @@ namespace KinematicCharacterController.Examples
         public float OrientationSharpness = 10f;
         public OrientationMethod OrientationMethod = OrientationMethod.TowardsCamera;
         private bool _isRun = false;
+        public bool _isGround = false;
 
         [Header("Air Movement")]
         public float MaxAirMoveSpeed = 15f;
@@ -186,6 +188,7 @@ namespace KinematicCharacterController.Examples
                         {
                             _timeSinceJumpRequested = 0f;
                             _jumpRequested = true;
+                            _isGround = true;
                         }
 
                         // 바닥에 떨어진 왕관 줍기실행
@@ -409,7 +412,7 @@ namespace KinematicCharacterController.Examples
                                 _jumpRequested = false;
                                 _jumpConsumed = true;
                                 _jumpedThisFrame = true;
-
+                                _isGround = false;
                             }
                         }
 
@@ -590,6 +593,5 @@ namespace KinematicCharacterController.Examples
                 pickable.Drop();
             }
         }
-
     }
 }

@@ -133,13 +133,33 @@ namespace KinematicCharacterController.Examples
                     _animator.SetFloat("Speed", 0.5f);
             }
 
+            //
             if (characterInputs.JumpDown)
             {
+                Debug.Log("Jump Call");
+                
+                if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
+                {
+                    float aniTime = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+
+                    if (aniTime < 1&& aniTime > 0)
+                    {
+                        return;
+                    }
+                }   
                 _animator.SetBool("IsGrounded", false);
             }
-            else
+            else  
             {
-                _animator.SetBool("IsGrounded", true);
+                if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && !Character._isGround)
+                {
+                    float aniTime = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+
+                    if (aniTime >= 1)
+                    {
+                        _animator.SetBool("IsGrounded", true);
+                    }
+                }
             }
 
             // 진행중인 애니메이션이 있으면 return
