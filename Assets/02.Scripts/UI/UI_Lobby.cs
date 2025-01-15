@@ -15,6 +15,7 @@ namespace GetyourCrown.UI
         [Resolve] RoomListSlot _roomListSlot;
         [Resolve] Button _createRoom;
         [Resolve] Button _joinRoom;
+        //[Resolve] Button _exitLobby;
         List<RoomListSlot> _roomListSlots = new List<RoomListSlot>(10);
         List<RoomInfo> _roomInfosCashed = new List<RoomInfo>(10);
         int _roomIdSelected = -1;
@@ -48,6 +49,12 @@ namespace GetyourCrown.UI
 
                 PhotonNetwork.JoinRoom(roomInfo.Name);
             });
+
+            //todo -> lobby -> mainmenu
+            //_exitLobby.onClick.AddListener(() =>
+            //{
+
+            //});
         }
 
         private void OnEnable()

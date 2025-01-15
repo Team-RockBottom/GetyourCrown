@@ -26,6 +26,9 @@ namespace GetyourCrown.UI.UI_Utilities
 
         private static Dictionary<Type, string> s_prefixes = new Dictionary<Type, string>()
         {
+            { typeof(Transform), "" },
+            { typeof(RectTransform), "" },
+            { typeof(GameObject), "" },
             { typeof(TMP_Text), "Text (TMP) - " },
             { typeof(TextMeshProUGUI), "Text (TMP) - " },
             { typeof(TextMeshPro), "Text (TMP) - " },

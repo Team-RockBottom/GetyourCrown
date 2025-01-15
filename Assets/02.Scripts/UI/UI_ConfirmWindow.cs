@@ -8,18 +8,18 @@ namespace GetyourCrown.UI
     public class UI_ConfirmWindow : UI_Popup
     {
         [Resolve] TMP_Text _message;
-        [Resolve] Button _button;
+        [Resolve] Button _confirm;
 
         public void Show(string message, UnityAction onConfirmed = null)
         {
             base.Show();
 
             _message.text = message;
-            _button.onClick.RemoveAllListeners();
-            _button.onClick.AddListener(Hide);
+            _confirm.onClick.RemoveAllListeners();
+            _confirm.onClick.AddListener(Hide);
 
             if (onConfirmed != null)
-                _button.onClick.AddListener(onConfirmed);
+                _confirm.onClick.AddListener(onConfirmed);
         }
     }
 }
