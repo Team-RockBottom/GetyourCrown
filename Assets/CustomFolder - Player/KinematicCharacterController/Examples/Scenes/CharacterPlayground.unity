@@ -2394,7 +2394,7 @@ MonoBehaviour:
   _kickableLayerMask:
     serializedVersion: 2
     m_Bits: 32768
-  _kickPower: 3
+  _kickPower: 20
   radius: 1
   maxDistance: 1
 --- !u!1 &107278484

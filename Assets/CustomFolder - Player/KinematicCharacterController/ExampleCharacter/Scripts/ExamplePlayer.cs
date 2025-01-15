@@ -105,6 +105,7 @@ namespace KinematicCharacterController.Examples
 
         private void HandleCharacterInput()
         {
+
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
 
             // Build the CharacterInputs struct
@@ -141,6 +142,8 @@ namespace KinematicCharacterController.Examples
                 _animator.SetBool("IsGrounded", true);
             }
 
+            // 진행중인 애니메이션이 있으면 return
+
             if (characterInputs.Pickable)
             {
                 Debug.Log("LC Input in");
@@ -151,8 +154,12 @@ namespace KinematicCharacterController.Examples
             }
             else
             {
-                _animator.SetInteger("State", 0);
-                _animator.SetBool("IsDirty", false);
+                if (!_animator.GetCurrentAnimatorStateInfo(0).)
+                {
+                    _animator.SetInteger("State", 0);
+                    _animator.SetBool("IsDirty", false);
+                }
+
             }
             
 

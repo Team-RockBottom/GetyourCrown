@@ -557,14 +557,19 @@ namespace KinematicCharacterController.Examples
 
         [SerializeField] LayerMask _kickableLayerMask;
 
+        [SerializeField] float rangeMultiple = 1;
+
+        //TODO Augment선택 체크하여 rangeMultiple 변경
+
         private const float SPHERCAST_RADIUS = 1f;
         private const float SPHERCAST_MAXDISTANCE = 1f;
+        private const float SPHERCAST_KICK_RADIUS = 1.5f;
+        private const float SPHERCAST_KICK_MAXDISTANCE = 1.5f;
         [SerializeField] private float _kickPower = 3f;
         public void TryKick()
         {
-            if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _kickableLayerMask))
+            if (Physics.SphereCast(transform.position, SPHERCAST_KICK_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_KICK_MAXDISTANCE, _kickableLayerMask))
             {
-                Debug.Log($"sphereCasting{hit.collider.name}");
                 KickableObject kickable = hit.collider.GetComponent<KickableObject>();
                 kickable.Kick((hit.point - transform.position) * _kickPower);
             }
@@ -573,42 +578,18 @@ namespace KinematicCharacterController.Examples
         {
             if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _crownLayer))
             {
-                Debug.Log($"hit : {hit.collider.name}");
                 PickableObject pickable = hit.collider.GetComponent<PickableObject>();
                 pickable.PickUp();
             }
-            else
-            {
-                Debug.Log("TryPick");
-            }
         }
-
-        public float radius = 1f; // SphereCast의 반지름
-        public float maxDistance = 1f; // SphereCast의 최대 거리
-
-        private void OnDrawGizmos()
+        public void TryAttack()
         {
-            // SphereCast의 시작 위치와 방향 설정
-            Vector3 startPosition = transform.position;
-            Vector3 direction = transform.forward;
-            RaycastHit hit;
-
-            // Gizmos 색상 설정
-            Gizmos.color = Color.yellow;
-
-            // SphereCast가 충돌한 경우와 아닌 경우를 나누어 표시
-            if (Physics.SphereCast(startPosition, radius, direction, out hit, maxDistance, _crownLayer))
+            if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _crownLayer))
             {
-                // 충돌한 경우 충돌 지점까지의 경로와 충돌 지점 표시
-                Gizmos.DrawRay(startPosition, direction * hit.distance);
-                Gizmos.DrawWireSphere(startPosition + direction * hit.distance, radius);
-            }
-            else
-            {
-                // 충돌하지 않은 경우 최대 거리까지의 경로 표시
-                Gizmos.DrawRay(startPosition, direction * maxDistance);
-                Gizmos.DrawWireSphere(startPosition + direction * maxDistance, radius);
+                PickableObject pickable = hit.collider.GetComponent<PickableObject>();
+                pickable.Drop();
             }
         }
+
     }
 }
