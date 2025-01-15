@@ -34,7 +34,9 @@ namespace GetyourCrown.UI.UI_Utilities
             { typeof(TextMeshPro), "Text (TMP) - " },
             { typeof(TMP_InputField), "InputField (TMP) - " },
             { typeof(Image), "Image - " },
-            { typeof(Button), "Button - " }
+            { typeof(Button), "Button - " },
+            { typeof(Toggle), "Toggle - " },
+            { typeof(Slider), "Slider - " }
         };
     }
 
