@@ -25,6 +25,7 @@ namespace GetyourCrown.UI
         {
             if (_uis.TryAdd(ui.GetType(), ui))
             {
+                //Debug.Log($"Registered UI {ui.GetType()}");
                 if (ui is UI_Popup)
                 {
                     ui.onShow += () => Push((UI_Popup)ui);

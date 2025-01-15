@@ -12,7 +12,7 @@ namespace GetyourCrown.UI
             set
             {
                 _isSelectedValue = value;
-                _isSeleted.gameObject.SetActive(value);
+                _isSelected.gameObject.SetActive(value);
             }
         }
 
@@ -61,7 +61,7 @@ namespace GetyourCrown.UI
         string _roomNameValue;
         int _roomPlayerCountValue;
         int _roomMaxPlayersValue;
-        [Resolve] Image _isSeleted;
+        [Resolve] Image _isSelected;
         [Resolve] TMP_Text _roomId;
         [Resolve] TMP_Text _roomName;
         [Resolve] TMP_Text _roomPlayerCount;

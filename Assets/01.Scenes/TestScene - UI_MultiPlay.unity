@@ -567,6 +567,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas - Room
       objectReference: {fileID: 0}
+    - target: {fileID: 6681111310065774181, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6681111310065774181, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6681111310065774181, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6681111310065774181, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6681111310065774181, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6681111310065774181, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -626,17 +650,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3472597709146000550, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000014543533
+      value: 0.000014364719
       objectReference: {fileID: 0}
     - target: {fileID: 3472597709146000550, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00004553795
+      value: -0.0009589113
       objectReference: {fileID: 0}
     - target: {fileID: 4707465121724865844, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
-      propertyPath: m_Value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4753225854626363013, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
       propertyPath: m_Value
       value: 1
       objectReference: {fileID: 0}
