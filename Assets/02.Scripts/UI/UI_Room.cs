@@ -19,7 +19,7 @@ namespace GetyourCrown.UI
         [Resolve] Button _startGame;
         [Resolve] Button _gameReady;
         [Resolve] Button _leftRoom;
-        //[Resolve] Button _characterChange; //추가 하기
+        [Resolve] Button _characterChange; //추가 하기
         Dictionary<int, (Player player, RoomPlayerInfoSlot slot)> _roomPlayerInfoPairs;
 
         protected override void Awake()
@@ -65,6 +65,12 @@ namespace GetyourCrown.UI
             {
                 PhotonNetwork.LeaveRoom();
             });
+
+            //_characterChange.onClick.AddListener(() =>
+            //{
+            //    UI_NickNameChange uI_NickNameChange = UI_Manager.instance.Resolve<UI_NickNameChange>();
+            //    uI_NickNameChange.Show();
+            //});
         }
 
         public override void Show()
@@ -81,6 +87,7 @@ namespace GetyourCrown.UI
             {
                 RoomPlayerInfoSlot slot = Instantiate(_roomPlayerInfoSlot, _roomPlayerInfoPanel);
                 slot.gameObject.SetActive(true);
+                slot.playerName = player.NickName;
                 slot.actorNumber = player.ActorNumber;
                 slot.isMasterClient = player.IsMasterClient;
 
@@ -95,6 +102,7 @@ namespace GetyourCrown.UI
 
                 slot.gameObject.SetActive(true);
                 _roomPlayerInfoPairs.Add(player.ActorNumber, (player, slot));
+                Debug.Log(player.ActorNumber);
             }
 
             TogglePlayerButtons(PhotonNetwork.LocalPlayer);
@@ -156,6 +164,13 @@ namespace GetyourCrown.UI
 
         public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
         {
+        }
+
+        public void PlayerNickName(Player player, string nickName)
+        {
+            Debug.Log(player.ActorNumber);
+            _roomPlayerInfoPairs[player.ActorNumber].slot.playerName = nickName;
+
         }
     }
 }

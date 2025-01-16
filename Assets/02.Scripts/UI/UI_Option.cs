@@ -60,7 +60,7 @@ namespace GetyourCrown.UI
             base.Show();
 
             prevVSyncCount = QualitySettings.vSyncCount;
-            prevIsFullScreen = Screen.fullScreen;
+            prevIsFullScreen = _fullScreen.isOn;
             
             prevAudioVolum = _volum.value;
         }
