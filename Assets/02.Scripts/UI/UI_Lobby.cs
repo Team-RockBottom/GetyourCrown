@@ -32,6 +32,8 @@ namespace GetyourCrown.UI
                 createRoom.Show();
             });
 
+            _createRoom.interactable = false;
+
             _joinRoom.interactable = false;
             _joinRoom.onClick.AddListener(() =>
             {
@@ -41,10 +43,12 @@ namespace GetyourCrown.UI
                 if (!roomInfo.IsOpen)
                 {
                     uI_ConfirmWindow.Show("방이 닫혀 있습니다.");
+                    return;
                 }
                 if (roomInfo.PlayerCount >= roomInfo.MaxPlayers)
                 {
                     uI_ConfirmWindow.Show("이 방은 더 이상 참여할 수 없습니다.");
+                    return;
                 }
 
                 PhotonNetwork.JoinRoom(roomInfo.Name);

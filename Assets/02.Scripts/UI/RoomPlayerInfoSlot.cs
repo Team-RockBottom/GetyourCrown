@@ -15,6 +15,7 @@ namespace GetyourCrown.UI
             {
                 _isReadyValue = value;
                 _isReady.gameObject.SetActive(value);
+                _readyImage.gameObject.SetActive(value);
             }
         }
 
@@ -43,6 +44,7 @@ namespace GetyourCrown.UI
         [Resolve] TMP_Text _isReady;
         [Resolve] TMP_Text _playerName;
         [Resolve] Image _isMasterClient;
+        [Resolve] Image _readyImage;
         //캐릭터 프리펩 넣기
     }
 }

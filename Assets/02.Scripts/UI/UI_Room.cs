@@ -57,7 +57,7 @@ namespace GetyourCrown.UI
 
                 player.SetCustomProperties(new Hashtable()
                 {
-                    { PlayerInRoomProperty.IS_READY, isReady == false}
+                    { PlayerInRoomProperty.IS_READY, isReady == false},
                 });
             });
 

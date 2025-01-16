@@ -567,6 +567,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas - Room
       objectReference: {fileID: 0}
+    - target: {fileID: 4537078972312230373, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322047829334977967, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6681111310065774181, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -584,11 +592,23 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6681111310065774181, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6681111310065774181, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6681111310065774181, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6681111310065774181, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6974052702028402016, guid: cc18652b85876db4884a5b838f95cc0a, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -658,7 +678,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4707465121724865844, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4766801461889660781, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
       propertyPath: m_AnchorMax.x
