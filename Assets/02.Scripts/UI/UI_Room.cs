@@ -19,7 +19,7 @@ namespace GetyourCrown.UI
         [Resolve] Button _startGame;
         [Resolve] Button _gameReady;
         [Resolve] Button _leftRoom;
-        //[Resolve] Button _characterChange; //추가 하기
+        [Resolve] Button _characterChange;
         Dictionary<int, (Player player, RoomPlayerInfoSlot slot)> _roomPlayerInfoPairs;
 
         protected override void Awake()
@@ -60,6 +60,13 @@ namespace GetyourCrown.UI
                     { PlayerInRoomProperty.IS_READY, isReady == false},
                 });
             });
+
+            _characterChange.onClick.AddListener(() =>
+            {
+                UI_CharacterSelect uI_CharacterSelect = UI_Manager.instance.Resolve<UI_CharacterSelect>();
+                uI_CharacterSelect.Show();
+            });
+
 
             _leftRoom.onClick.AddListener(() =>
             {

@@ -26,7 +26,7 @@ namespace GetyourCrown.UI
 
             if (TryGraphicRaycast(mousePos, out CanvasRenderer renderer))
             {
-                //다른 팝업 클릭 못하게 하기
+
             }
             else
             {

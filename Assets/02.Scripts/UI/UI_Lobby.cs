@@ -32,8 +32,6 @@ namespace GetyourCrown.UI
                 createRoom.Show();
             });
 
-            _createRoom.interactable = false;
-
             _joinRoom.interactable = false;
             _joinRoom.onClick.AddListener(() =>
             {
