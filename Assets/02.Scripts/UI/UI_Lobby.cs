@@ -52,7 +52,6 @@ namespace GetyourCrown.UI
                 PhotonNetwork.JoinRoom(roomInfo.Name);
             });
 
-            //todo -> lobby -> mainmenu
             //_exitLobby.onClick.AddListener(() =>
             //{
 
@@ -97,8 +96,10 @@ namespace GetyourCrown.UI
                 { PlayerInRoomProperty.IS_READY, false }
             });
 
+
             UI_Manager.instance.Resolve<UI_Room>().Show();
         }
+
 
         public void OnJoinRandomFailed(short returnCode, string message)
         {
@@ -184,6 +185,7 @@ namespace GetyourCrown.UI
             {
                 RoomListSlot slot = Instantiate(_roomListSlot, _roomListSlotContent);
                 slot.gameObject.SetActive(true);
+
                 slot.roomId = i;
                 slot.roomName = roomList[i].Name;
                 slot.roomPlayerCount = roomList[i].PlayerCount;
