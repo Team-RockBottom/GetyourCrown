@@ -91,7 +91,7 @@ namespace GetyourCrown.UI
             popup.sortingOrder = sortingOrder;
             popup.inputActionsEnabled = true;
             _popupStack.Add(popup);
-            Debug.Log($"Push popup : {popup.name}");
+            //Debug.Log($"Push popup : {popup.name}");
         }
 
         public void Pop(UI_Popup popup)
@@ -110,7 +110,7 @@ namespace GetyourCrown.UI
             }
 
             _popupStack.RemoveAt(popupIndex);
-            Debug.Log($"Pop popup : {popup.name}");
+            //Debug.Log($"Pop popup : {popup.name}");
         }
     }
 }

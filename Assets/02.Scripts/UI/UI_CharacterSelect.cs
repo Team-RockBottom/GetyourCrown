@@ -74,7 +74,6 @@ namespace GetyourCrown.UI
         private void LoadCharacterSpecs()
         {
             _characterSpecs = Resources.LoadAll<CharacterSpec>(_characterSpecFolder);
-
         }
 
         private void LoadCharacterSlot()
@@ -127,10 +126,10 @@ namespace GetyourCrown.UI
 
             if (spec.prefab != null)
             {
-                _currentCharacter = Instantiate(spec.prefab, _characterPreviewPos); //캐릭터 생성
-                _currentCharacter.transform.localPosition = new Vector3(0, -1, 0);
-                _currentCharacter.transform.localScale = Vector3.one; //캐릭터 크기 설정
-                _currentCharacter.transform.localRotation = Quaternion.Euler(0, 180, 0); //캐릭터 회전 (카메라에 바라보겐)
+                _currentCharacter = Instantiate(spec.prefab, _characterPreviewPos); 
+                _currentCharacter.transform.localPosition = new Vector3(0, -1, 0); 
+                _currentCharacter.transform.localScale = Vector3.one;
+                _currentCharacter.transform.localRotation = Quaternion.Euler(0, 180, 0);
 
 
                 // 캐릭터를 렌더링할 카메라 설정

@@ -63,7 +63,6 @@ namespace GetyourCrown.UI
         bool _isCharacterSelectOpenValue;
         string _playerNameValue;
         bool _isMasterClientValue;
-        int _playerCharacterValue;
         [Resolve] TMP_Text _isReady;
         [Resolve] TMP_Text _playerName;
         [Resolve] TMP_Text _isCharacterSelectOpen;

@@ -14,7 +14,7 @@ namespace GetyourCrown.UI
         public void Show(string message, UnityAction onConfirmed = null)
         {
             base.Show();
-            Debug.Log($"UI_ConfirmWindow.Show() »£√‚µ : {message}");
+            //Debug.Log($"UI_ConfirmWindow.Show() »£√‚µ : {message}");
 
             _message.text = message;
             _confirm.onClick.RemoveAllListeners();
