@@ -594,6 +594,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4045360762216801443, guid: bfed6853b2d487b4fb11803d69004485, type: 3}
+      propertyPath: m_Name
+      value: Button - Augment
+      objectReference: {fileID: 0}
     - target: {fileID: 7182170833078875792, guid: bfed6853b2d487b4fb11803d69004485, type: 3}
       propertyPath: m_Name
       value: AugmentSlot

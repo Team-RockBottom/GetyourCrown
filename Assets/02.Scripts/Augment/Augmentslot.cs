@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Practices.PhotonPunClient.Network;
+using Photon.Pun;
 
 
 public class Augmentslot : MonoBehaviour
@@ -8,6 +10,7 @@ public class Augmentslot : MonoBehaviour
     [SerializeField] TMP_Text _nameText;
     [SerializeField] TMP_Text _descriptionText;
     [SerializeField] Image _iconImage;
+    [SerializeField] Button _button;
     private int _idValue;
     private string _descriptionValue;
     private string _nameValue;
@@ -36,4 +39,13 @@ public class Augmentslot : MonoBehaviour
         set => _nameText.text = value;
     }
 
+    private void Awake()
+    {
+        _button.onClick.AddListener(TransferSelectedAugmentId);
+    }
+
+    private void TransferSelectedAugmentId()
+    {
+        //TODO >> 자기 자신의 Charactercontroller 인지 확인하고 맞다면 Id 전달하기
+    }
 }
