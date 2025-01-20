@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
-namespace KinematicCharacterController.Examples
+namespace Practices.PhotonPunClient.Network
 {
     public class ExampleCharacterCamera : MonoBehaviour
     {
+        [SerializeField] PhotonView _photonView;
+
         [Header("Framing")]
         public Camera Camera;
         public Vector2 FollowPointFraming = new Vector2(0f, 0f);
@@ -175,5 +179,7 @@ namespace KinematicCharacterController.Examples
                 Transform.position = targetPosition;
             }
         }
+
+
     }
 }

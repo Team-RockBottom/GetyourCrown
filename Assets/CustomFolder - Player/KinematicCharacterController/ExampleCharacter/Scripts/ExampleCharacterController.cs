@@ -4,11 +4,17 @@ using UnityEngine;
 using KinematicCharacterController;
 using System;
 using Photon.Pun;
+using Practices.PhotonPunClient.Network;
+using UnityEngine.AI;
+using UnityEngine.InputSystem;
+using Practices.PhotonPunClient;
+using Photon.Realtime;
+using UnityEditor.Sprites;
 //using Practices.PhotonPunClient.Network;
 
-namespace KinematicCharacterController.Examples
+namespace Practices.PhotonPunClient.Network
 {
-    public enum CharacterState 
+    public enum CharacterState
     {
         Default,
     }
@@ -26,6 +32,7 @@ namespace KinematicCharacterController.Examples
         public Quaternion CameraRotation;
         public bool Attack;
         public bool JumpDown;
+        public bool Kickable;
         public bool Pickable;
         public bool CrouchUp;
         public bool Run;
@@ -44,14 +51,27 @@ namespace KinematicCharacterController.Examples
         TowardsGroundSlopeAndGravity,
     }
 
-    public class ExampleCharacterController : MonoBehaviour, ICharacterController,IPunInstantiateMagicCallback
+    public class ExampleCharacterController : MonoBehaviour, ICharacterController
     {
 
         public static Dictionary<int, ExampleCharacterController> controllers
                 = new Dictionary<int, ExampleCharacterController>();
 
-        [SerializeField] LayerMask _crownLayer;
-        [SerializeField] Transform _crownPosition { get; set; }
+        public int ownerActorNr => _photonView.OwnerActorNr;
+        public int photonViewId => _photonView.ViewID;
+        public bool isInitialized { get; private set; }
+        public PickableObject pickable { get; set; }
+
+        [SerializeField] Transform _crownPosition;
+
+        Animator _animator;
+        bool _isStun = false;
+
+        [SerializeField] PhotonView _photonView;
+        ExampleCharacterController _controller;
+        [SerializeField] LayerMask _kingLayer;
+
+
         public KinematicCharacterMotor Motor;
 
         [Header("Stable Movement")]
@@ -106,10 +126,11 @@ namespace KinematicCharacterController.Examples
         {
             // Handle initial state
             TransitionToState(CharacterState.Default);
-
             // Assign the characterController to the motor
             Motor.CharacterController = this;
         }
+
+
 
         /// <summary>
         /// Handles movement state transitions and enter/exit callbacks
@@ -253,6 +274,10 @@ namespace KinematicCharacterController.Examples
         /// </summary>
         public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
         {
+            if (_isStun)
+            {
+                return;
+            }
             switch (CurrentCharacterState)
             {
                 case CharacterState.Default:
@@ -308,6 +333,11 @@ namespace KinematicCharacterController.Examples
         /// </summary>
         public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
         {
+            if (_isStun)
+            {
+                return;
+            }
+
             switch (CurrentCharacterState)
             {
                 case CharacterState.Default:
@@ -433,6 +463,11 @@ namespace KinematicCharacterController.Examples
         /// </summary>
         public void AfterCharacterUpdate(float deltaTime)
         {
+            if (_isStun)
+            {
+                return;
+            }
+
             switch (CurrentCharacterState)
             {
                 case CharacterState.Default:
@@ -558,7 +593,7 @@ namespace KinematicCharacterController.Examples
         }
 
 
-        [SerializeField] LayerMask _kickableLayerMask;
+        [SerializeField] LayerMask _crownLayer;
 
         [SerializeField] float rangeMultiple = 1;
 
@@ -571,27 +606,92 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _kickPower = 3f;
         public void TryKick()
         {
-            if (Physics.SphereCast(transform.position, SPHERCAST_KICK_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_KICK_MAXDISTANCE, _kickableLayerMask))
+            if (Physics.SphereCast(transform.position, SPHERCAST_KICK_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_KICK_MAXDISTANCE, _crownLayer))
             {
                 KickableObject kickable = hit.collider.GetComponent<KickableObject>();
                 kickable.Kick((hit.point - transform.position) * _kickPower);
             }
         }
-        public void TryPick()
+        //public void TryPick()
+        //{
+        //    if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _crownLayer))
+        //    {
+        //        PickableObject pickable = hit.collider.GetComponent<PickableObject>();
+        //        pickable.parentPosition = crownPosition;
+        //        pickable.PickUp();
+        //    }
+        //}
+
+        public void TryPickUp()
         {
-            if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _crownLayer))
+            Collider[] cols = Physics.OverlapSphere(transform.position, 1f, _crownLayer);
+
+            if (cols.Length > 0)
             {
-                PickableObject pickable = hit.collider.GetComponent<PickableObject>();
-                pickable.PickUp();
+                cols[0].GetComponent<PickableObject>().PickUp();
+                return;
             }
         }
+
         public void TryAttack()
         {
-            if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _crownLayer))
+            if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _kingLayer))
             {
-                PickableObject pickable = hit.collider.GetComponent<PickableObject>();
+                PickableObject pickable = hit.collider.GetComponentInChildren<PickableObject>();
+                PhotonView photonView = hit.collider.GetComponent<ExampleCharacterController>()._photonView;
+                photonView.RPC(nameof(HitCall), RpcTarget.All, photonView.Owner);
                 pickable.Drop();
             }
         }
+        IEnumerator Stun()
+        {
+            _animator.SetTrigger("IsStun");
+            _isStun = true;
+            _animator.SetBool("IsDirty", false);
+            yield return new WaitForSeconds(3);
+            _isStun = false;
+            _animator.SetBool("IsDirty", true);
+        }
+
+        IEnumerator Hit()
+        {
+            _animator.SetTrigger("IsHit");
+            _isStun = true;
+            _animator.SetBool("IsDirty", false);
+            yield return new WaitForSeconds(0.7f);
+            _isStun = false;
+            _animator.SetBool("IsDirty", true);
+        }
+
+        [PunRPC]
+        public void StunCall(Player player)
+        {
+            if (controllers.TryGetValue(player.ActorNumber, out ExampleCharacterController controller))
+            {
+                controller.StartCoroutine(Stun());
+            }
+        }
+
+        [PunRPC]
+        public void HitCall(Player player)
+        {
+            if (controllers.TryGetValue(player.ActorNumber, out ExampleCharacterController controller))
+            {
+                controller.StartCoroutine(Hit());
+            }
+        }
+
+        internal Transform GetCrownPosition()
+        {
+            return _crownPosition;
+        }
+
+
+        public void AddController()
+        {
+            controllers.Add(_photonView.OwnerActorNr, this);
+            Debug.Log(controllers.Count);
+        }
+
     }
 }

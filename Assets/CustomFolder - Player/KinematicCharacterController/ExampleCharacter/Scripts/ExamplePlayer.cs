@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
-using KinematicCharacterController.Examples;
+using Photon.Pun;
 
-namespace KinematicCharacterController.Examples
+namespace Practices.PhotonPunClient.Network
 {
     public class ExamplePlayer : MonoBehaviour
     {
+        [SerializeField] PhotonView _photonView;
+
         public ExampleCharacterController Character;
         public ExampleCharacterCamera CharacterCamera;
 
@@ -18,13 +20,25 @@ namespace KinematicCharacterController.Examples
         private const string VerticalInput = "Vertical";
 
         [SerializeField] LayerMask _playerLayerMask;
-        
+
+
+        /// <summary>
+        /// 딜레이를 위한 bool타입변수
+        /// </summary>
+        bool _isAttack = false;
+        bool _isPick = false;
+        bool _iskick = false;
+
+        [SerializeField] float _isAttackDelayTime = 0f;
+        [SerializeField] float _isPickDelayTime = 0f;
+        [SerializeField] float _isKickDelayTime = 0f;
 
         Animator _animator;
 
         private void Awake()
         {
             _animator = Character.GetComponent<Animator>();
+
         }
         private void Start()
         {
@@ -36,6 +50,17 @@ namespace KinematicCharacterController.Examples
             // Ignore the character's collider(s) for camera obstruction checks
             CharacterCamera.IgnoredColliders.Clear();
             CharacterCamera.IgnoredColliders.AddRange(Character.GetComponentsInChildren<Collider>());
+
+            if (_photonView.IsMine)
+            {
+                CharacterCamera.tag = "MainCamera";
+                GetComponent<AudioListener>().enabled = true;
+            }
+            else
+            {
+                CharacterCamera.gameObject.SetActive(false);
+                gameObject.SetActive(false);
+            }
         }
 
         private void Update()
@@ -82,24 +107,6 @@ namespace KinematicCharacterController.Examples
             // Apply inputs to the camera
             CharacterCamera.UpdateWithInput(Time.deltaTime, scrollInput, lookInputVector);
 
-            // 플레이어 Attack
-            if (Input.GetMouseButtonDown(0))
-            {
-                RaycastHit hit;
-
-                if (Physics.SphereCast(transform.position, 0.5f,transform.forward, out hit, _playerLayerMask))
-                {
-                    hit.collider.gameObject.GetComponent<ExamplePlayer>();
-                    //TODO : Kickable 호출 및 애니메이션
-                }
-            }
-
-            // 왕관 Kick
-            if (Input.GetMouseButtonDown(1))
-            {
-                Debug.Log("RC Input in");
-                Character.TryKick();
-            }
 
         }
 
@@ -114,12 +121,13 @@ namespace KinematicCharacterController.Examples
             characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
             characterInputs.Run = Input.GetKey(KeyCode.LeftShift);
             characterInputs.JumpDown = Input.GetKeyDown(KeyCode.Space);
-            characterInputs.Attack  = Input.GetMouseButtonDown(0);
+            characterInputs.Attack = Input.GetMouseButtonDown(0);
+            characterInputs.Kickable = Input.GetMouseButtonDown(1);
             characterInputs.Pickable = Input.GetKeyDown(KeyCode.E);
             characterInputs.CrouchUp = Input.GetKeyUp(KeyCode.C);
 
             float axisCheck = Mathf.Abs(Input.GetAxisRaw(VerticalInput)) + Mathf.Abs(Input.GetAxisRaw(HorizontalInput));
-            
+
             //걷기 뛰기 애니메이션 세팅
             if (axisCheck <= 0)
             {
@@ -137,19 +145,19 @@ namespace KinematicCharacterController.Examples
             if (characterInputs.JumpDown)
             {
                 Debug.Log("Jump Call");
-                
+
                 if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
                 {
                     float aniTime = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
-                    if (aniTime < 1&& aniTime > 0)
+                    if (aniTime < 1 && aniTime > 0)
                     {
                         return;
                     }
-                }   
+                }
                 _animator.SetBool("IsGrounded", false);
             }
-            else  
+            else
             {
                 if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && !Character._isGround)
                 {
@@ -164,28 +172,64 @@ namespace KinematicCharacterController.Examples
 
             // 진행중인 애니메이션이 있으면 return
 
-            if (characterInputs.Pickable)
+            if (characterInputs.Pickable && _isPick == false)
             {
                 Debug.Log("LC Input in");
-                Character.TryPick();
                 _animator.SetInteger("State", 2);
-                _animator.SetBool("IsDirty",true);
+                _animator.SetBool("IsDirty", true);
+                Character.TryPickUp();
+                StartCoroutine(PickDelay());
                 //characterInputs.Pickable = false;
             }
             else
             {
-                if (!_animator.GetCurrentAnimatorStateInfo(0).)
-                {
-                    _animator.SetInteger("State", 0);
-                    _animator.SetBool("IsDirty", false);
-                }
+                _animator.SetInteger("State", 0);
+                _animator.SetBool("IsDirty", false);
+            }
+
+
+            // 플레이어 Attack
+            if (characterInputs.Attack && _isAttack == false)
+            {
+                _animator.SetInteger("State", 1);
+                _animator.SetBool("IsDirty", true);
+                Character.TryAttack();
+                StartCoroutine(AttackDelay());
 
             }
-            
 
-
+            // 왕관 Kick
+            if (characterInputs.Kickable && _iskick == false)
+            {
+                _animator.SetInteger("State", 3);
+                _animator.SetBool("IsDirty", true);
+                Character.TryKick();
+                StartCoroutine(KickDelay());
+            }
             // Apply inputs to character
             Character.SetInputs(ref characterInputs);
+        }
+
+
+        IEnumerator AttackDelay()
+        {
+            _isAttack = true;
+            yield return new WaitForSeconds(_isAttackDelayTime);
+            _isAttack = false;
+        }
+
+        IEnumerator PickDelay()
+        {
+            _isPick = true;
+            yield return new WaitForSeconds(_isPickDelayTime);
+            _isPick = false;
+        }
+
+        IEnumerator KickDelay()
+        {
+            _iskick = true;
+            yield return new WaitForSeconds(_isKickDelayTime);
+            _iskick = false;
         }
     }
 }
