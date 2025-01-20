@@ -73,6 +73,12 @@ namespace Practices.PhotonPunClient.Network
 
 
         public KinematicCharacterMotor Motor;
+        
+        [Header("Augment Attachment")]
+        [SerializeField] float rangeMultiple = 1;
+        [SerializeField] float speedMultiple = 1;
+
+
 
         [Header("Stable Movement")]
         public float MaxStableWalkSpeed = 10f;
@@ -364,7 +370,8 @@ namespace Practices.PhotonPunClient.Network
                             }
                             else
                             {
-                                targetMovementVelocity = reorientedInput * MaxStableRunSpeed;
+                                targetMovementVelocity = (reorientedInput * MaxStableRunSpeed) * speedMultiple;
+                                //TODO -> speedMultiple 최대치 전까지 틱당 증가하는 기능 추가 >> 왕관 쓰면 초기화 // 왕관쓰면 작동 x
                             }
 
                             // Smooth movement Velocity
@@ -595,18 +602,20 @@ namespace Practices.PhotonPunClient.Network
 
         [SerializeField] LayerMask _crownLayer;
 
-        [SerializeField] float rangeMultiple = 1;
+
 
         //TODO Augment선택 체크하여 rangeMultiple 변경
 
         private const float SPHERCAST_RADIUS = 1f;
         private const float SPHERCAST_MAXDISTANCE = 1f;
-        private const float SPHERCAST_KICK_RADIUS = 1.5f;
-        private const float SPHERCAST_KICK_MAXDISTANCE = 1.5f;
+        private const float SPHERCAST_KICK_RADIUS = 2;
+        private const float SPHERCAST_KICK_MAXDISTANCE = 2;
         [SerializeField] private float _kickPower = 3f;
         public void TryKick()
         {
-            if (Physics.SphereCast(transform.position, SPHERCAST_KICK_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_KICK_MAXDISTANCE, _crownLayer))
+            Vector3 kickCastPosition = (transform.position + (Vector3.forward * SPHERCAST_KICK_RADIUS) + (Vector3.up * 1.5f));
+
+            if (Physics.SphereCast(kickCastPosition, SPHERCAST_KICK_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_KICK_MAXDISTANCE, _crownLayer))
             {
                 KickableObject kickable = hit.collider.GetComponent<KickableObject>();
                 kickable.Kick((hit.point - transform.position) * _kickPower);
@@ -635,7 +644,9 @@ namespace Practices.PhotonPunClient.Network
 
         public void TryAttack()
         {
-            if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _kingLayer))
+            Vector3 attackCastPosition = (transform.position + (Vector3.forward * SPHERCAST_RADIUS) + (Vector3.up * 1.5f));
+
+            if (Physics.SphereCast(attackCastPosition, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _kingLayer))
             {
                 PickableObject pickable = hit.collider.GetComponentInChildren<PickableObject>();
                 PhotonView photonView = hit.collider.GetComponent<ExampleCharacterController>()._photonView;
