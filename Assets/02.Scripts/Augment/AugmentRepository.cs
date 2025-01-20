@@ -1,16 +1,22 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AugmentRepository : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] List<AugmentSpec> _augmentSpecs = new List<AugmentSpec>();
+    public IDictionary<int, AugmentSpec> IaugmentDic => _augmentDic;
+    private Dictionary<int,AugmentSpec> _augmentDic = new Dictionary<int, AugmentSpec> ();
+
+    private void Awake()
     {
-        
+        foreach (AugmentSpec spec in _augmentSpecs)
+        {
+            _augmentDic.Add(spec.augmentId, spec);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public AugmentSpec Get(int id)
     {
-        
+        return _augmentDic[id];
     }
 }
