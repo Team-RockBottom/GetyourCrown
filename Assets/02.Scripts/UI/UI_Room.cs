@@ -57,7 +57,7 @@ namespace GetyourCrown.UI
             _roomPlayerInfoSlot.gameObject.SetActive(false);
             _startGame.onClick.AddListener(() =>
             {
-                //SceneManager.LoadScene("GameScene");
+                SceneManager.LoadScene("GameScene-Workflow");
                 Debug.Log("GameScene");
             });
 
