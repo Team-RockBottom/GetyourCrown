@@ -35,16 +35,17 @@ namespace GetyourCrown.UI
             _joinRoom.interactable = false;
             _joinRoom.onClick.AddListener(() =>
             {
-                UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
                 RoomInfo roomInfo = _roomInfosCashed[_roomIdSelected];
 
                 if (!roomInfo.IsOpen)
                 {
+                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
                     uI_ConfirmWindow.Show("방이 닫혀 있습니다.");
                     return;
                 }
                 if (roomInfo.PlayerCount >= roomInfo.MaxPlayers)
                 {
+                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
                     uI_ConfirmWindow.Show("이 방은 더 이상 참여할 수 없습니다.");
                     return;
                 }

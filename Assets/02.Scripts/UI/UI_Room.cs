@@ -307,6 +307,7 @@ namespace GetyourCrown.UI
         {
             Debug.Log(player.ActorNumber);
             _roomPlayerInfoPairs[player.ActorNumber].slot.playerName = nickName;
+            _roomPlayerInfoSlot.playerName = nickName;
 
         }
     }

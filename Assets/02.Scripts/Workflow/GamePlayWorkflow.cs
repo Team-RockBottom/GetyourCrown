@@ -33,8 +33,8 @@ namespace Practices.PhotonPunClient
             //// TODO -> 증강 보여주는 기능
             //yield return StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
       
-             yield return StartCoroutine(C_WaitUntilCountDown());
-             yield return StartCoroutine(C_WaitUntilGamePlayTime());
+            yield return StartCoroutine(C_WaitUntilCountDown());
+            yield return StartCoroutine(C_WaitUntilGamePlayTime());
         }
 
         void SpawnPlayerCharacterRandomly()
@@ -54,19 +54,19 @@ namespace Practices.PhotonPunClient
 
                 foreach (Player player in PhotonNetwork.PlayerListOthers)
                 {
-                    //if (player.CustomProperties.TryGetValue(PlayerInGamePlayPropertyKey.IS_CHARACTER_SPAWNED, out bool isCharacterSpawned))
-                    //{
-                    //    if (isCharacterSpawned == false)
-                    //    {
-                    //        allReady = false;
-                    //        break;
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    allReady = false;
-                    //    break;
-                    //}
+                    if (player.CustomProperties.TryGetValue(PlayerInGamePlayPropertyKey.IS_CHARACTER_SPAWNED, out bool isCharacterSpawned))
+                    {
+                        if (isCharacterSpawned == false)
+                        {
+                            allReady = false;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        allReady = false;
+                        break;
+                    }
                 }
 
                 if (allReady)
@@ -87,19 +87,19 @@ namespace Practices.PhotonPunClient
 
                 foreach (Player player in PhotonNetwork.PlayerListOthers) //Room의 플레이어 순회
                 {
-                    //if (player.CustomProperties.TryGetValue(PlayerInGamePlayPropertyKey.IS_AUGMENT_SELECTED, out bool isAugmentSelected)) //증강 선택 여부 체크
-                    //{
-                    //    if (isAugmentSelected == false) //증강 선택하지 않은 경우
-                    //    {
-                    //        selected = false;
-                    //        break; //foreach 탈출
-                    //    }
-                    //}
-                    //else //다른 customproperty일 경우
-                    //{
-                    //    selected = false;
-                    //    break; //foreach 탈출
-                    //}
+                    if (player.CustomProperties.TryGetValue(PlayerInGamePlayPropertyKey.IS_AUGMENT_SELECTED, out bool isAugmentSelected)) //증강 선택 여부 체크
+                    {
+                        if (isAugmentSelected == false) //증강 선택하지 않은 경우
+                        {
+                            selected = false;
+                            break; //foreach 탈출
+                        }
+                    }
+                    else //다른 customproperty일 경우
+                    {
+                        selected = false;
+                        break; //foreach 탈출
+                    }
                 }
 
 
@@ -161,6 +161,7 @@ namespace Practices.PhotonPunClient
                 {
                     UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
                     uI_ConfirmWindow.Show("게임 종료");
+                    
                     break;
                 }
                 else
