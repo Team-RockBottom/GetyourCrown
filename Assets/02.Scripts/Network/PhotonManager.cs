@@ -52,14 +52,14 @@ namespace GetyourCrown.Network
             base.OnConnectedToMaster();
 
             PhotonNetwork.AutomaticallySyncScene = true;
-            Debug.Log($"[{nameof(PhotonManager)}] Connected to master server");
+            //Debug.Log($"[{nameof(PhotonManager)}] Connected to master server");
             PhotonNetwork.JoinLobby();
         }
 
         public override void OnJoinedLobby()
         {
             base.OnJoinedLobby();
-            Debug.Log($"[{nameof(PhotonManager)}] Joined Lobby");
+            //Debug.Log($"[{nameof(PhotonManager)}] Joined Lobby");
         }
     }
 }

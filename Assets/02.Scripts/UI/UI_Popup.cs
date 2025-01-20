@@ -1,49 +1,49 @@
-using GetyourCrown.UI.UI_Utilities;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
+    using GetyourCrown.UI.UI_Utilities;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.InputSystem;
+    using UnityEngine.UI;
 
-namespace GetyourCrown.UI
-{
-    public class UI_Popup : UI_Base
+    namespace GetyourCrown.UI
     {
-        [Resolve] Image _panel;
-
-        protected override void Start()
+        public class UI_Popup : UI_Base
         {
-            base.Start();
+            [Resolve] Image _panel;
 
-            playerInputActions.UI.Click.performed += MoveUITop;
-        }
-
-        void MoveUITop(InputAction.CallbackContext context)
-        {
-            if (context.ReadValueAsButton() == false)
-                return;
-
-            Vector2 mousePos = Mouse.current.position.ReadValue();
-
-            if (TryGraphicRaycast(mousePos, out CanvasRenderer renderer))
+            protected override void Start()
             {
-                //다른 팝업 클릭 못하게 하기
+                base.Start();
+
+                playerInputActions.UI.Click.performed += MoveUITop;
             }
-            else
+
+            void MoveUITop(InputAction.CallbackContext context)
             {
-                IEnumerable<UI_Popup> popups = manager.popups;
+                if (context.ReadValueAsButton() == false)
+                    return;
 
-                foreach (UI_Popup popup in popups)
+                Vector2 mousePos = Mouse.current.position.ReadValue();
+
+                if (TryGraphicRaycast(mousePos, out CanvasRenderer renderer))
                 {
-                    if (popup == this)
-                        continue;
 
-                    if (popup.TryGraphicRaycast(mousePos, out renderer))
+                }
+                else
+                {
+                    IEnumerable<UI_Popup> popups = manager.popups;
+
+                    foreach (UI_Popup popup in popups)
                     {
-                        popup.Show();
-                        break;
+                        if (popup == this)
+                            continue;
+
+                        if (popup.TryGraphicRaycast(mousePos, out renderer))
+                        {
+                            popup.Show();
+                            break;
+                        }
                     }
                 }
             }
         }
     }
-}

@@ -14,11 +14,14 @@ namespace GetyourCrown.Workflow
 
         IEnumerator C_TestWorkflow()
         {
-            UI_Manager manager = UI_Manager.instance;
+            UI_Manager ui_Manager = UI_Manager.instance;
 
             yield return new WaitUntil(() => PhotonNetwork.IsConnected);
 
-            manager.Resolve<UI_Lobby>().Show();
+            ui_Manager.Resolve<UI_Lobby>().Show();
+            ui_Manager.Resolve<UI_Room>().Hide();
+
+
         }
     }
 }

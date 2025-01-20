@@ -41,16 +41,17 @@ namespace GetyourCrown.UI
                 if (!roomInfo.IsOpen)
                 {
                     uI_ConfirmWindow.Show("방이 닫혀 있습니다.");
+                    return;
                 }
                 if (roomInfo.PlayerCount >= roomInfo.MaxPlayers)
                 {
                     uI_ConfirmWindow.Show("이 방은 더 이상 참여할 수 없습니다.");
+                    return;
                 }
 
                 PhotonNetwork.JoinRoom(roomInfo.Name);
             });
 
-            //todo -> lobby -> mainmenu
             //_exitLobby.onClick.AddListener(() =>
             //{
 
@@ -95,8 +96,10 @@ namespace GetyourCrown.UI
                 { PlayerInRoomProperty.IS_READY, false }
             });
 
+
             UI_Manager.instance.Resolve<UI_Room>().Show();
         }
+
 
         public void OnJoinRandomFailed(short returnCode, string message)
         {
@@ -182,6 +185,7 @@ namespace GetyourCrown.UI
             {
                 RoomListSlot slot = Instantiate(_roomListSlot, _roomListSlotContent);
                 slot.gameObject.SetActive(true);
+
                 slot.roomId = i;
                 slot.roomName = roomList[i].Name;
                 slot.roomPlayerCount = roomList[i].PlayerCount;

@@ -29,6 +29,7 @@ namespace GetyourCrown.UI.UI_Utilities
             { typeof(Transform), "" },
             { typeof(RectTransform), "" },
             { typeof(GameObject), "" },
+            { typeof(RawImage), "" },
             { typeof(TMP_Text), "Text (TMP) - " },
             { typeof(TextMeshProUGUI), "Text (TMP) - " },
             { typeof(TextMeshPro), "Text (TMP) - " },
@@ -51,7 +52,7 @@ namespace GetyourCrown.UI.UI_Utilities
         {
             Type type = GetType();
             FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
-            StringBuilder stringBulder = new StringBuilder(40);
+            StringBuilder stringBuilder = new StringBuilder(40);
 
             for (int i = 0; i < fieldInfos.Length; i++)
             {
@@ -59,9 +60,9 @@ namespace GetyourCrown.UI.UI_Utilities
 
                 if (resolveAttribute != null)
                 {
-                    stringBulder.Clear();
+                    stringBuilder.Clear();
                     string prefix = ResolvePrefixTable.GetPrefix(fieldInfos[i].FieldType);
-                    stringBulder.Append(prefix);
+                    stringBuilder.Append(prefix);
                     string fieldName = fieldInfos[i].Name;
                     bool isFirstCharacter = true;
 
@@ -72,16 +73,16 @@ namespace GetyourCrown.UI.UI_Utilities
                             if (fieldName[j].Equals('_'))
                                 continue;
 
-                            stringBulder.Append(char.ToUpper(fieldName[j]));
+                            stringBuilder.Append(char.ToUpper(fieldName[j]));
                             isFirstCharacter = false;
                         }
                         else
                         {
-                            stringBulder.Append(fieldName[j]);
+                            stringBuilder.Append(fieldName[j]);
                         }
                     }
 
-                    Transform child = transform.FindChildReculsively(stringBulder.ToString());
+                    Transform child = transform.FindChildReculsively(stringBuilder.ToString());
 
                     if (child)
                     {
@@ -90,7 +91,7 @@ namespace GetyourCrown.UI.UI_Utilities
                     }
                     else
                     {
-                        Debug.Log($"{name} : Can't resolve field {fieldInfos[i].Name}");
+                        Debug.LogError($"[{name}] :Cannot resolve field {fieldInfos[i].Name}");
                     }
                 }
             }

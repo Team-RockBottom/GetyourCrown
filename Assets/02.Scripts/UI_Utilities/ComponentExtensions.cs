@@ -8,7 +8,7 @@ namespace GetyourCrown.UI.UI_Utilities
         {
             foreach (Transform child in component.transform)
             {
-                if(child.name.Equals(childName))
+                if (child.name.Equals(childName))
                 {
                     return child;
                 }
@@ -16,7 +16,7 @@ namespace GetyourCrown.UI.UI_Utilities
                 {
                     Transform grandChild = FindChildReculsively(child, childName);
 
-                    if(grandChild)
+                    if (grandChild)
                         return grandChild;
                 }    
             }
