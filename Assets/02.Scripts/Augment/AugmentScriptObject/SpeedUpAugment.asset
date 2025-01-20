@@ -12,3 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68db3b9d1c4b1b74d958cbbdedf78a18, type: 3}
   m_Name: SpeedUpAugment
   m_EditorClassIdentifier: 
+  <augmentId>k__BackingField: 1
+  <augmentName>k__BackingField: SpeedUp
+  <augmentDescripction>k__BackingField: If you are not wearing a crown, your movement
+    speed will increase by 5% every 2 seconds, up to a maximum of 25%.
+  <augmentIcon>k__BackingField: {fileID: 0}
+  <multiple>k__BackingField: 0
+  <speedIncrease>k__BackingField: 5
+  <increaseCoolDown>k__BackingField: 0
+  <maxSpeedIncrease>k__BackingField: 25
+  <scoreIncrease>k__BackingField: 0

@@ -5,7 +5,7 @@ public class AugmentRepository : MonoBehaviour
 {
     [SerializeField] List<AugmentSpec> _augmentSpecs = new List<AugmentSpec>();
     public IDictionary<int, AugmentSpec> IaugmentDic => _augmentDic;
-    private Dictionary<int,AugmentSpec> _augmentDic = new Dictionary<int, AugmentSpec> ();
+    public Dictionary<int,AugmentSpec> _augmentDic = new Dictionary<int, AugmentSpec> ();
 
     private void Awake()
     {
@@ -19,4 +19,6 @@ public class AugmentRepository : MonoBehaviour
     {
         return _augmentDic[id];
     }
+
+
 }
