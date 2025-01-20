@@ -1,6 +1,6 @@
 using Photon.Pun;
 using Practices.PhotonPunClient;
-using Practices.PhotonPunClient.Network;
+using GetyourCrown.CharacterContorller;
 using UnityEngine;
 
 public class AddController : MonoBehaviour, IPunInstantiateMagicCallback

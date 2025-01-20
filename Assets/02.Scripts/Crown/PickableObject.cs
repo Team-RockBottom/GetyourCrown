@@ -1,6 +1,7 @@
 using Photon.Pun;
 using Photon.Realtime;
-using Practices.PhotonPunClient.Network;
+using GetyourCrown.CharacterContorller;
+using GetyourCrown.Network;
 using UnityEngine;
 using System.Collections;
 

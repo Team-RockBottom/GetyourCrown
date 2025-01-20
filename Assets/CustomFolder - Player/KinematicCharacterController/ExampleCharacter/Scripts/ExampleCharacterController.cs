@@ -6,7 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Crown;
 
-namespace Practices.PhotonPunClient.Network
+namespace GetyourCrown.CharacterContorller
 {
     public enum CharacterState
     {

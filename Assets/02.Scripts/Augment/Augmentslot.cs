@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using Practices.PhotonPunClient.Network;
+using GetyourCrown.Network;
 using Photon.Pun;
 
 namespace Augment

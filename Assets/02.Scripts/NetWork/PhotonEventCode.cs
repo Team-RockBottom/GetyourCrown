@@ -1,4 +1,4 @@
-namespace Practices.PhotonPunClient.Network
+namespace GetyourCrown.Network
 {
     public static class PhotonEventCode
     {

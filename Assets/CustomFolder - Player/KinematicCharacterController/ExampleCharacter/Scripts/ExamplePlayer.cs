@@ -4,7 +4,7 @@ using UnityEngine;
 using KinematicCharacterController;
 using Photon.Pun;
 
-namespace Practices.PhotonPunClient.Network
+namespace GetyourCrown.CharacterContorller
 {
     public class ExamplePlayer : MonoBehaviour
     {

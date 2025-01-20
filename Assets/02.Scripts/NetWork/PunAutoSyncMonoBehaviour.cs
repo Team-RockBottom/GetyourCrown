@@ -3,7 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-namespace Practices.PhotonPunClient.Network
+namespace GetyourCrown.Network
 {
     /// <summary>
     /// 레벨에 미리 배치해둬야하는 동기화필요한 NetworkObject 들은

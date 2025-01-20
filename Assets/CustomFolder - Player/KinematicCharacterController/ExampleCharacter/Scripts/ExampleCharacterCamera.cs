@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
-namespace Practices.PhotonPunClient.Network
+namespace GetyourCrown.CharacterContorller
 {
     public class ExampleCharacterCamera : MonoBehaviour
     {

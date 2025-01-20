@@ -41,6 +41,10 @@ MonoBehaviour:
   - RespawnSpaceship
   - ShowTimer
   - ShowGameTimer
+  - HitCall
+  - InternalDrop
+  - InternalPickUp
+  - StunCall
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
