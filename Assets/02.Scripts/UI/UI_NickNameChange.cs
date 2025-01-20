@@ -15,12 +15,11 @@ namespace GetyourCrown.UI
         {
             base.Start();
 
-            UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
-
             _confirm.onClick.AddListener(() =>
             {
                 if (string.IsNullOrWhiteSpace(_nickNameChange.text))
                 {
+                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
                     uI_ConfirmWindow.Show("닉네임을 입력해주세요.");
                     return;
                 }

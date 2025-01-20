@@ -35,12 +35,11 @@ namespace GetyourCrown.UI
                 }
             });
             
-            UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
-
             _confirm.onClick.AddListener(() =>
             {
                 if (string.IsNullOrWhiteSpace(_roomName.text))
                 {
+                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
                     uI_ConfirmWindow.Show("规 力格阑 涝仿秦林技夸.");
                     return;
                 }

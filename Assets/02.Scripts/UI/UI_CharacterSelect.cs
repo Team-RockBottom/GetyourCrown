@@ -53,9 +53,11 @@ namespace GetyourCrown.UI
                 {
                     { PlayerInRoomProperty.SHOW_CHARACTER_SELECTION, isCharacterSelection == false},
                 });
+                _characterPreviewPos.gameObject.SetActive(false);
 
                 Hide();
             });
+            _characterPreviewPos.gameObject.SetActive(true);
 
             _characterSlot.gameObject.SetActive(false);
             if (onConfirmed != null)

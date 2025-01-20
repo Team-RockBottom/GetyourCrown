@@ -24,6 +24,7 @@ namespace GetyourCrown.UI
         [Resolve] Button _gameReady;
         [Resolve] Button _leftRoom;
         [Resolve] Button _characterChange;
+        [Resolve] Button _nickNameChange;
         [Resolve] TMP_Text _roomName;
         GameObject _currentCharacterCopy = null;
         Camera _characterCamera;
@@ -89,6 +90,12 @@ namespace GetyourCrown.UI
             _leftRoom.onClick.AddListener(() =>
             {
                 PhotonNetwork.LeaveRoom();
+            });
+
+            _nickNameChange.onClick.AddListener(() =>
+            {
+                UI_NickNameChange uI_NickNameChange = UI_Manager.instance.Resolve<UI_NickNameChange>();
+                uI_NickNameChange.Show();
             });
 
             //_characterChange.onClick.AddListener(() =>
