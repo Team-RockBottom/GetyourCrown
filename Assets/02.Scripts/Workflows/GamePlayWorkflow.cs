@@ -13,6 +13,11 @@ namespace Practices.PhotonPunClient
         private void Start()
         {
             StartCoroutine(C_Workflow());
+
+            
+            // TODO 게임시작 카운트 다운
+            // TODO >> 카운트 다운 끝나면 (이거 전까지는 캐릭터 안움직임)게임시작 call 서버시간 체크해서 정확히 5분뒤가 서버시간으로 언제인지 확인하고
+            // 5분뒤에 게임끝(이 이후로는 캐릭터 안움직임)
         }
 
         IEnumerator C_Workflow()
@@ -23,6 +28,7 @@ namespace Practices.PhotonPunClient
             yield return StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
         }
 
+        
         void SpawnPlayerCharacterRandomly()
         {
             Vector2 xz = Random.insideUnitCircle * 5f;
