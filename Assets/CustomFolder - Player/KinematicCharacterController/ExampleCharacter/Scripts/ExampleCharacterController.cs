@@ -2,15 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
-using System;
 using Photon.Pun;
-using Practices.PhotonPunClient.Network;
-using UnityEngine.AI;
-using UnityEngine.InputSystem;
-using Practices.PhotonPunClient;
 using Photon.Realtime;
-using UnityEditor.Sprites;
-//using Practices.PhotonPunClient.Network;
+using Crown;
 
 namespace Practices.PhotonPunClient.Network
 {

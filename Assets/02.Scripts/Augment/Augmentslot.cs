@@ -4,48 +4,50 @@ using UnityEngine.UI;
 using Practices.PhotonPunClient.Network;
 using Photon.Pun;
 
-
-public class Augmentslot : MonoBehaviour
+namespace Augment
 {
-    [SerializeField] TMP_Text _nameText;
-    [SerializeField] TMP_Text _descriptionText;
-    [SerializeField] Image _iconImage;
-    [SerializeField] Button _button;
-    private int _idValue;
-    private string _descriptionValue;
-    private string _nameValue;
-
-    public Sprite iconimage
+    public class Augmentslot : MonoBehaviour
     {
-        get => _iconImage.sprite;
-        set => _iconImage.sprite = value;
-    }
+        [SerializeField] TMP_Text _nameText;
+        [SerializeField] TMP_Text _descriptionText;
+        [SerializeField] Image _iconImage;
+        [SerializeField] Button _button;
+        private int _idValue;
+        private string _descriptionValue;
+        private string _nameValue;
 
-    public int id
-    {
-        get => _idValue;
-        set => _idValue = value;
-    }
+        public Sprite iconimage
+        {
+            get => _iconImage.sprite;
+            set => _iconImage.sprite = value;
+        }
 
-    public string descriptionValue
-    {
-        get => _descriptionValue;
-        set => _descriptionText.text = value;
-    }
+        public int id
+        {
+            get => _idValue;
+            set => _idValue = value;
+        }
 
-    public string nameValue
-    {
-        get => _nameValue;
-        set => _nameText.text = value;
-    }
+        public string descriptionValue
+        {
+            get => _descriptionValue;
+            set => _descriptionText.text = value;
+        }
 
-    private void Awake()
-    {
-        _button.onClick.AddListener(TransferSelectedAugmentId);
-    }
+        public string nameValue
+        {
+            get => _nameValue;
+            set => _nameText.text = value;
+        }
 
-    private void TransferSelectedAugmentId()
-    {
-        //TODO >> 자기 자신의 Charactercontroller 인지 확인하고 맞다면 Id 전달하기
+        private void Awake()
+        {
+            _button.onClick.AddListener(TransferSelectedAugmentId);
+        }
+
+        private void TransferSelectedAugmentId()
+        {
+            //TODO >> 자기 자신의 Charactercontroller 인지 확인하고 맞다면 Id 전달하기
+        }
     }
 }

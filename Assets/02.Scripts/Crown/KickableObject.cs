@@ -1,17 +1,20 @@
 using UnityEngine;
 
-public class KickableObject : MonoBehaviour
+namespace Crown
 {
-    Rigidbody _rigidbody;
-
-    private void Awake()
+    public class KickableObject : MonoBehaviour
     {
-        _rigidbody = GetComponent<Rigidbody>();
-    }
+        Rigidbody _rigidbody;
 
-    public void Kick(Vector3 force)
-    {
-        Debug.Log("call kick");
-        _rigidbody.AddForce(force, ForceMode.Impulse);
+        private void Awake()
+        {
+            _rigidbody = GetComponent<Rigidbody>();
+        }
+
+        public void Kick(Vector3 force)
+        {
+            Debug.Log("call kick");
+            _rigidbody.AddForce(force, ForceMode.Impulse);
+        }
     }
 }
