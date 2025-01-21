@@ -5,6 +5,7 @@ using KinematicCharacterController;
 using Photon.Pun;
 using Photon.Realtime;
 using Crown;
+using Augment;
 
 namespace GetyourCrown.CharacterContorller
 {
@@ -67,12 +68,12 @@ namespace GetyourCrown.CharacterContorller
 
 
         public KinematicCharacterMotor Motor;
-        
+
         [Header("Augment Attachment")]
+        [SerializeField] int _augmentId = -1;
         [SerializeField] float rangeMultiple = 1;
         [SerializeField] float speedMultiple = 1;
-
-
+        [SerializeField] AugmentRepository _augmentRepository;
 
         [Header("Stable Movement")]
         public float MaxStableWalkSpeed = 10f;
@@ -680,6 +681,11 @@ namespace GetyourCrown.CharacterContorller
         [PunRPC]
         public void HitCall(Player player)
         {
+            if (!player.IsLocal)
+            {
+                return;
+            }
+
             if (controllers.TryGetValue(player.ActorNumber, out ExampleCharacterController controller))
             {
                 controller.StartCoroutine(Hit());
@@ -698,5 +704,32 @@ namespace GetyourCrown.CharacterContorller
             Debug.Log(controllers.Count);
         }
 
+        public void AugmentDataReceive(int id)
+        {
+            if (_photonView.IsMine)
+            {
+                _augmentId = id;
+                AugmentSpec augment = _augmentRepository._augmentDic[_augmentId];
+                
+                // TODO : 스위치문 내용 작성할 것
+                switch (augment.augmentId)
+                {
+                    case 0:
+                    default:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                }
+            }
+        }
+
+
+        //public void AugmentDataCall()
+        //{
+        //}
     }
 }
