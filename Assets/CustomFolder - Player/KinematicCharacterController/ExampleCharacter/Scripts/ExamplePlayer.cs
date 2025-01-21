@@ -37,6 +37,7 @@ namespace GetyourCrown.CharacterContorller
 
         Animator _animator;
 
+        UI_Option _uI_Option;
 
         private void Awake()
         {
@@ -64,6 +65,11 @@ namespace GetyourCrown.CharacterContorller
             // Ignore the character's collider(s) for camera obstruction checks
             CharacterCamera.IgnoredColliders.Clear();
             CharacterCamera.IgnoredColliders.AddRange(Character.GetComponentsInChildren<Collider>());
+
+            _uI_Option = UI_Manager.instance.Resolve<UI_Option>();
+            _uI_Option.onHide += () => { _isESC = false; };
+            _uI_Option.onShow += () => { _isESC = true; };
+            _uI_Option.Hide();
         }
 
         private void Update()
@@ -80,17 +86,15 @@ namespace GetyourCrown.CharacterContorller
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                UI_Option uI_Option = UI_Manager.instance.Resolve<UI_Option>();
-                uI_Option.onHide += () => {_isESC = false; };
-                uI_Option.onShow += () => {_isESC = true; };
+                
                 if (_isESC)
                 {
-                    uI_Option.Hide();
+                    _uI_Option.Hide();
                 }
                 else
                 {
                     Cursor.lockState = CursorLockMode.None;
-                    uI_Option.Show();
+                    _uI_Option.Show();
                 }
             }
 
