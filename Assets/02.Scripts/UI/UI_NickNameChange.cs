@@ -24,7 +24,7 @@ namespace GetyourCrown.UI
                     return;
                 }
 
-                PhotonNetwork.NickName = _nickNameChange.text;
+                PhotonNetwork.LocalPlayer.NickName = _nickNameChange.text;
                 UI_Room room = UI_Manager.instance.Resolve<UI_Room>();
                 room.PlayerNickName(PhotonNetwork.LocalPlayer, _nickNameChange.text);
                 
@@ -38,7 +38,7 @@ namespace GetyourCrown.UI
         {
             base.Show();
 
-            _nickNameChange.text = PhotonNetwork.NickName;
+            _nickNameChange.text = PhotonNetwork.LocalPlayer.NickName;
         }
     }
 }

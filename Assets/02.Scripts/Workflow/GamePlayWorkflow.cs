@@ -159,9 +159,8 @@ namespace Practices.PhotonPunClient
 
                 if (elesedTime >= _gamePlayTimeCount)
                 {
-                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
-                    uI_ConfirmWindow.Show("게임 종료");
-                    
+                    _view.RPC("ConfirmWindowShow", RpcTarget.All, "게임 종료");
+
                     break;
                 }
                 else
@@ -177,6 +176,13 @@ namespace Practices.PhotonPunClient
         void ShowGameTimer(int timer)
         {
             gameTimeCountText.text = timer.ToString();
+        }
+
+        [PunRPC]
+        void ConfirmWindowShow(string message)
+        {
+            UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+            uI_ConfirmWindow.Show(message);
         }
     }
 }
