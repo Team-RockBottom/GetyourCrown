@@ -15,7 +15,7 @@ namespace GetyourCrown.UI
         [Resolve] RoomListSlot _roomListSlot;
         [Resolve] Button _createRoom;
         [Resolve] Button _joinRoom;
-        //[Resolve] Button _exitLobby;
+        [Resolve] Button _exitLobby;
         List<RoomListSlot> _roomListSlots = new List<RoomListSlot>(10);
         List<RoomInfo> _roomInfosCashed = new List<RoomInfo>(10);
         int _roomIdSelected = -1;
@@ -53,10 +53,12 @@ namespace GetyourCrown.UI
                 PhotonNetwork.JoinRoom(roomInfo.Name);
             });
 
-            //_exitLobby.onClick.AddListener(() =>
-            //{
-
-            //});
+            _exitLobby.onClick.AddListener(() =>
+            {
+                Hide();
+                UI_MainMenu ui_MainMenu = UI_Manager.instance.Resolve<UI_MainMenu>();
+                ui_MainMenu.Show();
+            });
         }
 
         private void OnEnable()

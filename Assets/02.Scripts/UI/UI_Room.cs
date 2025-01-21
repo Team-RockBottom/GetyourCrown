@@ -24,7 +24,6 @@ namespace GetyourCrown.UI
         [Resolve] Button _gameReady;
         [Resolve] Button _leftRoom;
         [Resolve] Button _characterChange;
-        [Resolve] Button _nickNameChange;
         [Resolve] TMP_Text _roomName;
         GameObject _currentCharacterCopy = null;
         Camera _characterCamera;
@@ -58,7 +57,6 @@ namespace GetyourCrown.UI
             _startGame.onClick.AddListener(() =>
             {
                 SceneManager.LoadScene("GameScene-Workflow");
-                Debug.Log("GameScene");
             });
 
             _gameReady.onClick.AddListener(() =>
@@ -91,18 +89,6 @@ namespace GetyourCrown.UI
             {
                 PhotonNetwork.LeaveRoom();
             });
-
-            _nickNameChange.onClick.AddListener(() =>
-            {
-                UI_NickNameChange uI_NickNameChange = UI_Manager.instance.Resolve<UI_NickNameChange>();
-                uI_NickNameChange.Show();
-            });
-
-            //_characterChange.onClick.AddListener(() =>
-            //{
-            //    UI_NickNameChange uI_NickNameChange = UI_Manager.instance.Resolve<UI_NickNameChange>();
-            //    uI_NickNameChange.Show();
-            //});
         }
 
         public override void Show()
@@ -146,7 +132,6 @@ namespace GetyourCrown.UI
                 PlayerCharacterUpdate(slot, player);
                 slot.gameObject.SetActive(true);
                 _roomPlayerInfoPairs.Add(player.ActorNumber, (player, slot));
-                Debug.Log(player.ActorNumber);
             }
 
             _roomName.text = PhotonNetwork.CurrentRoom.Name;
@@ -166,27 +151,6 @@ namespace GetyourCrown.UI
                 _gameReady.gameObject.SetActive(true);
             }
         }
-
-        /*void PlayerCharacterUpdate(RoomPlayerInfoSlot slot, Player player)
-        {
-            if (player.CustomProperties.TryGetValue(PlayerInRoomProperty.CHARACTER_ID, out int characterId))
-            {
-                CharacterSpec selectedCharacter = _characterSpecs.FirstOrDefault(spec => spec.id == characterId);
-                    
-                if (selectedCharacter != null) //캐릭터가 선택 되어있다면
-                {
-                    slot.playerCharacter = selectedCharacter.sprite.texture; // 해당 캐릭터 이미지 적용
-                }
-                else //캐릭터 선택을 하지 않았다면
-                {
-                    slot.playerCharacter = _characterSpecs[DEFAULT_CHARACTERSELECT].sprite.texture; // 기본 캐릭터 이미지 적용
-                }
-            }
-            else //캐릭터 아이디가 없다면
-            {
-                slot.playerCharacter = _characterSpecs[DEFAULT_CHARACTERSELECT].sprite.texture; // 기본 캐릭터 이미지 적용
-            }
-        }*/
 
         void PlayerCharacterUpdate(RoomPlayerInfoSlot slot, Player player)
         {
@@ -305,7 +269,6 @@ namespace GetyourCrown.UI
 
         public void PlayerNickName(Player player, string nickName)
         {
-            Debug.Log(player.ActorNumber);
             _roomPlayerInfoPairs[player.ActorNumber].slot.playerName = nickName;
             _roomPlayerInfoSlot.playerName = nickName;
 

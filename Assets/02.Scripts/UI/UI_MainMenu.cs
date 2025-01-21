@@ -1,7 +1,8 @@
 using GetyourCrown.UI.UI_Utilities;
+using Photon.Pun;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 namespace GetyourCrown.UI
 {
@@ -17,7 +18,8 @@ namespace GetyourCrown.UI
 
             _start.onClick.AddListener(() =>
             {
-                 SceneManager.LoadScene("TestScene - UI_MultiPlay");
+                StartCoroutine(C_NetworkConnection());
+                Hide();
             });
 
             _option.onClick.AddListener(() =>
@@ -30,6 +32,16 @@ namespace GetyourCrown.UI
             {
                 Application.Quit();
             });
+        }
+
+        IEnumerator C_NetworkConnection()
+        {
+            UI_Manager ui_Manager = UI_Manager.instance;
+
+            yield return new WaitUntil(() => PhotonNetwork.IsConnected);
+
+            ui_Manager.Resolve<UI_Lobby>().Show();
+            ui_Manager.Resolve<UI_Room>().Hide();
         }
     }  
 }

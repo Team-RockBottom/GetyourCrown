@@ -7,7 +7,7 @@ namespace GetyourCrown.Workflow
 {
     public class UI_TestWorkflow : MonoBehaviour
     {
-        private void Start()
+        /*private void Start()
         {
             StartCoroutine(C_TestWorkflow());    
         }
@@ -22,6 +22,6 @@ namespace GetyourCrown.Workflow
             ui_Manager.Resolve<UI_Room>().Hide();
 
 
-        }
+        }*/
     }
 }
