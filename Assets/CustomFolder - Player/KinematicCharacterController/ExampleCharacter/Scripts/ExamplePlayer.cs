@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
 using Photon.Pun;
+using GetyourCrown.UI;
 
 namespace GetyourCrown.CharacterContorller
 {
@@ -28,12 +29,14 @@ namespace GetyourCrown.CharacterContorller
         bool _isAttack = false;
         bool _isPick = false;
         bool _iskick = false;
+        bool _isESC = false;
 
         [SerializeField] float _isAttackDelayTime = 0f;
         [SerializeField] float _isPickDelayTime = 0f;
         [SerializeField] float _isKickDelayTime = 0f;
 
         Animator _animator;
+
 
         private void Awake()
         {
@@ -61,8 +64,6 @@ namespace GetyourCrown.CharacterContorller
             // Ignore the character's collider(s) for camera obstruction checks
             CharacterCamera.IgnoredColliders.Clear();
             CharacterCamera.IgnoredColliders.AddRange(Character.GetComponentsInChildren<Collider>());
-
-            
         }
 
         private void Update()
@@ -72,9 +73,25 @@ namespace GetyourCrown.CharacterContorller
                 return;
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && _isESC == false)
             {
                 Cursor.lockState = CursorLockMode.Locked;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                UI_Option uI_Option = UI_Manager.instance.Resolve<UI_Option>();
+                uI_Option.onHide += () => {_isESC = false; };
+                uI_Option.onShow += () => {_isESC = true; };
+                if (_isESC)
+                {
+                    uI_Option.Hide();
+                }
+                else
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    uI_Option.Show();
+                }
             }
 
             HandleCharacterInput();
