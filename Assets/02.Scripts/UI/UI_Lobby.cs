@@ -3,6 +3,7 @@ using GetyourCrown.UI.UI_Utilities;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -16,6 +17,8 @@ namespace GetyourCrown.UI
         [Resolve] Button _createRoom;
         [Resolve] Button _joinRoom;
         [Resolve] Button _exitLobby;
+        [Resolve] Button _nickNameChange;
+        [Resolve] TMP_Text _nickNameText;
         List<RoomListSlot> _roomListSlots = new List<RoomListSlot>(10);
         List<RoomInfo> _roomInfosCashed = new List<RoomInfo>(10);
         int _roomIdSelected = -1;
@@ -51,6 +54,12 @@ namespace GetyourCrown.UI
                 }
 
                 PhotonNetwork.JoinRoom(roomInfo.Name);
+            });
+
+            _nickNameChange.onClick.AddListener(() =>
+            {
+                UI_NickNameChange uI_NickNameChange = UI_Manager.instance.Resolve<UI_NickNameChange>();
+                uI_NickNameChange.Show();
             });
 
             _exitLobby.onClick.AddListener(() =>
@@ -90,6 +99,8 @@ namespace GetyourCrown.UI
         {
             //UI_ConfirmWindow confirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
             //confirmWindow.Show("로비에 접속하였습니다.");
+
+            NickNameChange();
         }
 
         public void OnJoinedRoom()
@@ -203,6 +214,11 @@ namespace GetyourCrown.UI
                     _joinRoom.interactable = true;
                 }
             }
+        }
+
+        public void NickNameChange()
+        {
+            _nickNameText.text = PhotonNetwork.NickName;
         }
     }
 }
