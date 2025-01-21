@@ -5,19 +5,24 @@ using UnityEngine;
 using ExitGames.Client.Photon.StructWrapping;
 using TMPro;
 using GetyourCrown.UI;
+using Augment;
 
 namespace Practices.PhotonPunClient
 {
     [RequireComponent(typeof(PhotonView))]
     public class GamePlayWorkflow : MonoBehaviour
     {
+        [Header ("GameTimer")]
         [SerializeField] int timeCountValue = 30;
         [SerializeField] TMP_Text timeCountText;
         [SerializeField] TMP_Text gameTimeCountText;
         float _gamePlayTimeCount = 30;
-
         int _timeCount = 0;
         WaitForSeconds _waitFor1Seconds = new WaitForSeconds(1);
+
+        [Header("Augment System")]
+        [SerializeField] Canvas _augmentCanvas;
+        
         PhotonView _view;
 
         private void Start()
@@ -78,12 +83,14 @@ namespace Practices.PhotonPunClient
 
         IEnumerator C_WaitUntilAllPlayerSelectAugment() //증강선택 체크
         {
+            UI_Augment uI_Augment = _augmentCanvas.GetComponent<UI_Augment>();
+            uI_Augment.AugmentSlotRefresh();
+            Cursor.lockState = CursorLockMode.Confined;
             int timeCount = timeCountValue;
 
             while (true)
             {
                 bool selected = true; //루프 탈출 조건 변수
-
 
                 foreach (Player player in PhotonNetwork.PlayerListOthers) //Room의 플레이어 순회
                 {

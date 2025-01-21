@@ -7,11 +7,12 @@ namespace Augment
     public class UI_Augment : MonoBehaviour
     {
         [SerializeField] AugmentRepository _augmentRepository;
-        [SerializeField] Augmentslot[] _augmentPrefab;
+        [SerializeField] Augmentslot[] _augmentPrefab = new Augmentslot[3];
 
-        private void Awake()
+
+        private void Start()
         {
-            AugmentSlotRefresh();
+            _augmentRepository.GetComponent<AugmentRepository>();
         }
 
         /// <summary>
@@ -19,11 +20,16 @@ namespace Augment
         /// </summary>
         public void AugmentSlotRefresh()
         {
-            int[] beforeAugmentIds = new int[2];
 
+            int[] beforeAugmentIds = new int[3];
+            beforeAugmentIds[0] = 99;
+            beforeAugmentIds[1] = 99;
+            beforeAugmentIds[2] = 99;
+
+            Debug.Log(_augmentPrefab.Length);
             for (int i = 0; i < _augmentPrefab.Length; i++)
             {
-                int randomAugmentId = Random.Range(0, _augmentRepository._augmentDic.Count - 1);
+                int randomAugmentId = Random.Range(1, _augmentRepository._augmentDic.Count);
 
                 for (int j = 0; j < beforeAugmentIds.Length; j++)
                 {
@@ -31,9 +37,14 @@ namespace Augment
                     {
                         return;
                     }
+                    else
+                    {
+                        continue;
+                    }
                 }
+                Debug.Log(i);
 
-                _augmentPrefab[i].nameValue = _augmentRepository._augmentDic[randomAugmentId].name;
+                _augmentPrefab[i].nameValue = _augmentRepository._augmentDic[randomAugmentId].augmentName;
                 _augmentPrefab[i].descriptionValue = _augmentRepository._augmentDic[randomAugmentId].augmentDescripction;
                 _augmentPrefab[i].iconimage = _augmentRepository._augmentDic[randomAugmentId].augmentIcon;
                 beforeAugmentIds[i] = randomAugmentId;

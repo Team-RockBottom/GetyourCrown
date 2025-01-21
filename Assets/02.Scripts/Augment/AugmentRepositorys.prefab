@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2654268361279731397}
   - component: {fileID: 7761197705304592585}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: AugmentRepositorys
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _augmentSpecs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: a8897bc15356ce9468a1a5fe95eb57f0, type: 2}
+  - {fileID: 11400000, guid: ac2084a49d92b104799c42d31717fcba, type: 2}
+  - {fileID: 11400000, guid: dcf69a36bf67e23489999287598f9265, type: 2}
+  - {fileID: 11400000, guid: 99fae93d943d64740ad72e50be3a1504, type: 2}
+  - {fileID: 11400000, guid: 4890188f98f83a34bba82430f5bebda3, type: 2}

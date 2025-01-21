@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: AttackUp
   m_EditorClassIdentifier: 
   <augmentId>k__BackingField: 2
-  <augmentName>k__BackingField: 
-  <augmentDescripction>k__BackingField: 
+  <augmentName>k__BackingField: AttackUp
+  <augmentDescripction>k__BackingField: AttackUp
   <augmentIcon>k__BackingField: {fileID: 0}
   <multiple>k__BackingField: 0
   <speedIncrease>k__BackingField: 0
   <increaseCoolDown>k__BackingField: 0
   <maxSpeedIncrease>k__BackingField: 0
   <scoreIncrease>k__BackingField: 0
+  <increaseValue>k__BackingField: 0

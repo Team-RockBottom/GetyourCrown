@@ -6,7 +6,7 @@ using Photon.Pun;
 
 namespace GetyourCrown.CharacterContorller
 {
-    public class ExamplePlayer : MonoBehaviour
+    public class ExamplePlayer : MonoBehaviour, IAnimationController
     {
         PhotonView _photonView;
 
@@ -25,21 +25,46 @@ namespace GetyourCrown.CharacterContorller
         /// <summary>
         /// 딜레이를 위한 bool타입변수
         /// </summary>
-        bool _isAttack = false;
-        bool _isPick = false;
-        bool _iskick = false;
+        bool _isWorking = false;
+        bool _inAir = false;
 
         [SerializeField] float _isAttackDelayTime = 0f;
         [SerializeField] float _isPickDelayTime = 0f;
         [SerializeField] float _isKickDelayTime = 0f;
 
+
         Animator _animator;
+
+        readonly int STATE_HASH = Animator.StringToHash("State");
+        readonly int IS_DIRTY_HASH = Animator.StringToHash("IsDirty");
+        readonly int SPEED_HASH = Animator.StringToHash("Speed");
+        readonly int IS_GROUNDED_HASH = Animator.StringToHash("IsGrounded");
+        readonly int IS_STUN = Animator.StringToHash("IsStun");
+        readonly int IS_HIT = Animator.StringToHash("IsHit");
+        readonly int AUGMENT = Animator.StringToHash("Augment");
+
+        const float MOVING_STOP = 0;
+        const float MOVING_WALK = 0.5f;
+        const float MOVING_RUN = 1;
+        [SerializeField] const float DEFAULT_DELAY_TIME =1f;
+
+
+        public State currentState { get; private set; }
+
+        public bool isTransitioning => _animator.GetBool(IS_DIRTY_HASH);
 
         private void Awake()
         {
             _photonView = GetComponent<PhotonView>();
             Character = GetComponent<ExampleCharacterController>();
             _animator = Character.GetComponent<Animator>();
+
+            StateMachineBehaviourBase[] behaviours = _animator.GetBehaviours<StateMachineBehaviourBase>();
+
+            for (int i = 0; i < behaviours.Length; i++)
+            {
+                behaviours[i].onStateEntered += state => currentState = state;
+            }
         }
         private void Start()
         {
@@ -68,6 +93,11 @@ namespace GetyourCrown.CharacterContorller
         private void Update()
         {
             if (!_photonView.IsMine)
+            {
+                return;
+            }
+
+            if (_isWorking)
             {
                 return;
             }
@@ -124,7 +154,6 @@ namespace GetyourCrown.CharacterContorller
 
         private void HandleCharacterInput()
         {
-
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
 
             // Build the CharacterInputs struct
@@ -140,108 +169,101 @@ namespace GetyourCrown.CharacterContorller
 
             float axisCheck = Mathf.Abs(Input.GetAxisRaw(VerticalInput)) + Mathf.Abs(Input.GetAxisRaw(HorizontalInput));
 
-            //걷기 뛰기 애니메이션 세팅
             if (axisCheck <= 0)
             {
-                _animator.SetFloat("Speed", 0);
+                _animator.SetFloat(SPEED_HASH, MOVING_STOP);
             }
             else if (axisCheck > 0)
             {
                 if (characterInputs.Run)
-                    _animator.SetFloat("Speed", 1f);
+                    _animator.SetFloat(SPEED_HASH, MOVING_RUN);
                 else
-                    _animator.SetFloat("Speed", 0.5f);
+                    _animator.SetFloat(SPEED_HASH, MOVING_WALK);
             }
 
-            //
             if (characterInputs.JumpDown)
             {
-                Debug.Log("Jump Call");
-
-                if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
+                if (_inAir)
                 {
-                    float aniTime = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-
-                    if (aniTime < 1 && aniTime > 0)
-                    {
-                        return;
-                    }
+                    return;
                 }
-                _animator.SetBool("IsGrounded", false);
-            }
-            else
-            {
-                if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && !Character._isGround)
-                {
-                    float aniTime = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-
-                    if (aniTime >= 1)
-                    {
-                        _animator.SetBool("IsGrounded", true);
-                    }
-                }
+                _inAir = true;
+                StartCoroutine(Jumping());
             }
 
-            // 진행중인 애니메이션이 있으면 return
 
-            if (characterInputs.Pickable && _isPick == false)
+            if (characterInputs.Pickable)
             {
-                Debug.Log("LC Input in");
-                _animator.SetInteger("State", 2);
-                _animator.SetBool("IsDirty", true);
-                Character.TryPickUp();
-                StartCoroutine(PickDelay());
-                //characterInputs.Pickable = false;
-            }
-            else
-            {
-                _animator.SetInteger("State", 0);
-                _animator.SetBool("IsDirty", false);
+                _isWorking = true;
+                StartCoroutine(Picking());
             }
 
 
             // 플레이어 Attack
-            if (characterInputs.Attack && _isAttack == false)
+            if (characterInputs.Attack)
             {
-                _animator.SetInteger("State", 1);
-                _animator.SetBool("IsDirty", true);
-                Character.TryAttack();
-                StartCoroutine(AttackDelay());
-
+                _isWorking = true;
+                StartCoroutine(Attacking());
             }
 
-            // 왕관 Kick
-            if (characterInputs.Kickable && _iskick == false)
+            // 왕관 Kick //시작할때 눌리는 버그 있음
+            if (characterInputs.Kickable)
             {
-                _animator.SetInteger("State", 3);
-                _animator.SetBool("IsDirty", true);
-                Character.TryKick();
-                StartCoroutine(KickDelay());
+                Debug.Log("LC Call");
+                _isWorking = true;
             }
+            StartCoroutine(Kicking());
             // Apply inputs to character
             Character.SetInputs(ref characterInputs);
         }
 
-
-        IEnumerator AttackDelay()
+        IEnumerator Jumping()
         {
-            _isAttack = true;
-            yield return new WaitForSeconds(_isAttackDelayTime);
-            _isAttack = false;
+            _animator.SetInteger(STATE_HASH, (int)State.Jump);
+            _animator.SetBool(IS_GROUNDED_HASH, false);
+            _animator.SetBool(IS_DIRTY_HASH, true);
+            //TODO GroundCheck
+            yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
+            _animator.SetBool(IS_GROUNDED_HASH, true);
+            _animator.SetInteger(STATE_HASH, (int)State.Move);
+            _inAir = false;
         }
 
-        IEnumerator PickDelay()
+        IEnumerator Picking()
         {
-            _isPick = true;
-            yield return new WaitForSeconds(_isPickDelayTime);
-            _isPick = false;
+            _animator.SetInteger(STATE_HASH, (int)State.Pick);
+            _animator.SetBool(IS_DIRTY_HASH, true);
+            Character.TryPickUp();
+            yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
+            _animator.SetInteger(STATE_HASH, (int)State.Move);
+            _isWorking = false;
         }
 
-        IEnumerator KickDelay()
+        IEnumerator Attacking()
         {
-            _iskick = true;
-            yield return new WaitForSeconds(_isKickDelayTime);
-            _iskick = false;
+            _animator.SetInteger(STATE_HASH, (int)State.Attack);
+            _animator.SetBool(IS_DIRTY_HASH, true); 
+            Character.TryAttack();
+            yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
+            _animator.SetInteger(STATE_HASH, (int)State.Move);
+            _isWorking = false;
+        }
+
+        IEnumerator Kicking()
+        {
+            _animator.SetInteger(STATE_HASH, (int)State.Kick);
+            _animator.SetBool(IS_DIRTY_HASH, true);
+            Character.TryKick();
+            yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
+            _animator.SetInteger(STATE_HASH, (int)State.Move);
+            _isWorking = false;
+        }
+
+
+        public void ChangeState(State newState)
+        {
+            _animator.SetInteger(STATE_HASH, (int)newState);
+            _animator.SetBool(IS_DIRTY_HASH, true);
         }
     }
 }
