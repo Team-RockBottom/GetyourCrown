@@ -62,7 +62,7 @@ namespace GetyourCrown.CharacterContorller
         Animator _animator;
         bool _isStun = false;
 
-        [SerializeField] PhotonView _photonView;
+        PhotonView _photonView;
         ExampleCharacterController _controller;
         [SerializeField] LayerMask _kingLayer;
 
@@ -125,6 +125,14 @@ namespace GetyourCrown.CharacterContorller
 
         private void Awake()
         {
+            _photonView = GetComponent<PhotonView>();
+
+            if (!_photonView.IsMine)
+            {
+                Motor.enabled = false;
+                return;
+            }
+
             // Handle initial state
             TransitionToState(CharacterState.Default);
             // Assign the characterController to the motor
