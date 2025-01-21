@@ -25,7 +25,7 @@ namespace GetyourCrown.UI
         [Resolve] Button _leftRoom;
         [Resolve] Button _characterChange;
         [Resolve] TMP_Text _roomName;
-        GameObject _currentCharacterCopy = null;
+        private Dictionary<int, GameObject> _slotCharacterPrefabs;
         Camera _characterCamera;
         public Dictionary<int, (Player player, RoomPlayerInfoSlot slot)> _roomPlayerInfoPairs;
         private CharacterSpec[] _characterSpecs;
@@ -37,9 +37,10 @@ namespace GetyourCrown.UI
             base.Awake();
 
             _roomPlayerInfoPairs = new Dictionary<int, (Player player, RoomPlayerInfoSlot slot)>(16);
+            _slotCharacterPrefabs = new Dictionary<int, GameObject>(16);
         }
 
-        private void OnEnable()
+    private void OnEnable()
         {
             PhotonNetwork.AddCallbackTarget(this);
         }
@@ -178,42 +179,50 @@ namespace GetyourCrown.UI
 
                 if (selectedCharacter != null) // 캐릭터가 선택 되어있다면
                 {
-                    slot.playerCharacter = RenderCharacterToTexture(selectedCharacter.prefab);
+                    RenderTexture slotRenderTexture = new RenderTexture(512, 512, 32);
+                    slot.playerCharacter = RenderCharacterToTexture(selectedCharacter.prefab, player.ActorNumber);
                 }
                 else // 캐릭터 선택을 하지 않았다면
                 {
-                    slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DEFAULT_CHARACTERSELECT].prefab);
+                    RenderTexture slotRenderTexture = new RenderTexture(512, 512, 32);
+                    slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DEFAULT_CHARACTERSELECT].prefab, player.ActorNumber);
                 }
             }
             else // 캐릭터 아이디가 없다면
             {
-                slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DEFAULT_CHARACTERSELECT].prefab);
+                RenderTexture slotRenderTexture = new RenderTexture(512, 512, 32);
+                slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DEFAULT_CHARACTERSELECT].prefab, player.ActorNumber);
             }
         }
 
-        public Texture RenderCharacterToTexture(GameObject characterPrefab)
+        public Texture RenderCharacterToTexture(GameObject characterPrefab, int slotIndex)
         {
-            if (_currentCharacterCopy != null)
+            string cameraName = $"CharacterCamera_Slot{slotIndex}";
+
+            GameObject lastCamera = GameObject.Find(cameraName);
+            if (lastCamera != null)
             {
-                Destroy(_currentCharacterCopy);
+                Destroy(lastCamera);
+            }
+
+            if (_slotCharacterPrefabs.TryGetValue(slotIndex, out GameObject lastCharacter))
+            {
+                Destroy(lastCharacter);
+                _slotCharacterPrefabs.Remove(slotIndex);
             }
 
             GameObject characterClone = Instantiate(characterPrefab);
-            _currentCharacterCopy = characterClone;
-            characterClone.transform.position = new Vector3(-20, -1, 0);
+            characterClone.transform.position = new Vector3(-20 * slotIndex, -1, 0);
             characterClone.transform.localScale = Vector3.one;
             characterClone.transform.localRotation = Quaternion.Euler(0, 180, 0);
+            _slotCharacterPrefabs[slotIndex] = characterClone;
 
-            if (_characterCamera == null)
-            {
-                _characterCamera = new GameObject("RoomInfoCharacterCamera").AddComponent<Camera>();
-                _characterCamera.transform.position = new Vector3(-20, 0, -2.25f);
-            }
-
-            RenderTexture renderTexture = new RenderTexture(512, 512, 32);
-            _characterCamera.targetTexture = renderTexture;
-
+            _characterCamera = new GameObject(cameraName).AddComponent<Camera>();
+            _characterCamera.transform.position = new Vector3(-20 * slotIndex, 0, -2.25f);
             _characterCamera.clearFlags = CameraClearFlags.SolidColor;
+            RenderTexture renderTexture = new RenderTexture(512, 512, 32);
+
+            _characterCamera.targetTexture = renderTexture;
             _characterCamera.Render();  
 
             return renderTexture;
@@ -269,8 +278,9 @@ namespace GetyourCrown.UI
 
                     if (selectedCharacter != null) // 선택된 캐릭터가 존재하는 경우
                     {
+                        RenderTexture slotRenderTexture = new RenderTexture(512, 512, 32);
                         // 캐릭터 이미지를 설정
-                        pair.slot.playerCharacter = RenderCharacterToTexture(selectedCharacter.prefab); // 선택된 캐릭터의 이미지를 해당 플레이어 슬롯에 표시
+                        pair.slot.playerCharacter = RenderCharacterToTexture(selectedCharacter.prefab, targetPlayer.ActorNumber); // 선택된 캐릭터의 이미지를 해당 플레이어 슬롯에 표시
                     }
                 }
 
@@ -279,7 +289,7 @@ namespace GetyourCrown.UI
                 {
                     pair.slot.isCharacterSelect = isCharacterSelection;
                 }
-            }
+            }   
         }
 
         public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
