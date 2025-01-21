@@ -28,10 +28,10 @@ namespace Practices.PhotonPunClient
 
         IEnumerator C_Workflow()
         {
-            //SpawnPlayerCharacterRandomly();
-            //yield return StartCoroutine(C_WaitUntilAllPlayerCharactersAreSpawned());
-            //// TODO -> 증강 보여주는 기능
-            //yield return StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
+            SpawnPlayerCharacterRandomly();
+            yield return StartCoroutine(C_WaitUntilAllPlayerCharactersAreSpawned());
+            // TODO -> 증강 보여주는 기능
+            yield return StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
       
             yield return StartCoroutine(C_WaitUntilCountDown());
             yield return StartCoroutine(C_WaitUntilGamePlayTime());
@@ -41,7 +41,7 @@ namespace Practices.PhotonPunClient
         {
             Vector2 xz = Random.insideUnitCircle * 5f;
             Vector3 randomPosition = new Vector3(xz.x, 0f, xz.y);
-            GameObject testPlayer = PhotonNetwork.Instantiate("PhotonNetworkObjects/TestPlayer",
+            GameObject testPlayer = PhotonNetwork.Instantiate("Character/TestPlayer",
                                       randomPosition,
                                       Quaternion.identity);
         }
