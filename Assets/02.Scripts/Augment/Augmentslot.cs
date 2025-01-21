@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using GetyourCrown.Network;
 using Photon.Pun;
 using GetyourCrown.CharacterContorller;
+using Photon.Realtime;
 
 namespace Augment
 {
@@ -49,8 +50,8 @@ namespace Augment
         private void TransferSelectedAugmentId()
         {
             //TODO >> 자기 자신의 Charactercontroller 인지 확인하고 맞다면 Id 전달하기
-            ExampleCharacterController controller = new ExampleCharacterController();
-            controller.AugmentDataReceive(_idValue);
+
+            //controller.AugmentDataReceive(_idValue);
         }
     }
 }

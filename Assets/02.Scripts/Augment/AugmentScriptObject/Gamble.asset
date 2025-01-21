@@ -12,3 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68db3b9d1c4b1b74d958cbbdedf78a18, type: 3}
   m_Name: Gamble
   m_EditorClassIdentifier: 
+  <augmentId>k__BackingField: 5
+  <augmentName>k__BackingField: Gamble
+  <augmentDescripction>k__BackingField: Decoy
+  <augmentIcon>k__BackingField: {fileID: 0}
+  <multiple>k__BackingField: 0
+  <speedIncrease>k__BackingField: 0
+  <increaseCoolDown>k__BackingField: 0
+  <maxSpeedIncrease>k__BackingField: 0
+  <scoreIncrease>k__BackingField: 0
+  <increaseValue>k__BackingField: 2
