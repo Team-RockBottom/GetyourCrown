@@ -8,10 +8,10 @@ namespace GetyourCrown.CharacterContorller
 {
     public class ExamplePlayer : MonoBehaviour
     {
-        [SerializeField] PhotonView _photonView;
+        PhotonView _photonView;
 
-        public ExampleCharacterController Character;
-        public ExampleCharacterCamera CharacterCamera;
+        ExampleCharacterController Character;
+        ExampleCharacterCamera CharacterCamera;
 
         private const string MouseXInput = "Mouse X";
         private const string MouseYInput = "Mouse Y";
@@ -37,11 +37,22 @@ namespace GetyourCrown.CharacterContorller
 
         private void Awake()
         {
+            _photonView = GetComponent<PhotonView>();
+            Character = GetComponent<ExampleCharacterController>();
             _animator = Character.GetComponent<Animator>();
-
         }
         private void Start()
         {
+
+            if (_photonView.IsMine)
+            {
+                CharacterCamera = Camera.main.GetComponent<ExampleCharacterCamera>();
+            }
+            else
+            {
+                return;
+            }
+
             Cursor.lockState = CursorLockMode.Locked;
 
             // Tell camera to follow transform
@@ -51,20 +62,16 @@ namespace GetyourCrown.CharacterContorller
             CharacterCamera.IgnoredColliders.Clear();
             CharacterCamera.IgnoredColliders.AddRange(Character.GetComponentsInChildren<Collider>());
 
-            if (_photonView.IsMine)
-            {
-                CharacterCamera.tag = "MainCamera";
-                GetComponent<AudioListener>().enabled = true;
-            }
-            else
-            {
-                CharacterCamera.gameObject.SetActive(false);
-                gameObject.SetActive(false);
-            }
+            
         }
 
         private void Update()
         {
+            if (!_photonView.IsMine)
+            {
+                return;
+            }
+
             if (Input.GetMouseButtonDown(0))
             {
                 Cursor.lockState = CursorLockMode.Locked;
@@ -75,6 +82,11 @@ namespace GetyourCrown.CharacterContorller
 
         private void LateUpdate()
         {
+            if (!_photonView.IsMine)
+            {
+                return;
+            }
+
             // Handle rotating the camera along with physics movers
             if (CharacterCamera.RotateWithPhysicsMover && Character.Motor.AttachedRigidbody != null)
             {
