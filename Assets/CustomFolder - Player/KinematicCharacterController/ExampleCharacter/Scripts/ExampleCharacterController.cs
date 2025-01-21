@@ -718,10 +718,16 @@ namespace GetyourCrown.CharacterContorller
                     default:
                         break;
                     case 1:
+                        speedMultiple = augment.speedIncrease;
                         break;
                     case 2:
+                        rangeMultiple = augment.increaseValue;
                         break;
                     case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
                         break;
                 }
             }

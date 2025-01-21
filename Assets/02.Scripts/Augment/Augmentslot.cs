@@ -52,7 +52,5 @@ namespace Augment
             ExampleCharacterController controller = new ExampleCharacterController();
             controller.AugmentDataReceive(_idValue);
         }
-
-
     }
 }

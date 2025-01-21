@@ -15,5 +15,6 @@ namespace Augment
         [field: SerializeField] public float increaseCoolDown { get; set; }
         [field: SerializeField] public float maxSpeedIncrease { get; set; }
         [field: SerializeField] public float scoreIncrease { get; set; }
+        [field: SerializeField] public float increaseValue { get; set; }
     }
 }
