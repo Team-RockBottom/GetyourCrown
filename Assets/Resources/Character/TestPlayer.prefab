@@ -2875,6 +2875,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 131072
   Motor: {fileID: 2031269557768178378}
+  _augmentId: -1
+  rangeMultiple: 1
+  speedMultiple: 1
+  _augmentRepository: {fileID: 0}
   MaxStableWalkSpeed: 10
   MaxStableRunSpeed: 15
   StableMovementSharpness: 15
@@ -2901,7 +2905,6 @@ MonoBehaviour:
   _crownLayer:
     serializedVersion: 2
     m_Bits: 32768
-  rangeMultiple: 1
   _kickPower: 20
 --- !u!114 &8260400133957772014
 MonoBehaviour:
