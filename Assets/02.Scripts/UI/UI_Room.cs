@@ -266,12 +266,5 @@ namespace GetyourCrown.UI
         public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
         {
         }
-
-        public void PlayerNickName(Player player, string nickName)
-        {
-            _roomPlayerInfoPairs[player.ActorNumber].slot.playerName = nickName;
-            _roomPlayerInfoSlot.playerName = nickName;
-
-        }
     }
 }

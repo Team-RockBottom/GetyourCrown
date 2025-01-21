@@ -89,6 +89,7 @@ namespace GetyourCrown.CharacterContorller
                 
                 if (_isESC)
                 {
+                    Cursor.lockState = CursorLockMode.Locked;
                     _uI_Option.Hide();
                 }
                 else

@@ -32,9 +32,12 @@ namespace Practices.PhotonPunClient
             yield return StartCoroutine(C_WaitUntilAllPlayerCharactersAreSpawned());
             // TODO -> 증강 보여주는 기능
             yield return StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
-      
-            yield return StartCoroutine(C_WaitUntilCountDown());
-            yield return StartCoroutine(C_WaitUntilGamePlayTime());
+
+            if(PhotonNetwork.IsMasterClient)
+            {
+                yield return StartCoroutine(C_WaitUntilCountDown());
+                yield return StartCoroutine(C_WaitUntilGamePlayTime());
+            }
         }
 
         void SpawnPlayerCharacterRandomly()
@@ -159,14 +162,21 @@ namespace Practices.PhotonPunClient
 
                 if (elesedTime >= _gamePlayTimeCount)
                 {
-                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
-                    uI_ConfirmWindow.Show("게임 종료");
-                    
+                    _view.RPC(nameof(ConfirmWindowShow), RpcTarget.All, "게임 종료");
+
                     break;
                 }
                 else
                 {
                     _view.RPC("ShowGameTimer", RpcTarget.All, intTime);
+                }
+
+                foreach(Player player in PhotonNetwork.PlayerList)
+                {
+                    if(player.CustomProperties.TryGetValue(PlayerInGamePlayPropertyKey.IS_CROWN_PICK_UP, out bool isCrownPickUp))
+                    { 
+                        
+                    }
                 }
 
                 yield return _waitFor1Seconds;
@@ -177,6 +187,13 @@ namespace Practices.PhotonPunClient
         void ShowGameTimer(int timer)
         {
             gameTimeCountText.text = timer.ToString();
+        }
+
+        [PunRPC]
+        void ConfirmWindowShow(string message)
+        {
+            UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+            uI_ConfirmWindow.Show(message);
         }
     }
 }
