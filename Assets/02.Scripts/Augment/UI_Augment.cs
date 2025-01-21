@@ -8,11 +8,10 @@ namespace Augment
     {
         [SerializeField] AugmentRepository _augmentRepository;
         [SerializeField] Augmentslot[] _augmentPrefab;
-        private Button[] _button;
 
         private void Awake()
         {
-
+            AugmentSlotRefresh();
         }
 
         /// <summary>
@@ -40,6 +39,7 @@ namespace Augment
                 beforeAugmentIds[i] = randomAugmentId;
             }
         }
+
 
         /// <summary>
         /// 선택한 증강 적용 버튼에 구독

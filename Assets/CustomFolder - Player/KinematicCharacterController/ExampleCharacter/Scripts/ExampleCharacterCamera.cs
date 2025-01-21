@@ -9,10 +9,9 @@ namespace GetyourCrown.CharacterContorller
 {
     public class ExampleCharacterCamera : MonoBehaviour
     {
-        [SerializeField] PhotonView _photonView;
 
         [Header("Framing")]
-        public Camera Camera;
+        [SerializeField] Camera Camera;
         public Vector2 FollowPointFraming = new Vector2(0f, 0f);
         public float FollowingSharpness = 10000f;
 
