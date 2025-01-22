@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Crown;
 using Augment;
+using static UnityEngine.Rendering.HableCurve;
 
 namespace GetyourCrown.CharacterContorller
 {
@@ -139,7 +140,16 @@ namespace GetyourCrown.CharacterContorller
             Motor.CharacterController = this;
         }
 
+        private void OnEnable()
+        {
+            //일단 이벤트 등록
+            UI_Augment.OnAugmentSelected += HandleAugmentSelected;
+        }
 
+        private void OnDisable()
+        {
+            UI_Augment.OnAugmentSelected -= HandleAugmentSelected;
+        }
 
         /// <summary>
         /// Handles movement state transitions and enter/exit callbacks
@@ -712,38 +722,58 @@ namespace GetyourCrown.CharacterContorller
             Debug.Log(controllers.Count);
         }
 
-        public void AugmentDataReceive(int id)
+        //public void AugmentDataReceive(int id)
+        //{
+        //    if (_photonView.IsMine)
+        //    {
+        //        _augmentId = id;
+        //        AugmentSpec augment = _augmentRepository._augmentDic[_augmentId];
+
+        //        // TODO : 스위치문 내용 작성할 것
+        //        switch (augment.augmentId)
+        //        {
+        //            case 0:
+        //            default:
+        //                break;
+        //            case 1:
+        //                speedMultiple = augment.speedIncrease;
+        //                break;
+        //            case 2:
+        //                rangeMultiple = augment.increaseValue;
+        //                break;
+        //            case 3:
+        //                break;
+        //            case 4:
+        //                break;
+        //            case 5:
+        //                break;
+        //        }
+        //    }
+        //}
+
+
+        /// <summary>
+        /// 이벤트 발생하면 실행
+        /// </summary>
+        /// <param name="augmentId"></param>
+        void HandleAugmentSelected(int augmentId)
         {
-            if (_photonView.IsMine)
+            Debug.Log("이벤트 발생해서 캐릭터 컨트롤러에서 호출");
+            AugmentSpec augment = _augmentRepository._augmentDic[_augmentId];
+            // 스위치문을 이용해 특정 변수 값 변경
+            switch (augmentId)
             {
-                _augmentId = id;
-                AugmentSpec augment = _augmentRepository._augmentDic[_augmentId];
-                
-                // TODO : 스위치문 내용 작성할 것
-                switch (augment.augmentId)
-                {
-                    case 0:
-                    default:
-                        break;
-                    case 1:
-                        speedMultiple = augment.speedIncrease;
-                        break;
-                    case 2:
-                        rangeMultiple = augment.increaseValue;
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                    case 5:
-                        break;
-                }
+                case 0:
+                default:
+                    break;
+                case 1:
+                    speedMultiple = augment.speedIncrease;
+                    break;
+                case 2:
+                    rangeMultiple = augment.increaseValue;
+                    break;
             }
         }
 
-
-        //public void AugmentDataCall()
-        //{
-        //}
     }
 }

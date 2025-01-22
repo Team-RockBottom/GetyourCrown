@@ -59,6 +59,10 @@ MonoBehaviour:
   - {fileID: 2574758858819572603}
   - {fileID: 4375435916651873404}
   - {fileID: 8987913303119616666}
+  _augmentationButtons:
+  - {fileID: 8637445952477455188}
+  - {fileID: 7556359672655230035}
+  - {fileID: 2944867457153968821}
 --- !u!223 &3105187537455124144
 Canvas:
   m_ObjectHideFlags: 0
