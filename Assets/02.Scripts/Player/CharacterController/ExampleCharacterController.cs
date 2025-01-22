@@ -76,6 +76,8 @@ namespace GetyourCrown.CharacterContorller
         [SerializeField] float speedMultiple = 1;
         [SerializeField] AugmentRepository _augmentRepository;
 
+        private UI_Augment _uiAugment;
+        
         [Header("Stable Movement")]
         public float MaxStableWalkSpeed = 10f;
         public float MaxStableRunSpeed = 15f;
@@ -126,8 +128,10 @@ namespace GetyourCrown.CharacterContorller
 
         private void Awake()
         {
+            //_uiAugment = GameObject.Find("AugmentSelected").GetComponent<UI_Augment>();
             _photonView = GetComponent<PhotonView>();
 
+            
             if (!_photonView.IsMine)
             {
                 Motor.enabled = false;
@@ -140,16 +144,24 @@ namespace GetyourCrown.CharacterContorller
             Motor.CharacterController = this;
         }
 
-        private void OnEnable()
+        private void Start()
         {
-            //일단 이벤트 등록
-            UI_Augment.OnAugmentSelected += HandleAugmentSelected;
+            if (!PhotonNetwork.IsConnected)
+            {
+                Debug.LogError("Photon is not connected!");
+                return;
+            }
+
+            if (PhotonNetwork.LocalPlayer.TagObject is ExampleCharacterController controller)
+            {
+                UI_Augment.OnAugmentSelected += controller.HandleAugmentSelected;
+            }
+            else
+            {
+                Debug.LogError("ExampleCharacterController not found for the local player.");
+            }
         }
 
-        private void OnDisable()
-        {
-            UI_Augment.OnAugmentSelected -= HandleAugmentSelected;
-        }
 
         /// <summary>
         /// Handles movement state transitions and enter/exit callbacks
@@ -759,7 +771,7 @@ namespace GetyourCrown.CharacterContorller
         void HandleAugmentSelected(int augmentId)
         {
             Debug.Log("이벤트 발생해서 캐릭터 컨트롤러에서 호출");
-            AugmentSpec augment = _augmentRepository._augmentDic[_augmentId];
+            AugmentSpec augment = _augmentRepository._augmentDic[augmentId];
             // 스위치문을 이용해 특정 변수 값 변경
             switch (augmentId)
             {
@@ -767,11 +779,22 @@ namespace GetyourCrown.CharacterContorller
                 default:
                     break;
                 case 1:
+                    Debug.Log("Switch 1 Call");
                     speedMultiple = augment.speedIncrease;
                     break;
                 case 2:
+                    Debug.Log("Switch 2 Call");
                     rangeMultiple = augment.increaseValue;
                     break;
+                case 3:
+                    Debug.Log("Switch 3 Call");
+                    break;
+                case 4:
+                    Debug.Log("Switch 4 Call");
+                    break;
+                case 5:
+                    Debug.Log("Switch 5 Call");
+                break;
             }
         }
 

@@ -10,23 +10,22 @@ namespace Augment
     {
         [SerializeField] AugmentRepository _augmentRepository;
         [SerializeField] Augmentslot[] _augmentPrefab = new Augmentslot[3];
-        [SerializeField] Button[] _augmentationButtons = new Button[3];
+        [SerializeField] Button[] _augmentationButtons;
         private int selectedAugmentId = -1;
 
-        public static event Action<int> OnAugmentSelected;
-        
-        
-        private void Start()
+        public static event Action<int> OnAugmentSelected; //선택 이벤트
+
+        private void Awake()
         {
             _augmentRepository.GetComponent<AugmentRepository>();
-            AugmentSlotRefresh();
 
-            for (int i = 0; i < _augmentationButtons.Length; i++)
-            {
-                int index = i; // 각 버튼의 인덱스를 유지하기 위해 복사
-                _augmentationButtons[i].onClick.AddListener(() => SelectAugment(_augmentPrefab[i].id));
-            }
+            //for (int i = 0; i < _augmentationButtons.Length; i++)
+            //{
+            //    //버튼 등록
+            //    _augmentationButtons[i].onClick.AddListener(() => SelectAugment(_augmentPrefab[i].id));
+            //}
         }
+
 
         /// <summary>
         /// 슬롯 초기화
@@ -41,17 +40,14 @@ namespace Augment
 
             for (int i = 0; i < _augmentPrefab.Length; i++)
             {
-                int randomAugmentId = UnityEngine.Random.Range(1, _augmentRepository._augmentDic.Count);
-
+                int randomAugmentId = UnityEngine.Random.Range(1, _augmentRepository._augmentDic.Count + 1);
+                Debug.Log(_augmentRepository._augmentDic.Count);
+                Debug.Log(randomAugmentId);
                 for (int j = 0; j < beforeAugmentIds.Length; j++)
                 {
                     if (beforeAugmentIds[j] == randomAugmentId)
                     {
                         return;
-                    }
-                    else
-                    {
-                        continue;
                     }
                 }
 
@@ -59,17 +55,19 @@ namespace Augment
                 _augmentPrefab[i].descriptionValue = _augmentRepository._augmentDic[randomAugmentId].augmentDescripction;
                 _augmentPrefab[i].iconimage = _augmentRepository._augmentDic[randomAugmentId].augmentIcon;
                 _augmentPrefab[i].id = _augmentRepository._augmentDic[randomAugmentId].augmentId;
+                _augmentationButtons[i].onClick.AddListener(() => SelectAugment(randomAugmentId));
                 beforeAugmentIds[i] = randomAugmentId;
             }
+
         }
     
         void SelectAugment(int augmentIndex)
         {
             selectedAugmentId = augmentIndex;
-            Debug.Log($"Selected Augment ID: {selectedAugmentId}");
-
-            // 이벤트 발생
             OnAugmentSelected?.Invoke(selectedAugmentId);
+            Debug.Log($"Selected Augment ID: {selectedAugmentId}");
+            gameObject.SetActive(false);
+            // 이벤트 발생
         }
     }
 }

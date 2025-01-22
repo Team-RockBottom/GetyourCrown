@@ -6,6 +6,7 @@ using ExitGames.Client.Photon.StructWrapping;
 using TMPro;
 using GetyourCrown.UI;
 using Augment;
+using GetyourCrown.UI.UI_Utilities;
 
 namespace Practices.PhotonPunClient
 {
@@ -38,8 +39,8 @@ namespace Practices.PhotonPunClient
             // TODO -> 증강 보여주는 기능
             yield return StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
       
-            yield return StartCoroutine(C_WaitUntilCountDown());
-            yield return StartCoroutine(C_WaitUntilGamePlayTime());
+            //yield return StartCoroutine(C_WaitUntilCountDown());
+            //yield return StartCoroutine(C_WaitUntilGamePlayTime());
         }
 
         void SpawnPlayerCharacterRandomly()
@@ -84,7 +85,7 @@ namespace Practices.PhotonPunClient
         IEnumerator C_WaitUntilAllPlayerSelectAugment() //증강선택 체크
         {
             UI_Augment uI_Augment = _augmentCanvas.GetComponent<UI_Augment>();
-            uI_Augment.AugmentSlotRefresh();
+            uI_Augment.AugmentSlotRefresh(); // 슬롯 초기화
             Cursor.lockState = CursorLockMode.Confined;
             int timeCount = timeCountValue;
 
