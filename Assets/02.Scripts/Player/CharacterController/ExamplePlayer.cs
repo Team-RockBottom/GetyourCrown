@@ -154,6 +154,11 @@ namespace GetyourCrown.CharacterContorller
 
         private void HandleCharacterInput()
         {
+            if (_isWorking)
+            {
+                return;
+            }
+
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
 
             // Build the CharacterInputs struct
@@ -211,8 +216,8 @@ namespace GetyourCrown.CharacterContorller
             {
                 Debug.Log("LC Call");
                 _isWorking = true;
+                StartCoroutine(Kicking());
             }
-            StartCoroutine(Kicking());
             // Apply inputs to character
             Character.SetInputs(ref characterInputs);
         }

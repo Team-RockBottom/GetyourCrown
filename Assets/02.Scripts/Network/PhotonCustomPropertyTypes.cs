@@ -1,4 +1,4 @@
-namespace Practices.PhotonPunClient
+namespace GetyourCrown.Network
 {
     public static class PlayerInRoomPropertyKey
     {
