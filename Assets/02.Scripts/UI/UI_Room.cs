@@ -128,7 +128,6 @@ namespace GetyourCrown.UI
                 slot.gameObject.SetActive(true);
                 slot.playerName = player.NickName;
                 slot.actorNumber = player.ActorNumber;
-                slot.playerName = player.NickName;
                 slot.isMasterClient = player.IsMasterClient;
                 if (player.CustomProperties.TryGetValue(PlayerInRoomProperty.IS_READY, out bool isReady))
                 {
@@ -294,13 +293,6 @@ namespace GetyourCrown.UI
 
         public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
         {
-        }
-
-        public void PlayerNickName(Player player, string nickName)
-        {
-            _roomPlayerInfoPairs[player.ActorNumber].slot.playerName = nickName;
-            _roomPlayerInfoSlot.playerName = nickName;
-
         }
     }
 }
