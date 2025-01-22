@@ -20,6 +20,9 @@ public class ScoreCounter : MonoBehaviour, IOnEventCallback
         private double _stackCount = 0;
         private double _startTime = 0;
     
+        private bool _augmentOnWork = false;
+        public float _augmentScoreCount = 0;
+
         protected virtual void OnEnable()
         {
             PhotonNetwork.AddCallbackTarget(this);
@@ -47,7 +50,15 @@ public class ScoreCounter : MonoBehaviour, IOnEventCallback
         public void CountUpEnd()
         {
             double timeAdd = PhotonNetwork.Time - _startTime;
-            ScoreCountUp(timeAdd);
+            if (_augmentOnWork)
+            {
+                ScoreCountUp(timeAdd-_augmentScoreCount);
+                ScoreCountUp(_augmentScoreCount * 2);
+            }
+            else
+            { 
+                ScoreCountUp(timeAdd);
+            }
             _startTime = 0;
         }
     
