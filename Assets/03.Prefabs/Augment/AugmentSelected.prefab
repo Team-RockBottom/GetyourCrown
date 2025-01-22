@@ -54,14 +54,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62b73189342f91c469c43cef78a76085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _augmentRepository: {fileID: 7761197705304592585, guid: d7ba192873ccd224cafc62ed8cc0a9f4, type: 3}
+  _augmentRepository: {fileID: 0}
   _augmentPrefab:
-  - {fileID: 2574758858819572603}
   - {fileID: 4375435916651873404}
+  - {fileID: 2574758858819572603}
   - {fileID: 8987913303119616666}
   _augmentationButtons:
-  - {fileID: 8637445952477455188}
   - {fileID: 7556359672655230035}
+  - {fileID: 8637445952477455188}
   - {fileID: 2944867457153968821}
 --- !u!223 &3105187537455124144
 Canvas:
