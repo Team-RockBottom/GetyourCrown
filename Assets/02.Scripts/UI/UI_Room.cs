@@ -40,7 +40,7 @@ namespace GetyourCrown.UI
             _slotCharacterPrefabs = new Dictionary<int, GameObject>(16);
         }
 
-    private void OnEnable()
+        private void OnEnable()
         {
             PhotonNetwork.AddCallbackTarget(this);
         }
