@@ -6,9 +6,10 @@ using ExitGames.Client.Photon.StructWrapping;
 using TMPro;
 using GetyourCrown.UI;
 using Augment;
-using GetyourCrown.UI.UI_Utilities;
+using GetyourCrown.UI.UI_Utilities; 
+using ExitGames.Client.Photon;
 
-namespace Practices.PhotonPunClient
+namespace GetyourCrown.Network
 {
     [RequireComponent(typeof(PhotonView))]
     public class GamePlayWorkflow : MonoBehaviour
@@ -17,7 +18,7 @@ namespace Practices.PhotonPunClient
         [SerializeField] int timeCountValue = 30;
         [SerializeField] TMP_Text timeCountText;
         [SerializeField] TMP_Text gameTimeCountText;
-        float _gamePlayTimeCount = 30;
+        float _gamePlayTimeCount = 10;
         int _timeCount = 0;
         WaitForSeconds _waitFor1Seconds = new WaitForSeconds(1);
 
@@ -25,11 +26,16 @@ namespace Practices.PhotonPunClient
         [SerializeField] Canvas _augmentCanvas;
         
         PhotonView _view;
+        [SerializeField] ScoreCounter scoreCounter;
 
         private void Start()
         {
             _view = GetComponent<PhotonView>();
             StartCoroutine(C_Workflow());
+            StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
+
+            StartCoroutine(C_WaitUntilCountDown());
+            StartCoroutine(C_WaitUntilGamePlayTime());
         }
 
         IEnumerator C_Workflow()
@@ -169,7 +175,8 @@ namespace Practices.PhotonPunClient
                 {
                     UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
                     uI_ConfirmWindow.Show("게임 종료");
-                    
+                    Debug.Log("GameStopCall");
+                    scoreCounter.ScroeTransferToLeaderBoard();
                     break;
                 }
                 else

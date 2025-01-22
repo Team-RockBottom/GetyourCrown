@@ -45,6 +45,7 @@ MonoBehaviour:
   - InternalDrop
   - InternalPickUp
   - StunCall
+  - ScoreAddToLeaderBoard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
