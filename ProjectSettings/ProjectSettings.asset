@@ -947,11 +947,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 1c2789cd-210b-4eae-9e91-a7d1014469b0
+  cloudProjectId: d7038137-7614-4c1b-8e53-6c3637d3175e
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: GetyourCrown
-  organizationId: baesanghwa1214
+  organizationId: kky9429
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
