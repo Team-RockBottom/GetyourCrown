@@ -131,7 +131,7 @@ namespace GetyourCrown.CharacterContorller
         {
             //_uiAugment = GameObject.Find("AugmentSelected").GetComponent<UI_Augment>();
             _photonView = GetComponent<PhotonView>();
-
+            controllers.Add(ownerActorNr, this);
             
             if (!_photonView.IsMine)
             {

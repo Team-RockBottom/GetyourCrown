@@ -67,12 +67,12 @@ namespace GetyourCrown.Network
             GameObject testPlayer = PhotonNetwork.Instantiate("Character/TestPlayer",
                                       randomPosition,
                                       Quaternion.identity);
-            if (PhotonNetwork.IsMasterClient)
-            {
-                GameObject crwon = PhotonNetwork.Instantiate("Crown/Crown",
-                                          randomPosition * 2,
-                                          Quaternion.identity);
-            }
+            //if (PhotonNetwork.IsMasterClient)
+            //{
+            //    GameObject crwon = PhotonNetwork.Instantiate("Crown/Crown",
+            //                              randomPosition * 2,
+            //                              Quaternion.identity);
+            //}
         }
 
         IEnumerator C_WaitUntilAllPlayerCharactersAreSpawned()
