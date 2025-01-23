@@ -69,6 +69,7 @@ namespace GetyourCrown.CharacterContorller
             _uI_Option = UI_Manager.instance.Resolve<UI_Option>();
             _uI_Option.onHide += () => { _isESC = false; };
             _uI_Option.onShow += () => { _isESC = true; };
+            _uI_Option.Show();
             _uI_Option.Hide();
         }
 

@@ -10,7 +10,5 @@ namespace Practices.PhotonPunClient
         public const string IS_CHARACTER_SPAWNED = "IsCharacterSpawned";
 
         public const string IS_AUGMENT_SELECTED = "IsAugmentSelected";
-
-        public const string IS_CROWN_PICK_UP = "IsCrownPickUp";
     }
 }
