@@ -4,6 +4,7 @@ using UnityEngine;
 using KinematicCharacterController;
 using Photon.Pun;
 using GetyourCrown.UI;
+using GetyourCrown.Network;
 
 namespace GetyourCrown.CharacterContorller
 {
@@ -95,6 +96,11 @@ namespace GetyourCrown.CharacterContorller
             _uI_Option.onShow += () => { _isESC = true; };
             _uI_Option.Show();
             _uI_Option.Hide();
+
+            PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable
+            {
+                {PlayerInGamePlayPropertyKey.IS_CHARACTER_SPAWNED, true }
+            });
         }
 
         private void Update()

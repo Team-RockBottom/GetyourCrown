@@ -133,7 +133,10 @@ namespace GetyourCrown.Network
                 _longTimer.text = timeCount.ToString();
 
                 if (selected)
+                {
+                    _longTimer.text = "준비중";
                     break;
+                }
 
                 yield return _waitFor1Seconds;
 
@@ -143,6 +146,7 @@ namespace GetyourCrown.Network
                 if (timeCount <= 0)
                 {
                     //TODO -> 표시된 증강 3개중 랜덤으로 하나 선택하는 기능
+                    _longTimer.text = "준비중";
 
                     break;
                 }
@@ -152,7 +156,6 @@ namespace GetyourCrown.Network
 
         IEnumerator C_WaitUntilCountDown()
         {
-            _longTimer.text = "준비중";
             _timeCount = 4;
 
             while(true) 
@@ -169,8 +172,7 @@ namespace GetyourCrown.Network
                 }
                 else
                 {
-                    _eventCountText.enabled = false;
-                    _eventCountImage.enabled = false;
+                    _view.RPC("GameStartDisable", RpcTarget.All);
                     break;
                 }
 
@@ -188,6 +190,13 @@ namespace GetyourCrown.Network
         void GameStart()
         {
             _eventCountText.text = "Start!";
+        }
+
+        [PunRPC]
+        void GameStartDisable()
+        {
+            _eventCountText.enabled = false;
+            _eventCountImage.enabled = false;
         }
 
         IEnumerator C_WaitUntilGamePlayTime()
