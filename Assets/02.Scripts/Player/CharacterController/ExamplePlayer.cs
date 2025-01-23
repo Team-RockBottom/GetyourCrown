@@ -214,7 +214,6 @@ namespace GetyourCrown.CharacterContorller
             // 왕관 Kick //시작할때 눌리는 버그 있음
             if (characterInputs.Kickable)
             {
-                Debug.Log("LC Call");
                 _isWorking = true;
                 StartCoroutine(Kicking());
             }
