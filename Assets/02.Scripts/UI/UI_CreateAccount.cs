@@ -24,9 +24,18 @@ namespace GetyourCrown.UI
         {
             base.Start();
 
-            await UnityServices.Instance.InitializeAsync();
+            try
+            {
+                await UnityServices.Instance.InitializeAsync();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Unity Services 초기화 실패: {e.Message}");
+                ConfirmWindowShow("Unity Services 초기화 중 문제가 발생했습니다.");
+            }
             _id.characterLimit = 20;
             _password.characterLimit = 16;
+            
         }
 
         public override async void Show()
@@ -45,24 +54,18 @@ namespace GetyourCrown.UI
                     ConfirmWindowShow("비밀번호를 입력해주세요.");
                     return;
                 }
-                if (_id.text.Length < 5)
-                {
-                    ConfirmWindowShow("아이디: 5 ~ 20자만 사용 가능합니다.");
-                    return;
-                }
-                else if (_password.text.Length < 8)
-                {
-                    ConfirmWindowShow("비밀번호: 8 ~ 16자만 사용 가능합니다.");
-                    return;
-                }
                 else if (_password.text != _confirmPassword.text)
                 {
                     ConfirmWindowShow("비밀번호를 확인해주세요.");
+                }
+                else if (!IsPasswordValid(_password.text))
+                {
+                    IsPasswordValid(_password.text);
                     return;
                 }
 
+
                 CreateAccount(_id.text, _password.text);
-                SaveUserData(_id.text);
                 Hide();
             });
 
@@ -71,45 +74,35 @@ namespace GetyourCrown.UI
 
         async Task CreateAccount(string id, string password)
         {
-            if (!IsPasswordValid(password))
-            {
-                ConfirmWindowShow("비밀번호 조건을 만족하지 못합니다.");
-                return;
-            }
-
             try
             {
-                if (!AuthenticationService.Instance.IsSignedIn)
-                {
-                    await AuthenticationService.Instance.SignInAnonymouslyAsync();
-                }
-
-                await AuthenticationService.Instance.AddUsernamePasswordAsync(id, password);
-
-                ConfirmWindowShow("계정을 생성하였ㅊ다.");
+                await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync(id, password);
+                ConfirmWindowShow("계정을 생성하였습니다.");
                 _id.text = string.Empty;
                 _password.text = string.Empty;
                 _confirmPassword.text = string.Empty;
+                SaveUserData(id);
+                AuthenticationService.Instance.SignOut(); //계정 생성시 자동로그인이 되어 다시 로그인하게 하기 위해 로그아웃
                 Hide();
             }
             catch (AuthenticationException e)
             {
-                Debug.LogError($"Authentication failed: {e.Message}"); 
+                Debug.Log($"Authentication failed: {e.Message}"); 
                 if (e.Message.Contains("user already has a username/password account linked to it"))
                 {
-                    Debug.LogError($"AuthenticationException e: {e.Message}");
-                    ConfirmWindowShow("이미 사용 중인 아이디입니다.");
+                    Debug.Log($"AuthenticationException e: {e.Message}");
+                    ConfirmWindowShow("네트워크 혹은 서비스에 문제가 있습니다..");
                 }
                 else
                 {
-                    Debug.LogError($"AuthenticationException e: {e.Message}");
+                    Debug.Log($"AuthenticationException e: {e.Message}");
                     ConfirmWindowShow($"계정 생성에 실패하였습니다. {e.Message}");
                 }
             }
             catch (Exception e)
             {
-                Debug.LogError($"Unexpected error: {e.Message}");
-                ConfirmWindowShow("익명 로그인에 실패하였습니다. 네트워크를 확인해주세요.");
+                Debug.Log($"Unexpected error: {e.Message}");
+                ConfirmWindowShow(e.Message);
             }
         }
 
@@ -117,20 +110,31 @@ namespace GetyourCrown.UI
         {
             try
             {
-                await UnityServices.Instance.InitializeAsync();
-
                 var userData = new Dictionary<string, object>()
                 {
                     { "User", id },
                     { "Coin", 1000},
                 };
-                    
+
                 await CloudSaveService.Instance.Data.ForceSaveAsync(userData);
+
+            }
+            catch (AuthenticationException e)
+            {
+                Debug.Log($"Authentication failed: {e.Message}");
+                if (e.Message.Contains("user already has a username/password account linked to it"))
+                {
+                    ConfirmWindowShow("이미 사용 중인 아이디입니다.");
+                }
+                else
+                {
+                    ConfirmWindowShow($"계정 생성에 실패하였습니다: {e.Message}");
+                }
             }
             catch (Exception e)
             {
-                Debug.LogError($"CloudSave error: {e.Message}");  // 오류 메시지 로그 추가
-                ConfirmWindowShow("클라우드에 세이브 실패하였습니다.");
+                Debug.Log($"Unexpected error: {e.Message}");
+                ConfirmWindowShow("계정 생성 중 예상치 못한 오류가 발생하였습니다.");
             }
         }
 

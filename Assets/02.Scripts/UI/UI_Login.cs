@@ -49,8 +49,10 @@ namespace GetyourCrown.UI
                 _uiCreateAccount.Show();
             });
 
-            _guest.onClick.AddListener(() =>
+            _guest.onClick.AddListener(async() =>
             {
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                Debug.Log($"{AuthenticationService.Instance.PlayerId}");
                 Hide();
             });
 
@@ -95,6 +97,7 @@ namespace GetyourCrown.UI
                 else
                 {
                     ConfirmWindowShow($"알 수 없는 오류가 발생했습니다.\n다시 시도 해주세요.\nErrorCode: {e.ErrorCode}");
+                    Debug.Log($"{e.ErrorCode}");
                 }
             }
         }
