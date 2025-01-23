@@ -153,10 +153,10 @@ namespace GetyourCrown.CharacterContorller
                 return;
             }
 
-            UI_Augment.OnAugmentSelected += HandleAugmentSelected;
 
             if (_photonView.IsMine)
             {
+                UI_Augment.OnAugmentSelected += HandleAugmentSelected;
                 _augmentRepository = FindObjectOfType<AugmentRepository>();
 
             }

@@ -113,10 +113,6 @@ namespace GetyourCrown.CharacterContorller
             //{
             //    Cursor.lockState = CursorLockMode.Locked;
             //}
-            if (Input.GetMouseButtonDown(0) && _isESC == false)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {

@@ -48,7 +48,7 @@ namespace GetyourCrown.Network
         IEnumerator C_Workflow()
         {
             SpawnPlayerCharacterRandomly();
-            //yield return StartCoroutine(C_WaitUntilAllPlayerCharactersAreSpawned());
+            yield return StartCoroutine(C_WaitUntilAllPlayerCharactersAreSpawned());
             // TODO -> 증강 보여주는 기능
             yield return StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
 
