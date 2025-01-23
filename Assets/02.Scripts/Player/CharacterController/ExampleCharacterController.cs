@@ -7,6 +7,7 @@ using Photon.Realtime;
 using Crown;
 using Augment;
 using static UnityEngine.Rendering.HableCurve;
+using GetyourCrown.Network;
 
 namespace GetyourCrown.CharacterContorller
 {
@@ -770,6 +771,12 @@ namespace GetyourCrown.CharacterContorller
         {
             Debug.Log("이벤트 발생해서 캐릭터 컨트롤러에서 호출");
             AugmentSpec augment = _augmentRepository._augmentDic[augmentId];
+
+            PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable
+            {
+                { PlayerInGamePlayPropertyKey.IS_AUGMENT_SELECTED, true }
+            });
+
             // 스위치문을 이용해 특정 변수 값 변경
             switch (augmentId)
             {
