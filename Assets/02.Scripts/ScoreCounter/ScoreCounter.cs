@@ -39,7 +39,11 @@ public class ScoreCounter : MonoBehaviour, IOnEventCallback
         {
             _stackCount += timeAdd;
         }
-    
+
+        private void Update()
+        {
+            Debug.Log(_stackCount);
+        }
 
         public void CountUpStart()
         {
@@ -58,8 +62,8 @@ public class ScoreCounter : MonoBehaviour, IOnEventCallback
             else
             { 
                 ScoreCountUp(timeAdd);
-                Debug.Log((float)timeAdd);
             }
+            Debug.Log(timeAdd);
             _startTime = 0;
         }
     

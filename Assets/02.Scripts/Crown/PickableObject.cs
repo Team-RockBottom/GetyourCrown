@@ -96,9 +96,10 @@ namespace Crown
                 _rigidbody.isKinematic = false;
                 controller.pickable = null;
                 _collider.isTrigger = false;
+                ExampleCharacterController parentController = GetComponentInParent<ExampleCharacterController>();
+                parentController.gameObject.layer = 0;
                 transform.SetParent(null);
                 gameObject.layer = 15;
-                controller.gameObject.layer = 0;
                 _isPickedUp = false;
                 _isOwned = false;
             }

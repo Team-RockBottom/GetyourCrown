@@ -180,8 +180,6 @@ namespace GetyourCrown.CharacterContorller
                     _scoreCheckAlreadyStart = false;
                     _scoreCounter.CountUpEnd();
                 }
-
-                
             }
         }
 
