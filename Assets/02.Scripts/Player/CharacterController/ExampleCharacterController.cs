@@ -63,9 +63,12 @@ namespace GetyourCrown.CharacterContorller
 
         Animator _animator;
         bool _isStun = false;
+        bool _scoreCheckAlreadyStart = false;
 
         PhotonView _photonView;
         ExampleCharacterController _controller;
+        ScoreCounter _scoreCounter;
+
         [SerializeField] LayerMask _kingLayer;
 
 
@@ -129,9 +132,9 @@ namespace GetyourCrown.CharacterContorller
 
         private void Awake()
         {
-            //_uiAugment = GameObject.Find("AugmentSelected").GetComponent<UI_Augment>();
             _photonView = GetComponent<PhotonView>();
             controllers.Add(ownerActorNr, this);
+            _scoreCounter = FindAnyObjectByType<ScoreCounter>();
             
             if (!_photonView.IsMine)
             {
@@ -139,9 +142,7 @@ namespace GetyourCrown.CharacterContorller
                 return;
             }
 
-            // Handle initial state
             TransitionToState(CharacterState.Default);
-            // Assign the characterController to the motor
             Motor.CharacterController = this;
         }
 
@@ -158,22 +159,32 @@ namespace GetyourCrown.CharacterContorller
             if (_photonView.IsMine)
             {
                 UI_Augment.OnAugmentSelected += HandleAugmentSelected;
-                _augmentRepository = FindObjectOfType<AugmentRepository>();
+                _augmentRepository = FindAnyObjectByType<AugmentRepository>();
 
             }
-            //if (PhotonNetwork.LocalPlayer.TagObject is ExampleCharacterController controller)
-            //{
-            //}
-            //else
-            //{
-            //    Debug.LogError("ExampleCharacterController not found for the local player.");
-            //}
+
         }
 
+        private void Update()
+        {
+            if (_photonView.IsMine)
+            {
+                if (gameObject.layer == 17 && _scoreCheckAlreadyStart == false)
+                {
+                    _scoreCheckAlreadyStart = true;
+                    _scoreCounter.CountUpStart();
+                }
 
-        /// <summary>
-        /// Handles movement state transitions and enter/exit callbacks
-        /// </summary>
+                if (gameObject.layer == 0 && _scoreCheckAlreadyStart == true)
+                {
+                    _scoreCheckAlreadyStart = false;
+                    _scoreCounter.CountUpEnd();
+                }
+
+                
+            }
+        }
+
         public void TransitionToState(CharacterState newState)
         {
             CharacterState tmpInitialState = CurrentCharacterState;
@@ -182,9 +193,7 @@ namespace GetyourCrown.CharacterContorller
             OnStateEnter(newState, tmpInitialState);
         }
 
-        /// <summary>
-        /// Event when entering a state
-        /// </summary>
+
         public void OnStateEnter(CharacterState state, CharacterState fromState)
         {
             switch (state)
@@ -196,9 +205,6 @@ namespace GetyourCrown.CharacterContorller
             }
         }
 
-        /// <summary>
-        /// Event when exiting a state
-        /// </summary>
         public void OnStateExit(CharacterState state, CharacterState toState)
         {
             switch (state)
@@ -210,15 +216,11 @@ namespace GetyourCrown.CharacterContorller
             }
         }
 
-        /// <summary>
-        /// This is called every frame by ExamplePlayer in order to tell the character what its inputs are
-        /// </summary>
+
         public void SetInputs(ref PlayerCharacterInputs inputs)
         {
-            // Clamp input
             Vector3 moveInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveAxisRight, 0f, inputs.MoveAxisForward), 1f);
 
-            // Calculate camera direction and rotation on the character plane
             Vector3 cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.forward, Motor.CharacterUp).normalized;
             if (cameraPlanarDirection.sqrMagnitude == 0f)
             {
@@ -230,7 +232,6 @@ namespace GetyourCrown.CharacterContorller
             {
                 case CharacterState.Default:
                     {
-                        // Move and look inputs
                         _moveInputVector = cameraPlanarRotation * moveInputVector;
 
                         switch (OrientationMethod)
@@ -251,45 +252,20 @@ namespace GetyourCrown.CharacterContorller
                             _isGround = true;
                         }
 
-                        // 바닥에 떨어진 왕관 줍기실행
-                        if (inputs.Pickable)
-                        {
-                            RaycastHit hit;
-
-                            //OnDrawGizmos();
-
-                            if (Physics.SphereCast(transform.position, 5f, transform.forward, out hit, 0.5f, _crownLayer))
-                            {
-                                Debug.Log(hit.collider.gameObject.name);
-                                //TODO : Pickable 호출 맟 애니메이션
-                                hit.collider.gameObject.GetComponent<PickableObject>().PickUp();
-                            }
-                        }
 
                         if (inputs.Run)
                         {
                             _isRun = !_isRun;
                         }
 
-                        if (inputs.Attack)
-                        {
-                            RaycastHit hit;
 
-                            if (Physics.SphereCast(transform.position, 0.5f, transform.forward, out hit, 1f))
-                            {
-                                //TODO : Kickable 호출 및 애니메이션
-                                //hit.collider.gameObject.GetComponent<Kickable>().Kick();
-                            }
-                        }
 
                         break;
                     }
             }
         }
 
-        /// <summary>
-        /// This is called every frame by the AI script in order to tell the character what its inputs are
-        /// </summary>
+
         public void SetInputs(ref AICharacterInputs inputs)
         {
             _moveInputVector = inputs.MoveVector;
@@ -298,19 +274,12 @@ namespace GetyourCrown.CharacterContorller
 
         private Quaternion _tmpTransientRot;
 
-        /// <summary>
-        /// (Called by KinematicCharacterMotor during its update cycle)
-        /// This is called before the character begins its movement update
-        /// </summary>
+
         public void BeforeCharacterUpdate(float deltaTime)
         {
         }
 
-        /// <summary>
-        /// (Called by KinematicCharacterMotor during its update cycle)
-        /// This is where you tell your character what its rotation should be right now. 
-        /// This is the ONLY place where you should set the character's rotation
-        /// </summary>
+
         public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
         {
             if (_isStun)
@@ -323,17 +292,14 @@ namespace GetyourCrown.CharacterContorller
                     {
                         if (_lookInputVector.sqrMagnitude > 0f && OrientationSharpness > 0f)
                         {
-                            // Smoothly interpolate from current to target look direction
                             Vector3 smoothedLookInputDirection = Vector3.Slerp(Motor.CharacterForward, _lookInputVector, 1 - Mathf.Exp(-OrientationSharpness * deltaTime)).normalized;
 
-                            // Set the current rotation (which will be used by the KinematicCharacterMotor)
                             currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, Motor.CharacterUp);
                         }
 
                         Vector3 currentUp = (currentRotation * Vector3.up);
                         if (BonusOrientationMethod == BonusOrientationMethod.TowardsGravity)
                         {
-                            // Rotate from current up to invert gravity
                             Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, -Gravity.normalized, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
                             currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
                         }
@@ -346,7 +312,6 @@ namespace GetyourCrown.CharacterContorller
                                 Vector3 smoothedGroundNormal = Vector3.Slerp(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
                                 currentRotation = Quaternion.FromToRotation(currentUp, smoothedGroundNormal) * currentRotation;
 
-                                // Move the position to create a rotation around the bottom hemi center instead of around the pivot
                                 Motor.SetTransientPosition(initialCharacterBottomHemiCenter + (currentRotation * Vector3.down * Motor.Capsule.radius));
                             }
                             else
@@ -365,11 +330,7 @@ namespace GetyourCrown.CharacterContorller
             }
         }
 
-        /// <summary>
-        /// (Called by KinematicCharacterMotor during its update cycle)
-        /// This is where you tell your character what its velocity should be right now. 
-        /// This is the ONLY place where you can set the character's velocity
-        /// </summary>
+        
         public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
         {
             if (_isStun)
@@ -381,22 +342,18 @@ namespace GetyourCrown.CharacterContorller
             {
                 case CharacterState.Default:
                     {
-                        // Ground movement
                         if (Motor.GroundingStatus.IsStableOnGround)
                         {
                             float currentVelocityMagnitude = currentVelocity.magnitude;
 
                             Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
 
-                            // Reorient velocity on slope
                             currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
 
-                            // Calculate target velocity
                             Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
                             Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
                             Vector3 targetMovementVelocity;
 
-                            // TODO : 증강에따라 속도증감 구현
                             if (!_isRun)
                             {
                                 targetMovementVelocity = reorientedInput * MaxStableWalkSpeed;
@@ -404,39 +361,31 @@ namespace GetyourCrown.CharacterContorller
                             else
                             {
                                 targetMovementVelocity = (reorientedInput * MaxStableRunSpeed) * speedMultiple;
-                                //TODO -> speedMultiple 최대치 전까지 틱당 증가하는 기능 추가 >> 왕관 쓰면 초기화 // 왕관쓰면 작동 x
                             }
 
-                            // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                         }
-                        // Air movement
                         else
                         {
-                            // Add move input
                             if (_moveInputVector.sqrMagnitude > 0f)
                             {
                                 Vector3 addedVelocity = _moveInputVector * AirAccelerationSpeed * deltaTime;
 
                                 Vector3 currentVelocityOnInputsPlane = Vector3.ProjectOnPlane(currentVelocity, Motor.CharacterUp);
 
-                                // Limit air velocity from inputs
                                 if (currentVelocityOnInputsPlane.magnitude < MaxAirMoveSpeed)
                                 {
-                                    // clamp addedVel to make total vel not exceed max vel on inputs plane
                                     Vector3 newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity, MaxAirMoveSpeed);
                                     addedVelocity = newTotal - currentVelocityOnInputsPlane;
                                 }
                                 else
                                 {
-                                    // Make sure added vel doesn't go in the direction of the already-exceeding velocity
                                     if (Vector3.Dot(currentVelocityOnInputsPlane, addedVelocity) > 0f)
                                     {
                                         addedVelocity = Vector3.ProjectOnPlane(addedVelocity, currentVelocityOnInputsPlane.normalized);
                                     }
                                 }
 
-                                // Prevent air-climbing sloped walls
                                 if (Motor.GroundingStatus.FoundAnyGround)
                                 {
                                     if (Vector3.Dot(currentVelocity + addedVelocity, addedVelocity) > 0f)
@@ -446,37 +395,28 @@ namespace GetyourCrown.CharacterContorller
                                     }
                                 }
 
-                                // Apply added velocity
                                 currentVelocity += addedVelocity;
                             }
 
-                            // Gravity
                             currentVelocity += Gravity * deltaTime;
 
-                            // Drag
                             currentVelocity *= (1f / (1f + (Drag * deltaTime)));
                         }
 
-                        // Handle jumping
                         _jumpedThisFrame = false;
                         _timeSinceJumpRequested += deltaTime;
                         if (_jumpRequested)
                         {
-                            // See if we actually are allowed to jump
                             if (!_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime))
                             {
-                                // Calculate jump direction before ungrounding
                                 Vector3 jumpDirection = Motor.CharacterUp;
                                 if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround)
                                 {
                                     jumpDirection = Motor.GroundingStatus.GroundNormal;
                                 }
 
-                                // Makes the character skip ground probing/snapping on its next update. 
-                                // If this line weren't here, the character would remain snapped to the ground when trying to jump. Try commenting this line out and see.
                                 Motor.ForceUnground();
 
-                                // Add to the return velocity and reset jump state
                                 currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
                                 currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
                                 _jumpRequested = false;
@@ -486,7 +426,6 @@ namespace GetyourCrown.CharacterContorller
                             }
                         }
 
-                        // Take into account additive velocity
                         if (_internalVelocityAdd.sqrMagnitude > 0f)
                         {
                             currentVelocity += _internalVelocityAdd;
@@ -497,10 +436,6 @@ namespace GetyourCrown.CharacterContorller
             }
         }
 
-        /// <summary>
-        /// (Called by KinematicCharacterMotor during its update cycle)
-        /// This is called after the character has finished its movement update
-        /// </summary>
         public void AfterCharacterUpdate(float deltaTime)
         {
             if (_isStun)
@@ -512,9 +447,7 @@ namespace GetyourCrown.CharacterContorller
             {
                 case CharacterState.Default:
                     {
-                        // Handle jump-related values
                         {
-                            // Handle jumping pre-ground grace period
                             if (_jumpRequested && _timeSinceJumpRequested > JumpPreGroundingGraceTime)
                             {
                                 _jumpRequested = false;
@@ -522,7 +455,6 @@ namespace GetyourCrown.CharacterContorller
 
                             if (AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround)
                             {
-                                // If we're on a ground surface, reset jumping values
                                 if (!_jumpedThisFrame)
                                 {
                                     _jumpConsumed = false;
@@ -531,15 +463,12 @@ namespace GetyourCrown.CharacterContorller
                             }
                             else
                             {
-                                // Keep track of time since we were last able to jump (for grace period)
                                 _timeSinceLastAbleToJump += deltaTime;
                             }
                         }
 
-                        // Handle uncrouching
                         if (_isCrouching && !_shouldBeCrouching)
                         {
-                            // Do an overlap test with the character's standing height to see if there are any obstructions
                             Motor.SetCapsuleDimensions(0.5f, 2f, 1f);
                             if (Motor.CharacterOverlap(
                                 Motor.TransientPosition,
@@ -548,12 +477,10 @@ namespace GetyourCrown.CharacterContorller
                                 Motor.CollidableLayers,
                                 QueryTriggerInteraction.Ignore) > 0)
                             {
-                                // If obstructions, just stick to crouching dimensions
                                 Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
                             }
                             else
                             {
-                                // If no obstructions, uncrouch
                                 MeshRoot.localScale = new Vector3(1f, 1f, 1f);
                                 _isCrouching = false;
                             }
@@ -637,7 +564,6 @@ namespace GetyourCrown.CharacterContorller
 
 
 
-        //TODO Augment선택 체크하여 rangeMultiple 변경
 
         private const float SPHERCAST_RADIUS = 1f;
         private const float SPHERCAST_MAXDISTANCE = 1f;
@@ -646,9 +572,7 @@ namespace GetyourCrown.CharacterContorller
         [SerializeField] private float _kickPower = 3f;
         public void TryKick()
         {
-            Vector3 kickCastPosition = (transform.position + (Vector3.forward * SPHERCAST_KICK_RADIUS) + (Vector3.up * 1.5f));
-
-            if (Physics.SphereCast(kickCastPosition, SPHERCAST_KICK_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_KICK_MAXDISTANCE, _crownLayer))
+            if (Physics.SphereCast(transform.position, SPHERCAST_KICK_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_KICK_MAXDISTANCE, _crownLayer))
             {
                 KickableObject kickable = hit.collider.GetComponent<KickableObject>();
                 kickable.Kick((hit.point - transform.position) * _kickPower);
@@ -668,58 +592,14 @@ namespace GetyourCrown.CharacterContorller
 
         public void TryAttack()
         {
-            Vector3 attackCastPosition = (transform.position + (Vector3.forward * SPHERCAST_RADIUS) + (Vector3.up * 1.5f));
 
-            if (Physics.SphereCast(attackCastPosition, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _kingLayer))
+            if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _kingLayer))
             {
                 PickableObject pickable = hit.collider.GetComponentInChildren<PickableObject>();
-                ExamplePlayer player = hit.collider.GetComponent<ExamplePlayer>();
-                player.Hit();
                 pickable.Drop();
             }
         }
-        //IEnumerator Stun()
-        //{
-        //    _animator.SetTrigger("IsStun");
-        //    _isStun = true;
-        //    _animator.SetBool("IsDirty", false);
-        //    yield return new WaitForSeconds(3);
-        //    _isStun = false;
-        //    _animator.SetBool("IsDirty", true);
-        //}
-        //
-        //IEnumerator Hit()
-        //{
-        //    _animator.SetTrigger("IsHit");
-        //    _isStun = true;
-        //    _animator.SetBool("IsDirty", false);
-        //    yield return new WaitForSeconds(0.7f);
-        //    _isStun = false;
-        //    _animator.SetBool("IsDirty", true);
-        //}
-        //
-        //[PunRPC]
-        //public void StunCall(Player player)
-        //{
-        //    if (controllers.TryGetValue(player.ActorNumber, out ExampleCharacterController controller))
-        //    {
-        //        controller.StartCoroutine(Stun());
-        //    }
-        //}
-        //
-        //[PunRPC]
-        //public void HitCall(Player player)
-        //{
-        //    if (!player.IsLocal)
-        //    {
-        //        return;
-        //    }
-        //
-        //    if (controllers.TryGetValue(player.ActorNumber, out ExampleCharacterController controller))
-        //    {
-        //        controller.StartCoroutine(Hit());
-        //    }
-        //}
+       
 
         internal Transform GetCrownPosition()
         {
@@ -733,40 +613,7 @@ namespace GetyourCrown.CharacterContorller
             Debug.Log(controllers.Count);
         }
 
-        //public void AugmentDataReceive(int id)
-        //{
-        //    if (_photonView.IsMine)
-        //    {
-        //        _augmentId = id;
-        //        AugmentSpec augment = _augmentRepository._augmentDic[_augmentId];
 
-        //        // TODO : 스위치문 내용 작성할 것
-        //        switch (augment.augmentId)
-        //        {
-        //            case 0:
-        //            default:
-        //                break;
-        //            case 1:
-        //                speedMultiple = augment.speedIncrease;
-        //                break;
-        //            case 2:
-        //                rangeMultiple = augment.increaseValue;
-        //                break;
-        //            case 3:
-        //                break;
-        //            case 4:
-        //                break;
-        //            case 5:
-        //                break;
-        //        }
-        //    }
-        //}
-
-
-        /// <summary>
-        /// 이벤트 발생하면 실행
-        /// </summary>
-        /// <param name="augmentId"></param>
         void HandleAugmentSelected(int augmentId)
         {
             Debug.Log("이벤트 발생해서 캐릭터 컨트롤러에서 호출");
@@ -777,7 +624,6 @@ namespace GetyourCrown.CharacterContorller
                 { PlayerInGamePlayPropertyKey.IS_AUGMENT_SELECTED, true }
             });
 
-            // 스위치문을 이용해 특정 변수 값 변경
             switch (augmentId)
             {
                 case 0:

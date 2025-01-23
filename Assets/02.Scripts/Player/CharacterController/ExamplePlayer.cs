@@ -25,9 +25,6 @@ namespace GetyourCrown.CharacterContorller
         [SerializeField] LayerMask _playerLayerMask;
 
 
-        /// <summary>
-        /// 딜레이를 위한 bool타입변수
-        /// </summary>
         bool _isWorking = false;
         bool _inAir = false;
         bool _isStun = false;
@@ -84,12 +81,9 @@ namespace GetyourCrown.CharacterContorller
                 return;
             }
 
-            //Cursor.lockState = CursorLockMode.Locked;
 
-            // Tell camera to follow transform
             CharacterCamera.SetFollowTransform(Character.CameraFollowPoint);
 
-            // Ignore the character's collider(s) for camera obstruction checks
             CharacterCamera.IgnoredColliders.Clear();
             CharacterCamera.IgnoredColliders.AddRange(Character.GetComponentsInChildren<Collider>());
 
@@ -117,11 +111,6 @@ namespace GetyourCrown.CharacterContorller
                 return;
             }
 
-            //if (Input.GetMouseButtonDown(0))
-            //{
-            //    Cursor.lockState = CursorLockMode.Locked;
-            //}
-
             if (Input.GetKeyDown(KeyCode.Escape))
             {
 
@@ -146,7 +135,6 @@ namespace GetyourCrown.CharacterContorller
                 return;
             }
 
-            // Handle rotating the camera along with physics movers
             if (CharacterCamera.RotateWithPhysicsMover && Character.Motor.AttachedRigidbody != null)
             {
                 CharacterCamera.PlanarDirection = Character.Motor.AttachedRigidbody.GetComponent<PhysicsMover>().RotationDeltaFromInterpolation * CharacterCamera.PlanarDirection;
@@ -158,24 +146,16 @@ namespace GetyourCrown.CharacterContorller
 
         private void HandleCameraInput()
         {
-            // Create the look input vector for the camera
+
             float mouseLookAxisUp = Input.GetAxisRaw(MouseYInput);
             float mouseLookAxisRight = Input.GetAxisRaw(MouseXInput);
             Vector3 lookInputVector = new Vector3(mouseLookAxisRight, mouseLookAxisUp, 0f);
 
-            // Prevent moving the camera while the cursor isn't locked
-            //if (Cursor.lockState != CursorLockMode.Locked)
-            //{
-            //    lookInputVector = Vector3.zero;
-            //}
-
-            // Input for zooming the camera (disabled in WebGL because it can cause problems)
             float scrollInput = -Input.GetAxis(MouseScrollInput);
 #if UNITY_WEBGL
         scrollInput = 0f;
 #endif
 
-            // Apply inputs to the camera
             CharacterCamera.UpdateWithInput(Time.deltaTime, scrollInput, lookInputVector);
 
 
@@ -191,7 +171,6 @@ namespace GetyourCrown.CharacterContorller
 
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
 
-            // Build the CharacterInputs struct
             characterInputs.MoveAxisForward = Input.GetAxisRaw(VerticalInput);
             characterInputs.MoveAxisRight = Input.GetAxisRaw(HorizontalInput);
             characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
@@ -234,20 +213,17 @@ namespace GetyourCrown.CharacterContorller
             }
 
 
-            // 플레이어 Attack
             if (characterInputs.Attack)
             {
                 _isWorking = true;
                 StartCoroutine(Attacking());
             }
 
-            // 왕관 Kick //시작할때 눌리는 버그 있음
             if (characterInputs.Kickable)
             {
                 _isWorking = true;
                 StartCoroutine(Kicking());
             }
-            // Apply inputs to character
             Character.SetInputs(ref characterInputs);
         }
 
@@ -256,7 +232,6 @@ namespace GetyourCrown.CharacterContorller
             _animator.SetInteger(STATE_HASH, (int)State.Jump);
             _animator.SetBool(IS_GROUNDED_HASH, false);
             _animator.SetBool(IS_DIRTY_HASH, true);
-            //TODO GroundCheck
             yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
             _animator.SetBool(IS_GROUNDED_HASH, true);
             _animator.SetInteger(STATE_HASH, (int)State.Move);
@@ -292,27 +267,6 @@ namespace GetyourCrown.CharacterContorller
             _animator.SetInteger(STATE_HASH, (int)State.Move);
             _isWorking = false;
         }
-
-        public void Hit()
-        {
-            _animator.SetInteger(STATE_HASH, (int)State.Hit);
-            _photonView.RPC(nameof(StateChangeToHit), RpcTarget.All, PhotonNetwork.LocalPlayer);
-            _animator.SetInteger(STATE_HASH, (int)State.Move);
-        }
-
-        [PunRPC]
-        private void StateChangeToHit()
-        {
-            StartCoroutine(C_Hit());
-        }
-
-        IEnumerator C_Hit()
-        {
-            _isStun = true;
-            yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
-            _isStun = false;
-        }
-
 
         public void ChangeState(State newState)
         {

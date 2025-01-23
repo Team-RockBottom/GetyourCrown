@@ -33,11 +33,6 @@ namespace GetyourCrown.Network
         PhotonView _view;
         [SerializeField] ScoreCounter scoreCounter;
 
-        private void Awake()
-        {
-            
-
-        }
 
         private void Start()
         {

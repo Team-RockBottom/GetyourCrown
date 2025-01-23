@@ -58,6 +58,7 @@ public class ScoreCounter : MonoBehaviour, IOnEventCallback
             else
             { 
                 ScoreCountUp(timeAdd);
+                Debug.Log((float)timeAdd);
             }
             _startTime = 0;
         }
