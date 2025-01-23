@@ -77,7 +77,7 @@ namespace Augment
             selectedAugmentId = augmentIndex;
             OnAugmentSelected?.Invoke(selectedAugmentId);
             Debug.Log($"Selected Augment ID: {selectedAugmentId}");
-            //gameObject.SetActive(false);
+            gameObject.SetActive(false);
             // 이벤트 발생
         }
     }

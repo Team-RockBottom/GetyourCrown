@@ -19,9 +19,9 @@ namespace GetyourCrown.Network
     {
         [Header ("GameTimer")]
         [SerializeField] int timeCountValue = 30;
-        [Resolve] TMP_Text _longTimer;
-        [Resolve] Image _eventCountImage;
-        [Resolve] TMP_Text _eventCountText;
+        [SerializeField] TMP_Text _longTimer;
+        [SerializeField] Image _eventCountImage;
+        [SerializeField] TMP_Text _eventCountText;
         float _gamePlayTimeCount = 120;
 
         int _timeCount = 0;
@@ -35,7 +35,7 @@ namespace GetyourCrown.Network
 
         private void Awake()
         {
-            StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
+            
 
         }
 
@@ -43,9 +43,6 @@ namespace GetyourCrown.Network
         {
             _view = GetComponent<PhotonView>();
             StartCoroutine(C_Workflow());
-
-            StartCoroutine(C_WaitUntilCountDown());
-            StartCoroutine(C_WaitUntilGamePlayTime());
         }
 
         IEnumerator C_Workflow()
@@ -53,7 +50,7 @@ namespace GetyourCrown.Network
             SpawnPlayerCharacterRandomly();
             //yield return StartCoroutine(C_WaitUntilAllPlayerCharactersAreSpawned());
             // TODO -> 증강 보여주는 기능
-            //yield return StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
+            yield return StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
 
             if (PhotonNetwork.IsMasterClient)
             {
@@ -77,7 +74,7 @@ namespace GetyourCrown.Network
             {
                 bool allReady = true;
 
-                foreach (Player player in PhotonNetwork.PlayerListOthers)
+                foreach (Player player in PhotonNetwork.PlayerList)
                 {
                     if (player.CustomProperties.TryGetValue(PlayerInGamePlayPropertyKey.IS_CHARACTER_SPAWNED, out bool isCharacterSpawned))
                     {
@@ -116,7 +113,7 @@ namespace GetyourCrown.Network
             {
                 bool selected = true;
 
-                foreach (Player player in PhotonNetwork.PlayerListOthers)
+                foreach (Player player in PhotonNetwork.PlayerList)
                 {
                     if (player.CustomProperties.TryGetValue(PlayerInGamePlayPropertyKey.IS_AUGMENT_SELECTED, out bool isAugmentSelected)) //증강 선택 여부 체크
                     {

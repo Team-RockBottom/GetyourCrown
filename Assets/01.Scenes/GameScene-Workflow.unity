@@ -819,6 +819,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeCountValue: 30
+  _longTimer: {fileID: 1488473111}
+  _eventCountImage: {fileID: 271837643}
+  _eventCountText: {fileID: 1903527556}
   _augmentCanvas: {fileID: 2058606084}
   scoreCounter: {fileID: 2078039657}
 --- !u!114 &1683776485

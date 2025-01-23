@@ -2878,7 +2878,6 @@ MonoBehaviour:
   _augmentId: -1
   rangeMultiple: 1
   speedMultiple: 1
-  _augmentRepository: {fileID: 7761197705304592585, guid: d7ba192873ccd224cafc62ed8cc0a9f4, type: 3}
   MaxStableWalkSpeed: 10
   MaxStableRunSpeed: 15
   StableMovementSharpness: 15
