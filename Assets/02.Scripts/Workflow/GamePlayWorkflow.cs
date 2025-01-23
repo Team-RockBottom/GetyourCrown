@@ -22,7 +22,7 @@ namespace GetyourCrown.Network
         [SerializeField] TMP_Text _longTimer;
         [SerializeField] Image _eventCountImage;
         [SerializeField] TMP_Text _eventCountText;
-        float _gamePlayTimeCount = 120;
+        float _gamePlayTimeCount = 10;
 
         int _timeCount = 0;
         WaitForSeconds _waitFor1Seconds = new WaitForSeconds(1);
@@ -212,7 +212,6 @@ namespace GetyourCrown.Network
 
                 if (intTime < 0)
                 {
-                    scoreCounter.ScroeTransferToLeaderBoard();
                     _view.RPC(nameof(ConfirmWindowShow), RpcTarget.All, "게임 종료");
 
                     break;
@@ -238,9 +237,10 @@ namespace GetyourCrown.Network
         [PunRPC]
         void ConfirmWindowShow(string message)
         {
+            scoreCounter.ScroeTransferToLeaderBoard();
             UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
             uI_ConfirmWindow.Show(message);
-            uI_ConfirmWindow.onHide += () => { SceneManager.LoadScene(""); };
+            uI_ConfirmWindow.onHide += () => {scoreCounter.Show(); _longTimer.gameObject.SetActive(false); };
         }
     }
 }
