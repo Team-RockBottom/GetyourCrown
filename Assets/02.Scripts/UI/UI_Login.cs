@@ -40,7 +40,7 @@ namespace GetyourCrown.UI
                     return;
                 }
 
-                LogIn(_id.text, _password.text);
+                LogInAsync(_id.text, _password.text);
             });
 
             _create.onClick.AddListener(() =>
@@ -73,7 +73,7 @@ namespace GetyourCrown.UI
             uI_ConfirmWindow.Show(message);
         }
 
-        async Task LogIn(string id, string password)
+        async Task LogInAsync(string id, string password)
         {
             try
             {

@@ -65,14 +65,14 @@ namespace GetyourCrown.UI
                 }
 
 
-                CreateAccount(_id.text, _password.text);
+                CreateAccountAsync(_id.text, _password.text);
                 Hide();
             });
 
             _cancle.onClick.AddListener(Hide);
         }
 
-        async Task CreateAccount(string id, string password)
+        async Task CreateAccountAsync(string id, string password)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace GetyourCrown.UI
                 _id.text = string.Empty;
                 _password.text = string.Empty;
                 _confirmPassword.text = string.Empty;
-                SaveUserData(id);
+                SaveUserDatAsync(id);
                 AuthenticationService.Instance.SignOut(); //계정 생성시 자동로그인이 되어 다시 로그인하게 하기 위해 로그아웃
                 Hide();
             }
@@ -106,7 +106,7 @@ namespace GetyourCrown.UI
             }
         }
 
-        async Task SaveUserData(string id)
+        async Task SaveUserDatAsync(string id)
         {
             try
             {

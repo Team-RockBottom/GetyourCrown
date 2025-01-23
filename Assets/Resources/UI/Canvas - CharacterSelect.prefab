@@ -655,8 +655,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2217188597023873288}
   m_HandleRect: {fileID: 2682300061346384578}
   m_Direction: 2
-  m_Value: 1.0000006
-  m_Size: 0.75771165
+  m_Value: 1.000001
+  m_Size: 0.7577117
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1530,18 +1530,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4584499963406220488, guid: 16b203327cc96564ca2217cd01d1c56f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5038351522559380623, guid: 16b203327cc96564ca2217cd01d1c56f, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 02408e1fc9c8fa64fb24ec7392fac473, type: 2}
-    - target: {fileID: 5038351522559380623, guid: 16b203327cc96564ca2217cd01d1c56f, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -1580972576246984219, guid: 02408e1fc9c8fa64fb24ec7392fac473, type: 2}
-    - target: {fileID: 5038351522559380623, guid: 16b203327cc96564ca2217cd01d1c56f, type: 3}
-      propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7892237707857735412, guid: 16b203327cc96564ca2217cd01d1c56f, type: 3}
