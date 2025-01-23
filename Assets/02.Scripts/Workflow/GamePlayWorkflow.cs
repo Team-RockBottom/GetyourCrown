@@ -18,7 +18,7 @@ namespace GetyourCrown.Network
         [SerializeField] int timeCountValue = 30;
         [SerializeField] TMP_Text timeCountText;
         [SerializeField] TMP_Text gameTimeCountText;
-        float _gamePlayTimeCount = 10;
+        float _gamePlayTimeCount = 600;
         int _timeCount = 0;
         WaitForSeconds _waitFor1Seconds = new WaitForSeconds(1);
 
