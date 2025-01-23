@@ -62,7 +62,7 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
             base.Show();
             _leaderBoard.gameObject.SetActive(true);
 
-            List<TotalScore> totalScores = totalLeaderBoard.OrderBy(x => x.crownEquipTime).ToList();
+            List<TotalScore> totalScores = totalLeaderBoard.OrderByDescending(x => x.crownEquipTime).ToList();
             
 
             for(int i = 0; i < totalLeaderBoard.Count; i++)
