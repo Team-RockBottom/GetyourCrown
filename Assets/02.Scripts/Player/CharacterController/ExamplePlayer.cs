@@ -102,10 +102,10 @@ namespace GetyourCrown.CharacterContorller
                 return;
             }
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
+            //if (Input.GetMouseButtonDown(0))
+            //{
+            //    Cursor.lockState = CursorLockMode.Locked;
+            //}
 
             HandleCharacterInput();
         }

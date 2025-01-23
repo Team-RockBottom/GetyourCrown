@@ -18,21 +18,26 @@ namespace GetyourCrown.Network
         [SerializeField] int timeCountValue = 30;
         [SerializeField] TMP_Text timeCountText;
         [SerializeField] TMP_Text gameTimeCountText;
-        float _gamePlayTimeCount = 10;
+        float _gamePlayTimeCount = 30;
         int _timeCount = 0;
         WaitForSeconds _waitFor1Seconds = new WaitForSeconds(1);
 
         [Header("Augment System")]
         [SerializeField] Canvas _augmentCanvas;
-        
+
         PhotonView _view;
         [SerializeField] ScoreCounter scoreCounter;
+
+        private void Awake()
+        {
+            StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
+
+        }
 
         private void Start()
         {
             _view = GetComponent<PhotonView>();
             StartCoroutine(C_Workflow());
-            StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
 
             StartCoroutine(C_WaitUntilCountDown());
             StartCoroutine(C_WaitUntilGamePlayTime());
@@ -43,8 +48,7 @@ namespace GetyourCrown.Network
             SpawnPlayerCharacterRandomly();
             yield return StartCoroutine(C_WaitUntilAllPlayerCharactersAreSpawned());
             // TODO -> 증강 보여주는 기능
-            yield return StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
-      
+
             //yield return StartCoroutine(C_WaitUntilCountDown());
             //yield return StartCoroutine(C_WaitUntilGamePlayTime());
         }
@@ -88,50 +92,55 @@ namespace GetyourCrown.Network
             }
         }
 
-        IEnumerator C_WaitUntilAllPlayerSelectAugment() //증강선택 체크
+        IEnumerator C_WaitUntilAllPlayerSelectAugment() 
         {
             UI_Augment uI_Augment = _augmentCanvas.GetComponent<UI_Augment>();
-            uI_Augment.AugmentSlotRefresh(); // 슬롯 초기화
+            uI_Augment.AugmentSlotRefresh();
+            Debug.Log("AugmentRefresh");
+            //UI_Augment uI_AugmentSelect = UI_Manager.instance.Resolve<UI_Augment>();
+            //uI_AugmentSelect.Show();
             Cursor.lockState = CursorLockMode.Confined;
+
             int timeCount = timeCountValue;
 
             while (true)
             {
-                bool selected = true; //루프 탈출 조건 변수
+                bool selected = true;
 
-                foreach (Player player in PhotonNetwork.PlayerListOthers) //Room의 플레이어 순회
+                foreach (Player player in PhotonNetwork.PlayerListOthers)
                 {
                     if (player.CustomProperties.TryGetValue(PlayerInGamePlayPropertyKey.IS_AUGMENT_SELECTED, out bool isAugmentSelected)) //증강 선택 여부 체크
                     {
-                        if (isAugmentSelected == false) //증강 선택하지 않은 경우
+                        if (isAugmentSelected == false)
                         {
                             selected = false;
-                            break; //foreach 탈출
+                            break;
                         }
                     }
-                    else //다른 customproperty일 경우
+                    else
                     {
                         selected = false;
-                        break; //foreach 탈출
+                        break;
                     }
                 }
 
 
-                if (selected) //증강이 선택된 경우
-                    break;//루프 탈출
+                if (selected)
+                    break;
 
-                yield return _waitFor1Seconds; //1초 딜레이
+                yield return _waitFor1Seconds;
 
-                timeCount--; //카운드 감소
+                timeCount--;
 
 
-                if (timeCount <= 0) //제한 시간 내에 선택하지 않은 경우
+                if (timeCount <= 0)
                 {
                     //TODO -> 표시된 증강 3개중 랜덤으로 하나 선택하는 기능
 
-                    break; //루프 탈출
+                    break;
                 }
             }
+
         }
 
         IEnumerator C_WaitUntilCountDown()

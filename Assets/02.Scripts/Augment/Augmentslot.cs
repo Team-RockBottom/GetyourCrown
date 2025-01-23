@@ -13,7 +13,7 @@ namespace Augment
         [SerializeField] TMP_Text _nameText;
         [SerializeField] TMP_Text _descriptionText;
         [SerializeField] Image _iconImage;
-        [SerializeField] Button _button;
+        //[SerializeField] Button _button;
         private int _idValue;
         private string _descriptionValue;
         private string _nameValue;
@@ -44,7 +44,7 @@ namespace Augment
 
         private void Awake()
         {
-            _button.onClick.AddListener(TransferSelectedAugmentId);
+            //_button.onClick.AddListener(TransferSelectedAugmentId);
         }
 
         private void TransferSelectedAugmentId()

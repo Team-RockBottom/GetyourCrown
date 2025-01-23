@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using System;
+using GetyourCrown.UI;
 
 namespace Augment
 {
@@ -27,12 +28,13 @@ namespace Augment
         }
 
 
+
         /// <summary>
         /// 슬롯 초기화
         /// </summary>
         public void AugmentSlotRefresh()
         {
-
+            Debug.Log("AugmentSlotRefresh Call");
             int[] beforeAugmentIds = new int[3];
             beforeAugmentIds[0] = 99;
             beforeAugmentIds[1] = 99;
@@ -40,33 +42,42 @@ namespace Augment
 
             for (int i = 0; i < _augmentPrefab.Length; i++)
             {
+                int index = i;
+                bool duplicate = false;
                 int randomAugmentId = UnityEngine.Random.Range(1, _augmentRepository._augmentDic.Count + 1);
-                Debug.Log(_augmentRepository._augmentDic.Count);
-                Debug.Log(randomAugmentId);
+                Debug.Log($"Random Augment Count : {randomAugmentId}");
+
                 for (int j = 0; j < beforeAugmentIds.Length; j++)
                 {
                     if (beforeAugmentIds[j] == randomAugmentId)
                     {
-                        return;
+                        i--;
+                        duplicate = true;
+                        break;
                     }
                 }
 
+                if (duplicate)
+                {
+                    continue;
+                }
+
+                _augmentationButtons[index].onClick.AddListener(() => SelectAugment(randomAugmentId));
                 _augmentPrefab[i].nameValue = _augmentRepository._augmentDic[randomAugmentId].augmentName;
                 _augmentPrefab[i].descriptionValue = _augmentRepository._augmentDic[randomAugmentId].augmentDescripction;
                 _augmentPrefab[i].iconimage = _augmentRepository._augmentDic[randomAugmentId].augmentIcon;
                 _augmentPrefab[i].id = _augmentRepository._augmentDic[randomAugmentId].augmentId;
-                _augmentationButtons[i].onClick.AddListener(() => SelectAugment(randomAugmentId));
                 beforeAugmentIds[i] = randomAugmentId;
             }
 
         }
     
-        void SelectAugment(int augmentIndex)
+        public void SelectAugment(int augmentIndex)
         {
             selectedAugmentId = augmentIndex;
             OnAugmentSelected?.Invoke(selectedAugmentId);
             Debug.Log($"Selected Augment ID: {selectedAugmentId}");
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
             // 이벤트 발생
         }
     }

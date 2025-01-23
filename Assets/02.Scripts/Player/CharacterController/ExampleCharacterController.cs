@@ -74,7 +74,7 @@ namespace GetyourCrown.CharacterContorller
         [SerializeField] int _augmentId = -1;
         [SerializeField] float rangeMultiple = 1;
         [SerializeField] float speedMultiple = 1;
-        [SerializeField] AugmentRepository _augmentRepository;
+        private AugmentRepository _augmentRepository;
 
         private UI_Augment _uiAugment;
         
@@ -146,20 +146,27 @@ namespace GetyourCrown.CharacterContorller
 
         private void Start()
         {
+            Debug.Log("CharacterController Start");
             if (!PhotonNetwork.IsConnected)
             {
                 Debug.LogError("Photon is not connected!");
                 return;
             }
 
-            if (PhotonNetwork.LocalPlayer.TagObject is ExampleCharacterController controller)
+            UI_Augment.OnAugmentSelected += HandleAugmentSelected;
+
+            if (_photonView.IsMine)
             {
-                UI_Augment.OnAugmentSelected += controller.HandleAugmentSelected;
+                _augmentRepository = FindObjectOfType<AugmentRepository>();
+
             }
-            else
-            {
-                Debug.LogError("ExampleCharacterController not found for the local player.");
-            }
+            //if (PhotonNetwork.LocalPlayer.TagObject is ExampleCharacterController controller)
+            //{
+            //}
+            //else
+            //{
+            //    Debug.LogError("ExampleCharacterController not found for the local player.");
+            //}
         }
 
 
