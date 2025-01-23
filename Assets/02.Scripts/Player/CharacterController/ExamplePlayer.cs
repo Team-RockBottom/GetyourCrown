@@ -55,6 +55,7 @@ namespace GetyourCrown.CharacterContorller
 
         public bool isTransitioning => _animator.GetBool(IS_DIRTY_HASH);
 
+        UI_Option _uI_Option;
         private void Awake()
         {
             _photonView = GetComponent<PhotonView>();
