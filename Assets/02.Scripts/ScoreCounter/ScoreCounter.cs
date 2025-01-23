@@ -56,11 +56,7 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
             _stackCount += timeAdd;
         }
 
-<<<<<<< Updated upstream
-        private void Update()
-        {
-            Debug.Log(_stackCount);
-=======
+
         public override void Show()
         {
             base.Show();
@@ -78,7 +74,6 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
                 slot.NickName = totalScores[i].nickName;
                 slot.gameObject.SetActive(true);
             }
->>>>>>> Stashed changes
         }
 
         public void CountUpStart()
