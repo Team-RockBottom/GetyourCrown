@@ -9,7 +9,6 @@ namespace Crown
 {
     public class PickableObject : PunAutoSyncMonobehaviour, IPunOwnershipCallbacks
     {
-        [SerializeField] LayerMask _king;
         Rigidbody _rigidbody;
         bool _isPickedUp = false;
         bool _isPickingUp = false;

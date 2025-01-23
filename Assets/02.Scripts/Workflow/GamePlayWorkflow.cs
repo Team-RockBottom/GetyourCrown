@@ -48,16 +48,17 @@ namespace GetyourCrown.Network
         IEnumerator C_Workflow()
         {
             SpawnPlayerCharacterRandomly();
-            yield return StartCoroutine(C_WaitUntilAllPlayerCharactersAreSpawned());
-            // TODO -> 증강 보여주는 기능
+
             yield return StartCoroutine(C_WaitUntilAllPlayerSelectAugment());
+
+            yield return StartCoroutine(C_WaitUntilAllPlayerCharactersAreSpawned());
 
             if (PhotonNetwork.IsMasterClient)
             {
                 yield return StartCoroutine(C_WaitUntilCountDown());
                 yield return StartCoroutine(C_WaitUntilGamePlayTime());
+            }
         }
-    }
 
         void SpawnPlayerCharacterRandomly()
         {
@@ -66,6 +67,12 @@ namespace GetyourCrown.Network
             GameObject testPlayer = PhotonNetwork.Instantiate("Character/TestPlayer",
                                       randomPosition,
                                       Quaternion.identity);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                GameObject crwon = PhotonNetwork.Instantiate("Crown/Crown",
+                                          randomPosition * 2,
+                                          Quaternion.identity);
+            }
         }
 
         IEnumerator C_WaitUntilAllPlayerCharactersAreSpawned()

@@ -653,15 +653,6 @@ namespace GetyourCrown.CharacterContorller
                 kickable.Kick((hit.point - transform.position) * _kickPower);
             }
         }
-        //public void TryPick()
-        //{
-        //    if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _crownLayer))
-        //    {
-        //        PickableObject pickable = hit.collider.GetComponent<PickableObject>();
-        //        pickable.parentPosition = crownPosition;
-        //        pickable.PickUp();
-        //    }
-        //}
 
         public void TryPickUp()
         {
