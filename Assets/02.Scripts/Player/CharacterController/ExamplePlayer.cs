@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
 using Photon.Pun;
+using GetyourCrown.UI;
 
 namespace GetyourCrown.CharacterContorller
 {
@@ -27,6 +28,7 @@ namespace GetyourCrown.CharacterContorller
         /// </summary>
         bool _isWorking = false;
         bool _inAir = false;
+        bool _isESC = false;
 
         [SerializeField] float _isAttackDelayTime = 0f;
         [SerializeField] float _isPickDelayTime = 0f;
@@ -87,7 +89,11 @@ namespace GetyourCrown.CharacterContorller
             CharacterCamera.IgnoredColliders.Clear();
             CharacterCamera.IgnoredColliders.AddRange(Character.GetComponentsInChildren<Collider>());
 
-            
+            _uI_Option = UI_Manager.instance.Resolve<UI_Option>();
+            _uI_Option.onHide += () => { _isESC = false; };
+            _uI_Option.onShow += () => { _isESC = true; };
+            _uI_Option.Show();
+            _uI_Option.Hide();
         }
 
         private void Update()
@@ -106,7 +112,25 @@ namespace GetyourCrown.CharacterContorller
             //{
             //    Cursor.lockState = CursorLockMode.Locked;
             //}
+            if (Input.GetMouseButtonDown(0) && _isESC == false)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
 
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+
+                if (_isESC)
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                    _uI_Option.Hide();
+                }
+                else
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    _uI_Option.Show();
+                }
+            }
             HandleCharacterInput();
         }
 

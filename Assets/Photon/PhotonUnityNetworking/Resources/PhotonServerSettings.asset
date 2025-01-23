@@ -46,6 +46,8 @@ MonoBehaviour:
   - InternalPickUp
   - StunCall
   - ScoreAddToLeaderBoard
+  - ConfirmWindowShow
+  - GameStart
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
