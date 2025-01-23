@@ -673,53 +673,53 @@ namespace GetyourCrown.CharacterContorller
             if (Physics.SphereCast(attackCastPosition, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _kingLayer))
             {
                 PickableObject pickable = hit.collider.GetComponentInChildren<PickableObject>();
-                PhotonView photonView = hit.collider.GetComponent<ExampleCharacterController>()._photonView;
-                photonView.RPC(nameof(HitCall), RpcTarget.All, photonView.Owner);
+                ExamplePlayer player = hit.collider.GetComponent<ExamplePlayer>();
+                player.Hit();
                 pickable.Drop();
             }
         }
-        IEnumerator Stun()
-        {
-            _animator.SetTrigger("IsStun");
-            _isStun = true;
-            _animator.SetBool("IsDirty", false);
-            yield return new WaitForSeconds(3);
-            _isStun = false;
-            _animator.SetBool("IsDirty", true);
-        }
-
-        IEnumerator Hit()
-        {
-            _animator.SetTrigger("IsHit");
-            _isStun = true;
-            _animator.SetBool("IsDirty", false);
-            yield return new WaitForSeconds(0.7f);
-            _isStun = false;
-            _animator.SetBool("IsDirty", true);
-        }
-
-        [PunRPC]
-        public void StunCall(Player player)
-        {
-            if (controllers.TryGetValue(player.ActorNumber, out ExampleCharacterController controller))
-            {
-                controller.StartCoroutine(Stun());
-            }
-        }
-
-        [PunRPC]
-        public void HitCall(Player player)
-        {
-            if (!player.IsLocal)
-            {
-                return;
-            }
-
-            if (controllers.TryGetValue(player.ActorNumber, out ExampleCharacterController controller))
-            {
-                controller.StartCoroutine(Hit());
-            }
-        }
+        //IEnumerator Stun()
+        //{
+        //    _animator.SetTrigger("IsStun");
+        //    _isStun = true;
+        //    _animator.SetBool("IsDirty", false);
+        //    yield return new WaitForSeconds(3);
+        //    _isStun = false;
+        //    _animator.SetBool("IsDirty", true);
+        //}
+        //
+        //IEnumerator Hit()
+        //{
+        //    _animator.SetTrigger("IsHit");
+        //    _isStun = true;
+        //    _animator.SetBool("IsDirty", false);
+        //    yield return new WaitForSeconds(0.7f);
+        //    _isStun = false;
+        //    _animator.SetBool("IsDirty", true);
+        //}
+        //
+        //[PunRPC]
+        //public void StunCall(Player player)
+        //{
+        //    if (controllers.TryGetValue(player.ActorNumber, out ExampleCharacterController controller))
+        //    {
+        //        controller.StartCoroutine(Stun());
+        //    }
+        //}
+        //
+        //[PunRPC]
+        //public void HitCall(Player player)
+        //{
+        //    if (!player.IsLocal)
+        //    {
+        //        return;
+        //    }
+        //
+        //    if (controllers.TryGetValue(player.ActorNumber, out ExampleCharacterController controller))
+        //    {
+        //        controller.StartCoroutine(Hit());
+        //    }
+        //}
 
         internal Transform GetCrownPosition()
         {

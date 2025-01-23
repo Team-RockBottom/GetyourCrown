@@ -5,6 +5,7 @@ using KinematicCharacterController;
 using Photon.Pun;
 using GetyourCrown.UI;
 using GetyourCrown.Network;
+using Photon.Realtime;
 
 namespace GetyourCrown.CharacterContorller
 {
@@ -29,6 +30,7 @@ namespace GetyourCrown.CharacterContorller
         /// </summary>
         bool _isWorking = false;
         bool _inAir = false;
+        bool _isStun = false;
         bool _isESC = false;
 
         [SerializeField] float _isAttackDelayTime = 0f;
@@ -49,7 +51,7 @@ namespace GetyourCrown.CharacterContorller
         const float MOVING_STOP = 0;
         const float MOVING_WALK = 0.5f;
         const float MOVING_RUN = 1;
-        [SerializeField] const float DEFAULT_DELAY_TIME =1f;
+        [SerializeField] const float DEFAULT_DELAY_TIME = 1f;
 
 
         public State currentState { get; private set; }
@@ -181,7 +183,8 @@ namespace GetyourCrown.CharacterContorller
 
         private void HandleCharacterInput()
         {
-            if (_isWorking)
+
+            if (_isWorking || _isStun)
             {
                 return;
             }
@@ -273,7 +276,7 @@ namespace GetyourCrown.CharacterContorller
         IEnumerator Attacking()
         {
             _animator.SetInteger(STATE_HASH, (int)State.Attack);
-            _animator.SetBool(IS_DIRTY_HASH, true); 
+            _animator.SetBool(IS_DIRTY_HASH, true);
             Character.TryAttack();
             yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
             _animator.SetInteger(STATE_HASH, (int)State.Move);
@@ -288,6 +291,26 @@ namespace GetyourCrown.CharacterContorller
             yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
             _animator.SetInteger(STATE_HASH, (int)State.Move);
             _isWorking = false;
+        }
+
+        public void Hit()
+        {
+            _animator.SetInteger(STATE_HASH, (int)State.Hit);
+            _photonView.RPC(nameof(StateChangeToHit), RpcTarget.All, PhotonNetwork.LocalPlayer);
+            _animator.SetInteger(STATE_HASH, (int)State.Move);
+        }
+
+        [PunRPC]
+        private void StateChangeToHit()
+        {
+            StartCoroutine(C_Hit());
+        }
+
+        IEnumerator C_Hit()
+        {
+            _isStun = true;
+            yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
+            _isStun = false;
         }
 
 
