@@ -133,7 +133,8 @@ namespace GetyourCrown.CharacterContorller
         private void Awake()
         {
             _photonView = GetComponent<PhotonView>();
-            controllers.Add(ownerActorNr, this);
+            controllers.TryAdd(ownerActorNr, this);
+
             _scoreCounter = FindAnyObjectByType<ScoreCounter>();
             
             if (!_photonView.IsMine)
@@ -181,6 +182,11 @@ namespace GetyourCrown.CharacterContorller
                     _scoreCounter.CountUpEnd();
                 }
             }
+        }
+
+        private void OnDestroy()
+        {
+            controllers.Remove(ownerActorNr);
         }
 
         public void TransitionToState(CharacterState newState)

@@ -69,6 +69,12 @@ namespace GetyourCrown.UI
             onHide?.Invoke();
         }
 
+        private void OnDestroy()
+        {
+            playerInputActions.Disable();
+            manager.UnRegister(this);
+        }
+
         public bool TryGraphicRaycast<T>(Vector2 pointerPos, out T result)
             where T : Component
         {
