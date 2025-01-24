@@ -29,6 +29,7 @@ namespace GetyourCrown.UI
 
             _roomListSlot.gameObject.SetActive(false);
             playerInputActions.UI.Click.performed += OnClick;
+            _createRoom.interactable = false;
             _createRoom.onClick.AddListener(() =>
             {
                 UI_CreateRoom createRoom = UI_Manager.instance.Resolve<UI_CreateRoom>();
@@ -56,6 +57,7 @@ namespace GetyourCrown.UI
                 PhotonNetwork.JoinRoom(roomInfo.Name);
             });
 
+            _nickNameChange.interactable = false;
             _nickNameChange.onClick.AddListener(() =>
             {
                 UI_NickNameChange uI_NickNameChange = UI_Manager.instance.Resolve<UI_NickNameChange>();
@@ -101,6 +103,8 @@ namespace GetyourCrown.UI
             //confirmWindow.Show("로비에 접속하였습니다.");
 
             NickNameChange();
+            _createRoom.interactable = true;
+            _nickNameChange.interactable = true;
         }
 
         public void OnJoinedRoom()

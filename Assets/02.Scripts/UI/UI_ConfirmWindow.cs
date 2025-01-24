@@ -8,6 +8,25 @@ namespace GetyourCrown.UI
 {
     public class UI_ConfirmWindow : UI_Popup
     {
+        public bool ConfirmInteractable
+        {
+            get => _confirmValue;
+            set
+            {
+                if (value)
+                {
+                    _confirmValue = true;
+                    _confirm.interactable = true;
+                }
+                else
+                {
+                    _confirmValue = false;
+                    _confirm.interactable = false;
+                }
+            }
+        }
+
+        bool _confirmValue;
         [Resolve] TMP_Text _message;
         [Resolve] Button _confirm;
 

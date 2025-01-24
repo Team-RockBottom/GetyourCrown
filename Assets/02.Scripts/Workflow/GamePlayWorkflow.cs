@@ -11,6 +11,7 @@ using ExitGames.Client.Photon;
 using UnityEngine.UI;
 using System;
 using UnityEngine.SceneManagement;
+using GetyourCrown.CharacterContorller;
 
 namespace GetyourCrown.Network
 {
@@ -33,7 +34,7 @@ namespace GetyourCrown.Network
         PhotonView _view;
         [SerializeField] ScoreCounter scoreCounter;
 
-
+        UI_ConfirmWindow _uI_ConfirmWindow;
         private void Start()
         {
             _view = GetComponent<PhotonView>();
@@ -210,10 +211,14 @@ namespace GetyourCrown.Network
                 double elesedTime = PhotonNetwork.Time - gamePlayTimeCount;
                 int intTime = (int)_gamePlayTimeCount - (int)elesedTime;
 
-                if (intTime < 0)
+                if (intTime == 0)
                 {
                     _view.RPC(nameof(ConfirmWindowShow), RpcTarget.All, "게임 종료");
-
+                    _view.RPC("ShowGameTimer", RpcTarget.All, intTime);
+                }
+                else if(intTime < 0)
+                {
+                    _view.RPC("GameEnd", RpcTarget.All);
                     break;
                 }
                 else
@@ -237,10 +242,25 @@ namespace GetyourCrown.Network
         [PunRPC]
         void ConfirmWindowShow(string message)
         {
+            foreach (int num in ExampleCharacterController.controllers.Keys)
+            {
+                ExampleCharacterController.controllers[num].gameObject.layer = 0;
+            }
+            _uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+            _uI_ConfirmWindow.Show(message);
+            _uI_ConfirmWindow.ConfirmInteractable = false;
+            _uI_ConfirmWindow.onHide += () => 
+            {
+                scoreCounter.Show(); 
+                _longTimer.gameObject.SetActive(false);
+            };
+        }
+
+        [PunRPC]
+        void GameEnd()
+        {
             scoreCounter.ScroeTransferToLeaderBoard();
-            UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
-            uI_ConfirmWindow.Show(message);
-            uI_ConfirmWindow.onHide += () => {scoreCounter.Show(); _longTimer.gameObject.SetActive(false); };
+            _uI_ConfirmWindow.ConfirmInteractable = true;
         }
     }
 }
