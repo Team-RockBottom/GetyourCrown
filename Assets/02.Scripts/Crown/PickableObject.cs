@@ -39,7 +39,7 @@ namespace Crown
 
         public void Drop()
         {
-            if (photonView.IsMine == false)
+            if (photonView.IsMine == true)
                 return;
             if (_isPickedUp == false)
                 return;

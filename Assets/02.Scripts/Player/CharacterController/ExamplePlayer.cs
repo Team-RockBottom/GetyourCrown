@@ -22,7 +22,6 @@ namespace GetyourCrown.CharacterContorller
         private const string HorizontalInput = "Horizontal";
         private const string VerticalInput = "Vertical";
 
-        [SerializeField] LayerMask _playerLayerMask;
 
 
         bool _isWorking = false;
