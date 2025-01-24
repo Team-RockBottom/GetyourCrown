@@ -81,7 +81,16 @@ namespace GetyourCrown.CharacterContorller
         private AugmentRepository _augmentRepository;
 
         private UI_Augment _uiAugment;
-        
+
+        [Header("SpeedUp Augment")]
+        private bool _speedUpAugmentActive = false;  // 스피드업 증강이 활성화
+        private bool _hasCrown = false;              // 왕관 있는지
+        private float _speedMultiplier = 1f;         
+        private float _speedUpTimer = 0f;            
+        private float _speedUpIncreaseRate = 0.05f;  
+        private const float MaxSpeedMultiplier = 1.25f; 
+
+
         [Header("Stable Movement")]
         public float MaxStableWalkSpeed = 10f;
         public float MaxStableRunSpeed = 15f;
@@ -352,13 +361,48 @@ namespace GetyourCrown.CharacterContorller
                             Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
                             Vector3 targetMovementVelocity;
 
-                            if (!_isRun)
+                            //if (!_isRun)
+                            //{
+                            //    targetMovementVelocity = reorientedInput * MaxStableWalkSpeed;
+                            //}
+                            //else
+                            //{
+                            //    targetMovementVelocity = (reorientedInput * MaxStableRunSpeed) * speedMultiple;
+                            //}
+
+                            if (_speedUpAugmentActive && !_hasCrown) // 증강 활성화 및 왕관 미착용
                             {
-                                targetMovementVelocity = reorientedInput * MaxStableWalkSpeed;
+                                if (_speedMultiplier < MaxSpeedMultiplier) // 최대 배율 확인
+                                {
+                                    _speedUpTimer += deltaTime;
+                                    if (_speedUpTimer >= 2f) // 2초마다 속도 증가
+                                    {
+                                        _speedMultiplier += _speedUpIncreaseRate;
+                                        _speedUpTimer = 0f; // 타이머 초기화
+                                    }
+                                }
+                                if (!_isRun) // 걷기
+                                {
+                                    targetMovementVelocity = reorientedInput * MaxStableWalkSpeed * _speedMultiplier;
+                                }
+                                else // 달리기
+                                {
+                                    targetMovementVelocity = reorientedInput * MaxStableRunSpeed * _speedMultiplier;
+                                }
                             }
-                            else
+                            else // 증강 비활성화 또는 왕관 착용
                             {
-                                targetMovementVelocity = (reorientedInput * MaxStableRunSpeed) * speedMultiple;
+                                Debug.Log("스피드 증강 없음 또는 왕관 착용");
+                                ResetSpeedMultiplier(); // 배율 초기화
+
+                                if (!_isRun) // 걷기
+                                {
+                                    targetMovementVelocity = reorientedInput * MaxStableWalkSpeed;
+                                }
+                                else // 달리기
+                                {
+                                    targetMovementVelocity = reorientedInput * MaxStableRunSpeed;
+                                }
                             }
 
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
@@ -584,6 +628,7 @@ namespace GetyourCrown.CharacterContorller
             if (cols.Length > 0)
             {
                 cols[0].GetComponent<PickableObject>().PickUp();
+                _hasCrown = true;
                 return;
             }
         }
@@ -594,6 +639,8 @@ namespace GetyourCrown.CharacterContorller
             if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _kingLayer))
             {
                 PickableObject pickable = hit.collider.GetComponentInChildren<PickableObject>();
+                ExampleCharacterController player = hit.collider.GetComponent<ExampleCharacterController>();
+                player._hasCrown = false;
                 pickable.Drop();
             }
         }
@@ -629,7 +676,8 @@ namespace GetyourCrown.CharacterContorller
                     break;
                 case 1:
                     Debug.Log("Switch 1 Call");
-                    speedMultiple = augment.speedIncrease;
+                    //speedMultiple = augment.speedIncrease;
+                    _speedUpAugmentActive = true;
                     break;
                 case 2:
                     Debug.Log("Switch 2 Call");
@@ -645,6 +693,11 @@ namespace GetyourCrown.CharacterContorller
                     Debug.Log("Switch 5 Call");
                 break;
             }
+        }
+        private void ResetSpeedMultiplier()
+        {
+            _speedMultiplier = 1f;
+            _speedUpTimer = 0f;
         }
 
     }
