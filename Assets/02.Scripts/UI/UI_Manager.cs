@@ -112,5 +112,10 @@ namespace GetyourCrown.UI
             _popupStack.RemoveAt(popupIndex);
             //Debug.Log($"Pop popup : {popup.name}");
         }
+
+        public void ClearUIs()
+        {
+            _uis.Clear();
+        }
     }
 }
