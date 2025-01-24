@@ -38,6 +38,17 @@ namespace GetyourCrown.UI
             }
         }
 
+        public void UnRegister(UI_Base ui)
+        {
+            if(_uis.Remove(ui.GetType()))
+            {
+                if(ui is UI_Popup)
+                {
+                    _popupStack.Remove((UI_Popup)ui);
+                }
+            }
+        }
+
         public T Resolve<T>()
             where T : UI_Base
         {
@@ -113,9 +124,6 @@ namespace GetyourCrown.UI
             //Debug.Log($"Pop popup : {popup.name}");
         }
 
-        public void ClearUIs()
-        {
-            _uis.Clear();
-        }
+ 
     }
 }
