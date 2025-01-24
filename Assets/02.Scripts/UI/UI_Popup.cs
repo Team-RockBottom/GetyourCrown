@@ -14,8 +14,8 @@
             {
                 base.Start();
 
-                playerInputActions.UI.Click.performed += MoveUITop;
-            }
+            playerInputActions.UI.Click.performed += MoveUITop;
+        }
 
             void MoveUITop(InputAction.CallbackContext context)
             {

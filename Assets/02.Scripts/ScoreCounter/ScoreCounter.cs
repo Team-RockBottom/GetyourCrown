@@ -6,6 +6,8 @@ using UnityEngine;
 using GetyourCrown.UI;
 using GetyourCrown.UI.UI_Utilities;
 using System.Linq;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace GetyourCrown.Network
 { 
@@ -27,9 +29,10 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
         private bool _augmentOnWork = false;
         public float _augmentScoreCount = 0;
 
-        [SerializeField] RectTransform _leaderBoardSlotGrid;
-        [SerializeField] RectTransform _leaderBoard;
-        [SerializeField] LeaderBoardSlot _leaderBoardSlot;
+        [Resolve] RectTransform _leaderBoardSlotGrid;
+        [Resolve] RectTransform _leaderBoard;
+        [Resolve] LeaderBoardSlot _leaderBoardSlot;
+        [Resolve] Button _roomBackButton;
 
         protected override void Start()
         {
@@ -37,6 +40,14 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
 
             _leaderBoardSlot.gameObject.SetActive(false);
             _leaderBoard.gameObject.SetActive(false);
+
+            _roomBackButton.onClick.AddListener(() =>
+            {
+                UI_Manager.instance.ClearUIs();
+                PhotonNetwork.LoadLevel("MainMenuScene");
+            });
+
+            _roomBackButton.gameObject.SetActive(false);
         }
 
         protected virtual void OnEnable()
@@ -74,6 +85,8 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
                 slot.NickName = totalScores[i].nickName;
                 slot.gameObject.SetActive(true);
             }
+
+            _roomBackButton.gameObject.SetActive(true);
         }
 
         public void CountUpStart()
