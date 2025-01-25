@@ -41,14 +41,26 @@ namespace GetyourCrown.UI
                 _characterPrice.text = _characterPriceValue.ToString();
             }
         }
+        
+        public bool CharacterOwned
+        {
+            get => _isOwnedValue;
+            set
+            {
+                _isOwnedValue = value;
+                _isLocked.gameObject.SetActive(value);
+            }
+        }
 
         public event Action<CharacterSlot> OnCharacterSelect;
 
         bool _isSelectedValue;
         int _characterPriceValue;
+        bool _isOwnedValue;
         [Resolve] Button _characterSelectButton;
         [Resolve] Image _isSelected;
         [Resolve] TMP_Text _characterPrice;
+        [Resolve] Image _isLocked;
 
         /// <summary>
         /// 생성 되면서 버튼에 구독

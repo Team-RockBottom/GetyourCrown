@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace GetyourCrown.Database
@@ -9,5 +10,7 @@ namespace GetyourCrown.Database
         [field: SerializeField] public Sprite sprite { get; private set; }
         [field: SerializeField] public GameObject prefab { get; private set; }
         [field: SerializeField] public int price { get; private set; }
+        [field: SerializeField] public bool isOwned { get; private set; }
+
     }
 }

@@ -16,3 +16,4 @@ MonoBehaviour:
   <sprite>k__BackingField: {fileID: 21300000, guid: 1b43931083419491d8b290f0c1fad04b, type: 3}
   <prefab>k__BackingField: {fileID: 8230766273605467533, guid: 413a1d22819f431ebb3ff91a05364000, type: 3}
   <price>k__BackingField: 100
+  <isOwned>k__BackingField: 1

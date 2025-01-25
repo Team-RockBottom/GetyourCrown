@@ -90,6 +90,7 @@ namespace GetyourCrown.UI
                 slot.CharacterImage = _characterSpecs[i].sprite;
                 slot.CharacterPrice = _characterSpecs[i].price;
                 slot.isSelected = false;
+                slot.CharacterOwned = _characterSpecs[i].isOwned;
                 slot.OnCharacterSelect += CharacterSelected;
                 slot.gameObject.SetActive(true);
                 _characterSlots.Add(slot);

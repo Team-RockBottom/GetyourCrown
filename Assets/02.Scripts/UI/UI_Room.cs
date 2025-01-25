@@ -5,12 +5,14 @@ using GetyourCrown.Network;
 using GetyourCrown.UI.UI_Utilities;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace GetyourCrown.UI
 {
@@ -26,12 +28,14 @@ namespace GetyourCrown.UI
         [Resolve] Button _characterChange;
         [Resolve] TMP_Text _roomName;
         [Resolve] TMP_Text _coin;
+        [Resolve] TMP_InputField _chatInputField;
         private Dictionary<int, GameObject> _slotCharacterPrefabs;
         Camera _characterCamera;
         public Dictionary<int, (Player player, RoomPlayerInfoSlot slot)> _roomPlayerInfoPairs;
         private CharacterSpec[] _characterSpecs;
         const int DEFAULT_CHARACTERSELECT = 0;
         bool isFirst = true;
+        private Coroutine chatCoroutine;
 
         protected override void Awake()
         {
@@ -114,6 +118,8 @@ namespace GetyourCrown.UI
                     DataManager.instance.OnCoinsChanged -= UpdataCoins;
                 }
             });
+
+            _chatInputField.onSubmit.AddListener(OnChatMessage);
         }
 
         public override void Show()
@@ -142,6 +148,7 @@ namespace GetyourCrown.UI
                 slot.playerName = player.NickName;
                 slot.actorNumber = player.ActorNumber;
                 slot.isMasterClient = player.IsMasterClient;
+
                 if (player.CustomProperties.TryGetValue(PlayerInRoomProperty.IS_READY, out bool isReady))
                 {
                     slot.isReady = isReady;
@@ -158,6 +165,25 @@ namespace GetyourCrown.UI
                 else
                 {
                     slot.isCharacterSelect = false;
+                }
+
+                if (player.CustomProperties.TryGetValue(PlayerInRoomProperty.CHAT_STATE, out bool isChat))
+                {
+                    slot.isChat = isChat;
+                }
+                else
+                {
+                    slot.isChat = false;
+                }
+
+                if (player.CustomProperties.TryGetValue(PlayerInRoomProperty.CHAT_MESSAGE, out object chatMessage))
+                {
+                    string slotMessage = chatMessage as string;
+                    slot.chatMessage = slotMessage;
+                }
+                else
+                {
+                    slot.chatMessage = string.Empty;
                 }
 
                 PlayerCharacterUpdate(slot, player);
@@ -259,6 +285,7 @@ namespace GetyourCrown.UI
             slot.playerName = newPlayer.NickName;
             slot.isReady = false;
             slot.isCharacterSelect = false;
+            slot.isChat = false;
             PlayerCharacterUpdate(slot, newPlayer);
             _roomPlayerInfoPairs.Add(newPlayer.ActorNumber, (newPlayer, slot));
             Debug.Log($"Player entered room {newPlayer.ActorNumber}");
@@ -301,6 +328,17 @@ namespace GetyourCrown.UI
                 {
                     pair.slot.isCharacterSelect = isCharacterSelection;
                 }
+
+                if (changedProps.TryGetValue(PlayerInRoomProperty.CHAT_STATE, out bool isChatMessage))
+                {
+                    pair.slot.isChat = isChatMessage;
+                }
+
+                if (changedProps.TryGetValue(PlayerInRoomProperty.CHAT_MESSAGE, out object slotMessageObj))
+                {
+                    string slotMessage = slotMessageObj as string;
+                    pair.slot.chatMessage = slotMessage;
+                }
             }   
         }
 
@@ -311,6 +349,44 @@ namespace GetyourCrown.UI
         private void UpdataCoins(int coins)
         {
             _coin.text = coins.ToString();
+        }
+
+        private void OnChatMessage(string message)
+        {
+            if (string.IsNullOrEmpty(message))
+                return;
+
+            Player player = PhotonNetwork.LocalPlayer;
+            bool isChat = _roomPlayerInfoPairs[player.ActorNumber].slot.isChat;
+            string slotMessage = _roomPlayerInfoPairs[player.ActorNumber].slot.chatMessage;
+
+            player.SetCustomProperties(new Hashtable()
+            {
+                { PlayerInRoomProperty.CHAT_STATE, isChat == false},
+                { PlayerInRoomProperty.CHAT_MESSAGE, slotMessage = message }
+            });
+
+            _chatInputField.text = string.Empty;
+
+            if (chatCoroutine != null)
+            {
+                StopCoroutine(chatCoroutine);
+            }
+            chatCoroutine = StartCoroutine(ResetChatMessage(player));
+        }
+
+        private IEnumerator ResetChatMessage(Player player)
+        {
+            float delay = 3f;
+            yield return new WaitForSeconds(delay);
+            bool isChat = _roomPlayerInfoPairs[player.ActorNumber].slot.isChat;
+            string slotMessage = _roomPlayerInfoPairs[player.ActorNumber].slot.chatMessage;
+
+            player.SetCustomProperties(new Hashtable()
+            {
+                { PlayerInRoomProperty.CHAT_STATE, isChat == false },
+                { PlayerInRoomProperty.CHAT_MESSAGE, slotMessage = ""},
+            });
         }
     }
 }
