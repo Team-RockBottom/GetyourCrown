@@ -1,3 +1,5 @@
+using GetyourCrown.Database;
+using GetyourCrown.Network;
 using GetyourCrown.UI.UI_Utilities;
 using System.Threading.Tasks;
 using TMPro;
@@ -40,7 +42,9 @@ namespace GetyourCrown.UI
                     return;
                 }
 
-                LogInAsync(_id.text, _password.text);
+                await LogInAsync(_id.text, _password.text);
+                await DataManager.instance.LoadPlayerDataAsync();
+                PhotonManager.instance.SetNickname(DataManager.instance.Nickname);
             });
 
             _create.onClick.AddListener(() =>
@@ -52,7 +56,7 @@ namespace GetyourCrown.UI
             _guest.onClick.AddListener(async() =>
             {
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
-                Debug.Log($"{AuthenticationService.Instance.PlayerId}");
+                PhotonManager.instance.SetNickname(AuthenticationService.Instance.PlayerId);
                 Hide();
             });
 

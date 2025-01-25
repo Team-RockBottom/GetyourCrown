@@ -25,6 +25,7 @@ namespace GetyourCrown.UI
         [Resolve] Button _leftRoom;
         [Resolve] Button _characterChange;
         [Resolve] TMP_Text _roomName;
+        [Resolve] TMP_Text _coin;
         private Dictionary<int, GameObject> _slotCharacterPrefabs;
         Camera _characterCamera;
         public Dictionary<int, (Player player, RoomPlayerInfoSlot slot)> _roomPlayerInfoPairs;
@@ -53,7 +54,7 @@ namespace GetyourCrown.UI
         protected override void Start()
         {
             base.Start();
-
+            DataManager.instance.OnCoinsChanged += UpdataCoins;
             _roomPlayerInfoSlot.gameObject.SetActive(false);
             _startGame.onClick.AddListener(() =>
             {
@@ -107,12 +108,24 @@ namespace GetyourCrown.UI
             _leftRoom.onClick.AddListener(() =>
             {
                 PhotonNetwork.LeaveRoom();
+
+                if (DataManager.instance != null)
+                {
+                    DataManager.instance.OnCoinsChanged -= UpdataCoins;
+                }
             });
         }
 
         public override void Show()
         {
             base.Show();
+
+            if (DataManager.instance == null)
+            {
+                DataManager.instance.OnCoinsChanged += UpdataCoins;
+            }
+
+            UpdataCoins(DataManager.instance.Coins);
 
             foreach (int actorNumber in _roomPlayerInfoPairs.Keys.ToList())
             {
@@ -293,6 +306,11 @@ namespace GetyourCrown.UI
 
         public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
         {
+        }
+
+        private void UpdataCoins(int coins)
+        {
+            _coin.text = coins.ToString();
         }
     }
 }

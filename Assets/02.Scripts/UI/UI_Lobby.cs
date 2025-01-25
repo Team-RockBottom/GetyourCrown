@@ -1,10 +1,11 @@
+using GetyourCrown.Database;
 using GetyourCrown.Network;
 using GetyourCrown.UI.UI_Utilities;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
 using TMPro;
-using Unity.Services.CloudSave;
+using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -20,6 +21,7 @@ namespace GetyourCrown.UI
         [Resolve] Button _exitLobby;
         [Resolve] Button _nickNameChange;
         [Resolve] TMP_Text _nickNameText;
+        [Resolve] TMP_Text _coin;
         List<RoomListSlot> _roomListSlots = new List<RoomListSlot>(10);
         List<RoomInfo> _roomInfosCashed = new List<RoomInfo>(10);
         int _roomIdSelected = -1;
@@ -27,9 +29,13 @@ namespace GetyourCrown.UI
         protected override void Start()
         {
             base.Start();
-
             _roomListSlot.gameObject.SetActive(false);
             playerInputActions.UI.Click.performed += OnClick;
+
+            UpdateUIWithPlayerData();
+            DataManager.instance.OnNicknameChanged += UpdateNicknameUI;
+            DataManager.instance.OnCoinsChanged += UpdateCoinsUI;
+
             _createRoom.onClick.AddListener(() =>
             {
                 UI_CreateRoom createRoom = UI_Manager.instance.Resolve<UI_CreateRoom>();
@@ -65,10 +71,30 @@ namespace GetyourCrown.UI
 
             _exitLobby.onClick.AddListener(() =>
             {
+                if (DataManager.instance != null)
+                {
+                    DataManager.instance.OnNicknameChanged -= UpdateNicknameUI;
+                    DataManager.instance.OnCoinsChanged -= UpdateCoinsUI;
+                }
+
                 Hide();
                 UI_MainMenu ui_MainMenu = UI_Manager.instance.Resolve<UI_MainMenu>();
                 ui_MainMenu.Show();
             });
+        }
+
+        public override async void Show()
+        {
+            base.Show();
+
+            await DataManager.instance.LoadPlayerDataAsync();
+            UpdateUIWithPlayerData();
+
+            if (DataManager.instance == null)
+            {
+                DataManager.instance.OnNicknameChanged += UpdateNicknameUI;
+                DataManager.instance.OnCoinsChanged += UpdateCoinsUI;
+            }
         }
 
         private void OnEnable()
@@ -100,8 +126,7 @@ namespace GetyourCrown.UI
         {
             //UI_ConfirmWindow confirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
             //confirmWindow.Show("로비에 접속하였습니다.");
-
-            NickNameChange();
+            UpdateUIWithPlayerData();
         }
 
         public void OnJoinedRoom()
@@ -217,9 +242,20 @@ namespace GetyourCrown.UI
             }
         }
 
-        public void NickNameChange()
+        private void UpdateUIWithPlayerData()
         {
-            _nickNameText.text = PhotonNetwork.NickName;
+            _nickNameText.text = DataManager.instance.Nickname;
+            _coin.text = DataManager.instance.Coins.ToString();
+        }
+
+        private void UpdateNicknameUI(string newNickname)
+        {
+            _nickNameText.text = newNickname;
+        }
+
+        private void UpdateCoinsUI(int newCoins)
+        {
+            _coin.text = newCoins.ToString();
         }
     }
 }

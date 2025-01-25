@@ -426,7 +426,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 4766801461889660781}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.79388446
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1010,7 +1010,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 6269294705599456865}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2099,7 +2099,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7783047319856212796}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
@@ -2201,7 +2201,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 309.9024, y: 60.979996}
+  m_AnchoredPosition: {x: 330, y: 139}
   m_SizeDelta: {x: 619.8048, y: 121.95999}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1701618644883269494

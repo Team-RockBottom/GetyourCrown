@@ -9,6 +9,7 @@ using Unity.Services.Core;
 using UnityEngine.UI;
 using UnityEngine;
 using System.Text.RegularExpressions;
+using GetyourCrown.Database;
 
 namespace GetyourCrown.UI
 {
@@ -38,7 +39,7 @@ namespace GetyourCrown.UI
             
         }
 
-        public override async void Show()
+        public override void Show()
         {
             base.Show();
                 
@@ -64,7 +65,6 @@ namespace GetyourCrown.UI
                     return;
                 }
 
-
                 CreateAccountAsync(_id.text, _password.text);
                 Hide();
             });
@@ -77,12 +77,12 @@ namespace GetyourCrown.UI
             try
             {
                 await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync(id, password);
+                await SaveUserDataAsync(id, 1000);
                 ConfirmWindowShow("계정을 생성하였습니다.");
                 _id.text = string.Empty;
                 _password.text = string.Empty;
                 _confirmPassword.text = string.Empty;
-                SaveUserDatAsync(id);
-                AuthenticationService.Instance.SignOut(); //계정 생성시 자동로그인이 되어 다시 로그인하게 하기 위해 로그아웃
+                AuthenticationService.Instance.SignOut(); //계정 생성시 자동 로그인이 되어 다시 로그인하게 하기 위해 로그아웃
                 Hide();
             }
             catch (AuthenticationException e)
@@ -106,35 +106,17 @@ namespace GetyourCrown.UI
             }
         }
 
-        async Task SaveUserDatAsync(string id)
+        async Task SaveUserDataAsync(string id, int coins)
         {
             try
             {
-                var userData = new Dictionary<string, object>()
-                {
-                    { "User", id },
-                    { "Coin", 1000},
-                };
-
-                await CloudSaveService.Instance.Data.ForceSaveAsync(userData);
-
-            }
-            catch (AuthenticationException e)
-            {
-                Debug.Log($"Authentication failed: {e.Message}");
-                if (e.Message.Contains("user already has a username/password account linked to it"))
-                {
-                    ConfirmWindowShow("이미 사용 중인 아이디입니다.");
-                }
-                else
-                {
-                    ConfirmWindowShow($"계정 생성에 실패하였습니다: {e.Message}");
-                }
+                await DataManager.instance.SaveNicknameAsync(id);
+                await DataManager.instance.SaveCoinsAsync(coins);
             }
             catch (Exception e)
             {
-                Debug.Log($"Unexpected error: {e.Message}");
-                ConfirmWindowShow("계정 생성 중 예상치 못한 오류가 발생하였습니다.");
+                Debug.Log($"Unexpected error saving user data: {e.Message}");
+                ConfirmWindowShow($"계정 생성 중 데이터를 저장하는 데 실패했습니다.\n {e.Message}");
             }
         }
 

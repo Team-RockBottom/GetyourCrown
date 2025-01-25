@@ -88,6 +88,7 @@ namespace GetyourCrown.UI
                 slot.gameObject.SetActive(true);
                 slot.CharacterIndex = _characterSpecs[i].id;
                 slot.CharacterImage = _characterSpecs[i].sprite;
+                slot.CharacterPrice = _characterSpecs[i].price;
                 slot.isSelected = false;
                 slot.OnCharacterSelect += CharacterSelected;
                 slot.gameObject.SetActive(true);

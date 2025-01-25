@@ -19,6 +19,7 @@ namespace GetyourCrown.UI
             UI_Login _uiLogin = UI_Manager.instance.Resolve<UI_Login>();
             _uiLogin.Show();
 
+
             _start.onClick.AddListener(() =>
             {
                 StartCoroutine(C_NetworkConnection());

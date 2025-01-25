@@ -1,6 +1,10 @@
+using GetyourCrown.Database;
 using GetyourCrown.UI.UI_Utilities;
 using Photon.Pun;
+using System;
+using System.Threading.Tasks;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace GetyourCrown.UI
@@ -11,23 +15,46 @@ namespace GetyourCrown.UI
         [Resolve] Button _confirm;
         [Resolve] Button _cancel;
 
+        private const int MinNicknameLength = 3;
+        private const int MaxNicknameLength = 15;
+
         protected override void Start()
         {
             base.Start();
 
-            _confirm.onClick.AddListener(() =>
+            _nickNameChange.characterLimit = MaxNicknameLength;
+
+            _confirm.onClick.AddListener(async () =>
             {
-                if (string.IsNullOrWhiteSpace(_nickNameChange.text))
+                string newNickname = _nickNameChange.text;
+
+                if (string.IsNullOrWhiteSpace(newNickname))
                 {
                     UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
                     uI_ConfirmWindow.Show("닉네임을 입력해주세요.");
                     return;
                 }
 
-                PhotonNetwork.NickName = _nickNameChange.text;
-                UI_Lobby uI_Lobby = UI_Manager.instance.Resolve<UI_Lobby>();
-                uI_Lobby.NickNameChange();
-                Hide();
+                if (newNickname.Length < MinNicknameLength)
+                {
+                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+                    uI_ConfirmWindow.Show($"닉네임은 {MinNicknameLength}글자 이상이어야 합니다.");
+                    return;
+                }
+
+                bool success = await ChangeNickname(newNickname);
+
+                if (success)
+                {
+                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+                    uI_ConfirmWindow.Show("닉네임이 성공적으로 변경되었습니다.");
+                    Hide();
+                }
+                else
+                {
+                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+                    uI_ConfirmWindow.Show("닉네임 변경에 실패했습니다.");
+                }
             });
 
             _cancel.onClick.AddListener(Hide);
@@ -37,7 +64,23 @@ namespace GetyourCrown.UI
         {
             base.Show();
 
-            _nickNameChange.text = PhotonNetwork.NickName;
+            _nickNameChange.text = DataManager.instance.Nickname;
+        }
+
+        private async Task<bool> ChangeNickname(string newNickname)
+        {
+            try
+            {
+                await DataManager.instance.SaveNicknameAsync(newNickname);
+                DataManager.instance.CurrentPlayerData.Nickname = newNickname;
+                PhotonNetwork.NickName = newNickname;
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+                return false;
+            }
         }
     }
 }

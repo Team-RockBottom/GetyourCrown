@@ -1,5 +1,6 @@
 using GetyourCrown.UI.UI_Utilities;
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,12 +32,23 @@ namespace GetyourCrown.UI
             }
         }
 
+        public int CharacterPrice
+        {
+            get => _characterPriceValue;
+            set
+            {
+                _characterPriceValue = value;
+                _characterPrice.text = _characterPriceValue.ToString();
+            }
+        }
+
         public event Action<CharacterSlot> OnCharacterSelect;
 
         bool _isSelectedValue;
-        int _characterId;
+        int _characterPriceValue;
         [Resolve] Button _characterSelectButton;
         [Resolve] Image _isSelected;
+        [Resolve] TMP_Text _characterPrice;
 
         /// <summary>
         /// 생성 되면서 버튼에 구독
