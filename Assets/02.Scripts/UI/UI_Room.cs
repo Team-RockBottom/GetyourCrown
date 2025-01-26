@@ -254,15 +254,12 @@ namespace GetyourCrown.UI
             characterClone.transform.localScale = Vector3.one;
             characterClone.transform.localRotation = Quaternion.Euler(0, 180, 0);
             _slotCharacterPrefabs[slotIndex] = characterClone;
-
             _characterCamera = new GameObject(cameraName).AddComponent<Camera>();
             _characterCamera.transform.position = new Vector3(-20 * slotIndex, 0, -2.25f);
             _characterCamera.clearFlags = CameraClearFlags.SolidColor;
             RenderTexture renderTexture = new RenderTexture(512, 512, 32);
-
             _characterCamera.targetTexture = renderTexture;
             _characterCamera.Render();  
-
             return renderTexture;
         }
 
@@ -288,7 +285,6 @@ namespace GetyourCrown.UI
             slot.isChat = false;
             PlayerCharacterUpdate(slot, newPlayer);
             _roomPlayerInfoPairs.Add(newPlayer.ActorNumber, (newPlayer, slot));
-            Debug.Log($"Player entered room {newPlayer.ActorNumber}");
         }
 
         public void OnPlayerLeftRoom(Player otherPlayer)

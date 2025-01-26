@@ -77,8 +77,26 @@ namespace GetyourCrown.UI
             _characterSpecs = Resources.LoadAll<CharacterSpec>(_characterSpecFolder);
         }
 
-        private void LoadCharacterSlot()
+        private async void LoadCharacterSlot()
         {
+            await DataManager.instance.LoadPlayerDataAsync();
+
+            Debug.Log("Loading player data...");
+
+            if (DataManager.instance.CurrentPlayerData.CharactersLocked == null)
+            {
+                Debug.LogError("CharactersLocked is null after data load.");
+            }
+            else
+            {
+                Debug.Log("CharactersLocked loaded successfully.");
+                foreach (var pair in DataManager.instance.CurrentPlayerData.CharactersLocked)
+                {
+                    Debug.Log($"CharacterIndex: {pair.Key}, Locked: {pair.Value}");
+                }
+            }
+
+
             if (_characterSlots.Count == _characterSpecs.Length)
                 return;
 
@@ -90,7 +108,20 @@ namespace GetyourCrown.UI
                 slot.CharacterImage = _characterSpecs[i].sprite;
                 slot.CharacterPrice = _characterSpecs[i].price;
                 slot.isSelected = false;
-                slot.CharacterOwned = _characterSpecs[i].isOwned;
+
+
+                Debug.Log($"Checking CharacterLocked for index {i}: {DataManager.instance.CurrentPlayerData.CharactersLocked.ContainsKey(i)}");
+                if (DataManager.instance.CurrentPlayerData.CharactersLocked.ContainsKey(slot.CharacterIndex))
+                {
+                    slot.CharacterLocked = DataManager.instance.CurrentPlayerData.CharactersLocked[slot.CharacterIndex];
+                    Debug.Log($"Slot {i} locked state: {slot.CharacterLocked}");  // 잠금 상태 확인
+                }
+                else
+                {
+                    slot.CharacterLocked = _characterSpecs[i].isLocked;
+                    Debug.Log($"Slot {i} default locked state: {slot.CharacterLocked}");
+                }
+
                 slot.OnCharacterSelect += CharacterSelected;
                 slot.gameObject.SetActive(true);
                 _characterSlots.Add(slot);

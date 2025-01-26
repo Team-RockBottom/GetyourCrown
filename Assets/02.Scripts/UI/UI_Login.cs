@@ -44,6 +44,7 @@ namespace GetyourCrown.UI
 
                 await LogInAsync(_id.text, _password.text);
                 await DataManager.instance.LoadPlayerDataAsync();
+                //await DataManager.instance.LoadCharactersAsync();
                 PhotonManager.instance.SetNickname(DataManager.instance.Nickname);
             });
 

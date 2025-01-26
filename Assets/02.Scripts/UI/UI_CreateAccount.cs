@@ -43,7 +43,7 @@ namespace GetyourCrown.UI
         {
             base.Show();
                 
-            _create.onClick.AddListener(() => 
+            _create.onClick.AddListener(async() => 
             {
                 if (string.IsNullOrWhiteSpace(_id.text))
                 {
@@ -65,7 +65,7 @@ namespace GetyourCrown.UI
                     return;
                 }
 
-                CreateAccountAsync(_id.text, _password.text);
+                await CreateAccountAsync(_id.text, _password.text);
                 Hide();
             });
 
@@ -77,7 +77,7 @@ namespace GetyourCrown.UI
             try
             {
                 await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync(id, password);
-                await SaveUserDataAsync(id, 1000);
+                await DefaultUserDataAsync(id, 1000);
                 ConfirmWindowShow("계정을 생성하였습니다.");
                 _id.text = string.Empty;
                 _password.text = string.Empty;
@@ -106,12 +106,13 @@ namespace GetyourCrown.UI
             }
         }
 
-        async Task SaveUserDataAsync(string id, int coins)
+        async Task DefaultUserDataAsync(string id, int coins)
         {
             try
             {
                 await DataManager.instance.SaveNicknameAsync(id);
                 await DataManager.instance.SaveCoinsAsync(coins);
+                await DataManager.instance.DefaultCharacterAsync();
             }
             catch (Exception e)
             {

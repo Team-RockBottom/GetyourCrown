@@ -42,12 +42,12 @@ namespace GetyourCrown.UI
             }
         }
         
-        public bool CharacterOwned
+        public bool CharacterLocked
         {
-            get => _isOwnedValue;
+            get => _isLockedValue;
             set
             {
-                _isOwnedValue = value;
+                _isLockedValue = value;
                 _isLocked.gameObject.SetActive(value);
             }
         }
@@ -56,7 +56,7 @@ namespace GetyourCrown.UI
 
         bool _isSelectedValue;
         int _characterPriceValue;
-        bool _isOwnedValue;
+        bool _isLockedValue;
         [Resolve] Button _characterSelectButton;
         [Resolve] Image _isSelected;
         [Resolve] TMP_Text _characterPrice;
@@ -73,7 +73,16 @@ namespace GetyourCrown.UI
 
         void CharacterSelected()
         {
-            OnCharacterSelect?.Invoke(this);
+            if (_isLockedValue)
+            {
+                UI_CharacterBuy _uiCharacterBuy = UI_Manager.instance.Resolve<UI_CharacterBuy>();
+                _uiCharacterBuy.CharacterInfo(CharacterImage, CharacterPrice);
+                _uiCharacterBuy.Show();
+            }
+            else
+            {
+                OnCharacterSelect?.Invoke(this);
+            }
         }
     }
 }
