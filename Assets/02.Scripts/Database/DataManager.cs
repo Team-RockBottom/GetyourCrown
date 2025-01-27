@@ -1,4 +1,5 @@
-using ExitGames.Client.Photon.StructWrapping;
+using GetyourCrown.UI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -69,60 +70,14 @@ namespace GetyourCrown.Database
                 }
                 if (loadedData.ContainsKey(CHARACTER_KEY))
                 {
-                    //Debug.Log(CurrentPlayerData);
-                    //var characterData = loadedData[CHARACTER_KEY].Value;
-                    //Debug.Log(characterData);
-
-                    // Dictionary<string, Item> 형태에서 직접 가져오기
-                    //if (characterData is Dictionary<string, Unity.Services.CloudSave.Models.Item> items)
-                    //{
-                    //    Debug.Log(characterData);
-                    //    var parsedCharacterData = new Dictionary<int, bool>();
-
-                    //     각 아이템을 순회하면서 데이터 처리
-                    //    foreach (var item in items)
-                    //    {
-                    //        int itemId = int.Parse(item.Key);  
-                    //        bool isLocked = item.Value.Get<bool>();
-
-                    //        parsedCharacterData.Add(itemId, isLocked);
-                    //        Debug.Log($"{itemId}, {isLocked}");
-                    //    }
-
-                    //     파싱된 데이터를 CurrentPlayerData에 적용
-                    //    CurrentPlayerData.CharactersLocked = parsedCharacterData;
-
-                    //    foreach (var item in CurrentPlayerData.CharactersLocked)
-                    //    {
-                    //        Debug.Log($"{item.Key}, {item.Value}");
-                    //    }
-                    //}
-
-                    var characterData = loadedData[CHARACTER_KEY].Value;
-
-                    // CloudSave Item 객체를 Dictionary<string, Item>으로 변환
-                    var jsonString = characterData.GetAsString();
-                    var parsedItems = JsonUtility.FromJson<Dictionary<string, bool>>(jsonString);
-
-                    var parsedCharacterData = new Dictionary<int, bool>();
-                    foreach (var kvp in parsedItems)
-                    {
-                        int itemId = int.Parse(kvp.Key);
-                        bool isLocked = kvp.Value;
-                        parsedCharacterData[itemId] = isLocked;
-                    }
-
-                    CurrentPlayerData.CharactersLocked = parsedCharacterData;
-
-                    foreach (var item in CurrentPlayerData.CharactersLocked)
-                    {
-                        Debug.Log($"{item.Key}, {item.Value}");
-                    }
+                    string jsonString = loadedData[CHARACTER_KEY].Value.GetAsString();
+                    CurrentPlayerData.CharactersLocked = JsonConvert.DeserializeObject<Dictionary<int, bool>>(jsonString);
+                    //저장된 JSON문자열을 원래 객체로 역직렬화하여 불러오기
                 }
             }
             catch (Exception e)
             {
-                Debug.Log($"error LoadPlayerdata  : {e}");
+                ShowConfirmWindow($"사용자의 데이터를 불러오지 못했습니다. 다시 시도해주세요. {e}");
             }
         }
         
@@ -139,8 +94,9 @@ namespace GetyourCrown.Database
                 OnNicknameChanged?.Invoke(Nickname);
             }
             catch (Exception e)
-            {
-                Debug.Log(e);
+            {   
+                ShowConfirmWindow($"닉네임을 저장을 실패했습니다. 다시 시도해주세요. {e}");
+
             }
         }
 
@@ -158,7 +114,8 @@ namespace GetyourCrown.Database
             }
             catch (Exception e)
             {
-                Debug.Log(e);
+                ShowConfirmWindow($"코인을 저장을 실패했습니다. 다시 시도해주세요. {e}");
+
             }
         }
 
@@ -172,8 +129,6 @@ namespace GetyourCrown.Database
 
             Coins += coins;
             await SaveCoinsAsync(Coins);
-
-            Debug.Log("Player Coin Update");
         }
 
         public async Task DefaultCharacterAsync()
@@ -189,16 +144,53 @@ namespace GetyourCrown.Database
                 };
 
                 CurrentPlayerData.CharactersLocked = defaultCharacters;
+                string jsonString = JsonConvert.SerializeObject(CurrentPlayerData.CharactersLocked);
+                //데이터를 직렬화해서 저장
+                //데이터를 JSON 문자열로 변환
 
                 await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>
                 {
-                    { CHARACTER_KEY, CurrentPlayerData.CharactersLocked }
+                    { CHARACTER_KEY, jsonString }
                 });
             }
             catch (Exception e)
             {
-                Debug.Log(e);
+                ShowConfirmWindow($"캐릭터 데이터를 저장하지 못하였습니다. 다시 시도해주세요. {e}");
             }
+        }
+
+        public async Task<bool> UnLockCharacterAsync(int characterId)
+        {
+            try
+            {
+                if (CurrentPlayerData.CharactersLocked.ContainsKey(characterId))
+                {
+                    CurrentPlayerData.CharactersLocked[characterId] = false;
+                    string jsonString = JsonConvert.SerializeObject(CurrentPlayerData.CharactersLocked);
+
+                    await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>
+                    {
+                        { CHARACTER_KEY, jsonString },
+                    });
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                ShowConfirmWindow($"캐릭터 해제를 실패하였습니다. 다시 시도해주세요 {e}");
+                return false;
+            }
+        }
+
+        void ShowConfirmWindow(string message)
+        {
+            UI_ConfirmWindow _uiConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+            _uiConfirmWindow.Show(message);
         }
     }
 }

@@ -76,13 +76,11 @@ namespace GetyourCrown.UI
             if (_isLockedValue)
             {
                 UI_CharacterBuy _uiCharacterBuy = UI_Manager.instance.Resolve<UI_CharacterBuy>();
-                _uiCharacterBuy.CharacterInfo(CharacterImage, CharacterPrice);
+                _uiCharacterBuy.CharacterInfo   (CharacterImage, CharacterPrice);
                 _uiCharacterBuy.Show();
             }
-            else
-            {
-                OnCharacterSelect?.Invoke(this);
-            }
+
+            OnCharacterSelect?.Invoke(this);
         }
     }
 }

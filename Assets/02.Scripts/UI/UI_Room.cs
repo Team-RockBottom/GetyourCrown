@@ -1,4 +1,3 @@
-using ExitGames.Client.Photon;
 using ExitGames.Client.Photon.StructWrapping;
 using GetyourCrown.Database;
 using GetyourCrown.Network;
@@ -34,7 +33,6 @@ namespace GetyourCrown.UI
         public Dictionary<int, (Player player, RoomPlayerInfoSlot slot)> _roomPlayerInfoPairs;
         private CharacterSpec[] _characterSpecs;
         const int DEFAULT_CHARACTERSELECT = 0;
-        bool isFirst = true;
         private Coroutine chatCoroutine;
 
         protected override void Awake()

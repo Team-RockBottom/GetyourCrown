@@ -18,17 +18,24 @@ namespace GetyourCrown.UI
         {
             base.Start();
 
-            _confirm.onClick.AddListener(async() =>
+            _confirm.onClick.AddListener(async () =>
             {
                 int price = int.Parse(_price.text);
 
                 if (DataManager.instance.Coins >= price)
                 {
-                    await DataManager.instance.UpdatePlayerCoinsAsync(-price); 
-                    
-                    UI_ConfirmWindow _uiConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
-                    _uiConfirmWindow.Show("캐릭터가 구매되었습니다.");
-                    Hide();
+                    UI_CharacterSelect _uiCharacterSelect = UI_Manager.instance.Resolve<UI_CharacterSelect>();
+                    int characterId = _uiCharacterSelect._lockedSelectCharacterId;
+                    bool characterBuySucces = await DataManager.instance.UnLockCharacterAsync(characterId);
+
+                    if (characterBuySucces)
+                    {
+                        await DataManager.instance.UpdatePlayerCoinsAsync(-price);
+                        UI_ConfirmWindow _uiConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+                        _uiConfirmWindow.Show("캐릭터가 구매되었습니다.");
+                        _uiCharacterSelect.UpdateCharacterSlot();
+                        Hide();
+                    }
                 }
                 else
                 {
@@ -37,7 +44,10 @@ namespace GetyourCrown.UI
                 }
             });
 
-            _cancle.onClick.AddListener(Hide);
+            _cancle.onClick.AddListener(() =>
+            {
+                Hide();
+            });
         }
 
         public override void Show()

@@ -24,6 +24,7 @@ namespace GetyourCrown.UI
         Camera _characterCamera;
         RenderTexture _renderTexture;
         UI_Room _uiRoom;
+        public int _lockedSelectCharacterId;
 
         string _characterSpecFolder = "CharacterSpecs";
         bool isFirst = true;
@@ -81,22 +82,6 @@ namespace GetyourCrown.UI
         {
             await DataManager.instance.LoadPlayerDataAsync();
 
-            Debug.Log("Loading player data...");
-
-            if (DataManager.instance.CurrentPlayerData.CharactersLocked == null)
-            {
-                Debug.LogError("CharactersLocked is null after data load.");
-            }
-            else
-            {
-                Debug.Log("CharactersLocked loaded successfully.");
-                foreach (var pair in DataManager.instance.CurrentPlayerData.CharactersLocked)
-                {
-                    Debug.Log($"CharacterIndex: {pair.Key}, Locked: {pair.Value}");
-                }
-            }
-
-
             if (_characterSlots.Count == _characterSpecs.Length)
                 return;
 
@@ -109,17 +94,13 @@ namespace GetyourCrown.UI
                 slot.CharacterPrice = _characterSpecs[i].price;
                 slot.isSelected = false;
 
-
-                Debug.Log($"Checking CharacterLocked for index {i}: {DataManager.instance.CurrentPlayerData.CharactersLocked.ContainsKey(i)}");
                 if (DataManager.instance.CurrentPlayerData.CharactersLocked.ContainsKey(slot.CharacterIndex))
                 {
                     slot.CharacterLocked = DataManager.instance.CurrentPlayerData.CharactersLocked[slot.CharacterIndex];
-                    Debug.Log($"Slot {i} locked state: {slot.CharacterLocked}");  // 잠금 상태 확인
                 }
                 else
                 {
                     slot.CharacterLocked = _characterSpecs[i].isLocked;
-                    Debug.Log($"Slot {i} default locked state: {slot.CharacterLocked}");
                 }
 
                 slot.OnCharacterSelect += CharacterSelected;
@@ -135,14 +116,20 @@ namespace GetyourCrown.UI
 
         private void CharacterSelected(CharacterSlot selectCharacter)
         {
+            if (selectCharacter.CharacterLocked)
+            {
+                int lockedCharacterId = selectCharacter.CharacterIndex;
+                _lockedSelectCharacterId = lockedCharacterId;
+                return; 
+            }
             foreach (var slot in _characterSlots)
             {
                 slot.isSelected = false;
             }
 
             selectCharacter.isSelected = true;
-
             int selectedCharacterId = selectCharacter.CharacterIndex; // 선택된 캐릭터ID 저장
+
             PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable()
             {
                 { PlayerInRoomProperty.CHARACTER_ID, selectedCharacterId }  // 캐릭터아이디 키로 선택된 캐릭터ID 저장 및 동기화
@@ -188,6 +175,17 @@ namespace GetyourCrown.UI
 
                 // 카메라 렌더링을 실행하여 캐릭터를 RawImage에 표시
                 _characterCamera.Render();
+            }
+        }
+
+        public void UpdateCharacterSlot()
+        {
+            foreach (var slot in _characterSlots)
+            {
+                if (DataManager.instance.CurrentPlayerData.CharactersLocked.ContainsKey(slot.CharacterIndex))
+                {
+                    slot.CharacterLocked = DataManager.instance.CurrentPlayerData.CharactersLocked[slot.CharacterIndex];
+                }
             }
         }
     }

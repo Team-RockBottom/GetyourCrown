@@ -1,10 +1,8 @@
 using GetyourCrown.UI.UI_Utilities;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.Services.Authentication;
-using Unity.Services.CloudSave;
 using Unity.Services.Core;
 using UnityEngine.UI;
 using UnityEngine;
@@ -45,21 +43,7 @@ namespace GetyourCrown.UI
                 
             _create.onClick.AddListener(async() => 
             {
-                if (string.IsNullOrWhiteSpace(_id.text))
-                {
-                    ConfirmWindowShow("닉네임을 입력해주세요.");
-                    return;
-                }
-                else if (string.IsNullOrWhiteSpace(_password.text))
-                {
-                    ConfirmWindowShow("비밀번호를 입력해주세요.");
-                    return;
-                }
-                else if (_password.text != _confirmPassword.text)
-                {
-                    ConfirmWindowShow("비밀번호를 확인해주세요.");
-                }
-                else if (!IsPasswordValid(_password.text))
+                if (!IsPasswordValid(_password.text))
                 {
                     IsPasswordValid(_password.text);
                     return;
@@ -129,32 +113,47 @@ namespace GetyourCrown.UI
 
         private bool IsPasswordValid(string password)
         {
+            if (string.IsNullOrWhiteSpace(_id.text))
+            {
+                ConfirmWindowShow("닉네임을 입력해주세요.");
+                return false;
+            }
+            else if (string.IsNullOrWhiteSpace(_password.text))
+            {
+                ConfirmWindowShow("비밀번호를 입력해주세요.");
+                return false;
+            }
+            else if (_password.text != _confirmPassword.text)
+            {
+                ConfirmWindowShow("비밀번호를 확인해주세요.");
+                return false;
+            }
             // 비밀번호가 최소 8자, 최대 16자 사이인지 확인
-            if (password.Length < 8 || password.Length > 16)
+            else if (password.Length < 8 || password.Length > 16)
             {
                 ConfirmWindowShow("비밀번호는 8자 이상 16자 이하이어야 합니다.");
                 return false;
             }
             // 대문자 포함 여부 확인
-            if (!Regex.IsMatch(password, @"[A-Z]"))
+            else if (!Regex.IsMatch(password, @"[A-Z]"))
             {
                 ConfirmWindowShow("비밀번호는 최소 1개의 대문자를 포함해야 합니다.");
                 return false;
             }
             // 소문자 포함 여부 확인
-            if (!Regex.IsMatch(password, @"[a-z]"))
+            else if (!Regex.IsMatch(password, @"[a-z]"))
             {
                 ConfirmWindowShow("비밀번호는 최소 1개의 소문자를 포함해야 합니다.");
                 return false;
             }
             // 숫자 포함 여부 확인
-            if (!Regex.IsMatch(password, @"[0-9]"))
+            else if (!Regex.IsMatch(password, @"[0-9]"))
             {
                 ConfirmWindowShow("비밀번호는 최소 1개의 숫자를 포함해야 합니다.");
                 return false;
             }
             // 특수문자 포함 여부 확인
-            if (!Regex.IsMatch(password, @"[\W_]+"))
+            else if (!Regex.IsMatch(password, @"[\W_]+"))
             {
                 ConfirmWindowShow("비밀번호는 최소 1개의 특수문자를 포함해야 합니다.");
                 return false;
