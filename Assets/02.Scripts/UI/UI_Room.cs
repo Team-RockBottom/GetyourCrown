@@ -221,13 +221,13 @@ namespace GetyourCrown.UI
                 else // 캐릭터 선택을 하지 않았다면
                 {
                     RenderTexture slotRenderTexture = new RenderTexture(512, 512, 32);
-                    slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DEFAULT_CHARACTERSELECT].prefab, player.ActorNumber);
+                    slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DataManager.instance.LastCharacter].prefab, player.ActorNumber);
                 }
             }
             else // 캐릭터 아이디가 없다면
             {
                 RenderTexture slotRenderTexture = new RenderTexture(512, 512, 32);
-                slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DEFAULT_CHARACTERSELECT].prefab, player.ActorNumber);
+                slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DataManager.instance.LastCharacter].prefab, player.ActorNumber);
             }
         }
 

@@ -8,22 +8,25 @@ using Unity.Services.Core;
 using UnityEngine;
 
 namespace GetyourCrown.Database
-
 {
     public class DataManager : MonoBehaviour
     {
         public static DataManager instance { get; private set; }
         public PlayerData CurrentPlayerData { get; private set; } = new PlayerData();
 
+        [SerializeField] CharacterSpecRepository _characterSpecRepository;
+
         private const string NICKNAME_KEY = "Nickname";
         private const string COINS_KEY = "Coins";
         private const string CHARACTER_KEY = "Chracters";
+        private const string LAST_CHARACTER_KEY = "LastCharacter";
 
         public event Action<string> OnNicknameChanged;
         public event Action<int> OnCoinsChanged;
 
         public string Nickname { get; private set; }
         public int Coins { get; private set; }
+        public int LastCharacter { get; private set; }
 
         void Awake()
         {
@@ -52,7 +55,7 @@ namespace GetyourCrown.Database
             try
             {
                 //불러올 데이터 키를 저장
-                var keys = new HashSet<string> { NICKNAME_KEY, COINS_KEY, CHARACTER_KEY };
+                var keys = new HashSet<string> { NICKNAME_KEY, COINS_KEY, CHARACTER_KEY, LAST_CHARACTER_KEY };
                 //cloudsave에서 데이터 로드
                 var loadedData = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
 
@@ -74,9 +77,14 @@ namespace GetyourCrown.Database
                     CurrentPlayerData.CharactersLocked = JsonConvert.DeserializeObject<Dictionary<int, bool>>(jsonString);
                     //저장된 JSON문자열을 원래 객체로 역직렬화하여 불러오기
                 }
+                if (loadedData.ContainsKey(LAST_CHARACTER_KEY))
+                {
+                    LastCharacter = loadedData[LAST_CHARACTER_KEY].Value.GetAs<int>();
+                }
             }
             catch (Exception e)
             {
+                Debug.Log(e);
                 ShowConfirmWindow($"사용자의 데이터를 불러오지 못했습니다. 다시 시도해주세요. {e}");
             }
         }
@@ -94,9 +102,9 @@ namespace GetyourCrown.Database
                 OnNicknameChanged?.Invoke(Nickname);
             }
             catch (Exception e)
-            {   
+            {
+                Debug.Log(e);
                 ShowConfirmWindow($"닉네임을 저장을 실패했습니다. 다시 시도해주세요. {e}");
-
             }
         }
 
@@ -114,8 +122,8 @@ namespace GetyourCrown.Database
             }
             catch (Exception e)
             {
+                Debug.Log(e);
                 ShowConfirmWindow($"코인을 저장을 실패했습니다. 다시 시도해주세요. {e}");
-
             }
         }
 
@@ -123,7 +131,6 @@ namespace GetyourCrown.Database
         {
             if (Coins + coins < 0)
             {
-                Debug.Log("Coin shortage");
                 return;
             }
 
@@ -135,13 +142,14 @@ namespace GetyourCrown.Database
         {
             try
             {
-                var defaultCharacters = new Dictionary<int, bool>
+                var defaultCharacters = new Dictionary<int, bool>();
+
+                for (int i = 0; i < _characterSpecRepository.specs.Count; i++)
                 {
-                    { 0, true },
-                    { 1, false },
-                    { 2, false },
-                    { 3, false },
-                };
+                    var characterData = _characterSpecRepository.specs[i];
+                    bool isLocked = characterData.id != 0;
+                    defaultCharacters.Add(i, isLocked);
+                }
 
                 CurrentPlayerData.CharactersLocked = defaultCharacters;
                 string jsonString = JsonConvert.SerializeObject(CurrentPlayerData.CharactersLocked);
@@ -155,7 +163,27 @@ namespace GetyourCrown.Database
             }
             catch (Exception e)
             {
+                Debug.Log(e);
+                //비동기는 내부적으로 스레드를 멀티태스킹 방식으로 처리
+                //await가 호출되면 현재 스레드는 비동기 작업이 완료될 때까지 차단되지 않고, 다른 작업을 처리하여
+                //널레퍼런스여도 유니티에서 나오지 않음
                 ShowConfirmWindow($"캐릭터 데이터를 저장하지 못하였습니다. 다시 시도해주세요. {e}");
+            }
+        }
+        public async Task SaveLastCharacterAsync(int characterId)
+        {
+            try
+            {
+                LastCharacter = characterId;
+                await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>
+                {
+                    { LAST_CHARACTER_KEY, LastCharacter },
+                });
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+                ShowConfirmWindow($"코인을 저장을 실패했습니다. 다시 시도해주세요. {e}");
             }
         }
 
@@ -182,7 +210,8 @@ namespace GetyourCrown.Database
             }
             catch (Exception e)
             {
-                ShowConfirmWindow($"캐릭터 해제를 실패하였습니다. 다시 시도해주세요 {e}");
+                Debug.Log(e);
+                ShowConfirmWindow($"캐릭터 해제를 실패하였습니다. 다시 시도해주세요. {e}");
                 return false;
             }
         }

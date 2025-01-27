@@ -1,17 +1,19 @@
-using ExitGames.Client.Photon;
 using GetyourCrown.Database;
 using GetyourCrown.Network;
 using GetyourCrown.UI.UI_Utilities;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace GetyourCrown.UI
 {
-    public class UI_CharacterSelect : UI_Popup
+    public class UI_CharacterSelect : UI_Popup, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
         [Resolve] Button _close;
         [Resolve] RectTransform _characterSlotContent;
@@ -24,13 +26,16 @@ namespace GetyourCrown.UI
         Camera _characterCamera;
         RenderTexture _renderTexture;
         UI_Room _uiRoom;
+        public int _selectedCharacterId;
         public int _lockedSelectCharacterId;
+        private Vector2 _lastMousePosition;
+        private bool _isRotating = false;
+        private Quaternion _currentCharacterRotation;
+        private Quaternion _startRotation;
 
         string _characterSpecFolder = "CharacterSpecs";
-        bool isFirst = true;
 
-        const int DEFAULT_CHARACTERSELECT = 0;
-        const int DEFAULT_CHARACTER_LIST_SIZE = 20;
+        private const int DEFAULT_CHARACTER_LIST_SIZE = 20;
 
         protected override void Start()
         {
@@ -39,6 +44,10 @@ namespace GetyourCrown.UI
             _uiRoom = FindFirstObjectByType<UI_Room>();
         }
 
+        private void Update()
+        {
+            //MouseDragCharacterRotation();
+        }
         public void Show(UnityAction onConfirmed = null)
         {
             base.Show();
@@ -65,12 +74,7 @@ namespace GetyourCrown.UI
 
             LoadCharacterSpecs();
             LoadCharacterSlot();
-
-            if (isFirst)
-            {
-                SelectedCharacterPreview(_characterSpecs[DEFAULT_CHARACTERSELECT]);
-                isFirst = false;
-            }
+            SelectedCharacterPreview(_characterSpecs[DataManager.instance.LastCharacter]);
         }
 
         private void LoadCharacterSpecs()
@@ -110,7 +114,7 @@ namespace GetyourCrown.UI
 
             if (_characterSlots.Count > 0)
             {
-                _characterSlots[DEFAULT_CHARACTERSELECT].isSelected = true;
+                _characterSlots[DataManager.instance.LastCharacter].isSelected = true;
             }
         }
 
@@ -129,6 +133,7 @@ namespace GetyourCrown.UI
 
             selectCharacter.isSelected = true;
             int selectedCharacterId = selectCharacter.CharacterIndex; // 선택된 캐릭터ID 저장
+            _selectedCharacterId = selectedCharacterId;
 
             PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable()
             {
@@ -186,6 +191,55 @@ namespace GetyourCrown.UI
                 {
                     slot.CharacterLocked = DataManager.instance.CurrentPlayerData.CharactersLocked[slot.CharacterIndex];
                 }
+            }
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if (RectTransformUtility.RectangleContainsScreenPoint(_characterPreview.rectTransform, Input.mousePosition))
+            {
+                _startRotation = _currentCharacter.transform.rotation;
+                _lastMousePosition = Input.mousePosition;
+                _isRotating = true;
+            }
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (_currentCharacter != null)
+                StartCoroutine(C_RotateCharaterSlerp());
+
+            _isRotating = false;
+        }
+
+        private IEnumerator C_RotateCharaterSlerp()
+        {
+            float elapsedTime = 0f;
+            float returnDuration = 0.1f;
+            Quaternion currentRotation = _currentCharacter.transform.rotation;
+
+            while (elapsedTime < returnDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = elapsedTime / returnDuration;
+                _currentCharacter.transform.rotation = Quaternion.Slerp(currentRotation, _startRotation, t);
+                yield return null;
+            }
+
+            _currentCharacter.transform.rotation = _startRotation;
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (_isRotating)
+            {
+                Vector2 delta = (Vector2)Input.mousePosition - _lastMousePosition;
+                float rotationSpeed = 0.2f;
+
+                if (_currentCharacter != null)
+                    _currentCharacter.transform.Rotate(Vector3.up, -delta.x * rotationSpeed, Space.World);
+
+                _lastMousePosition = Input.mousePosition;
             }
         }
     }

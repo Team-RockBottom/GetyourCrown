@@ -19,6 +19,7 @@ namespace GetyourCrown.UI
         [Resolve] Button _create;
         [Resolve] Button _cancle;
 
+        private const int DEFAULT_CHARACTER_ID = 0;
         protected override async void Start()
         {
             base.Start();
@@ -97,6 +98,7 @@ namespace GetyourCrown.UI
                 await DataManager.instance.SaveNicknameAsync(id);
                 await DataManager.instance.SaveCoinsAsync(coins);
                 await DataManager.instance.DefaultCharacterAsync();
+                await DataManager.instance.SaveLastCharacterAsync(DEFAULT_CHARACTER_ID);
             }
             catch (Exception e)
             {

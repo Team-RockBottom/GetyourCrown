@@ -6,6 +6,7 @@ namespace GetyourCrown.Database
     {
         public string Nickname = "Guest";
         public int Coins = 0;
+        public int LastCharacter = 0;
         public Dictionary<int, bool> CharactersLocked { get; set; } = new Dictionary<int, bool>();
     }
 }
