@@ -32,15 +32,15 @@ namespace GetyourCrown.UI
             }
         }
 
-        public int CharacterPrice
-        {
-            get => _characterPriceValue;
-            set
-            {
-                _characterPriceValue = value;
-                _characterPrice.text = _characterPriceValue.ToString();
-            }
-        }
+        //public int CharacterPrice
+        //{
+        //    get => _characterPriceValue;
+        //    set
+        //    {
+        //        _characterPriceValue = value;
+        //        //_characterPrice.text = _characterPriceValue.ToString();
+        //    }
+        //}
         
         public bool CharacterLocked
         {
@@ -59,7 +59,7 @@ namespace GetyourCrown.UI
         bool _isLockedValue;
         [Resolve] Button _characterSelectButton;
         [Resolve] Image _isSelected;
-        [Resolve] TMP_Text _characterPrice;
+        //[Resolve] TMP_Text _characterPrice;
         [Resolve] Image _isLocked;
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace GetyourCrown.UI
             if (_isLockedValue)
             {
                 UI_CharacterBuy _uiCharacterBuy = UI_Manager.instance.Resolve<UI_CharacterBuy>();
-                _uiCharacterBuy.CharacterInfo   (CharacterImage, CharacterPrice);
+                _uiCharacterBuy.CharacterInfo(CharacterImage); //, CharacterPrice);
                 _uiCharacterBuy.Show();
             }
 

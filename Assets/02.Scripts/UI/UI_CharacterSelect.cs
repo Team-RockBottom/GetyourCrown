@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -80,6 +81,8 @@ namespace GetyourCrown.UI
         private void LoadCharacterSpecs()
         {
             _characterSpecs = Resources.LoadAll<CharacterSpec>(_characterSpecFolder);
+            //LoadAll은 리소스에서 무작위로 로드하기때문에 스펙에 넣고 id순으로 정렬
+            _characterSpecs = _characterSpecs.OrderBy(spec => spec.id).ToArray();
         }
 
         private async void LoadCharacterSlot()
@@ -95,7 +98,7 @@ namespace GetyourCrown.UI
                 slot.gameObject.SetActive(true);
                 slot.CharacterIndex = _characterSpecs[i].id;
                 slot.CharacterImage = _characterSpecs[i].sprite;
-                slot.CharacterPrice = _characterSpecs[i].price;
+                //slot.CharacterPrice = _characterSpecs[i].price;
                 slot.isSelected = false;
 
                 if (DataManager.instance.CurrentPlayerData.CharactersLocked.ContainsKey(slot.CharacterIndex))
