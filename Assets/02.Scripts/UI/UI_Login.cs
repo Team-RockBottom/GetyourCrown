@@ -24,7 +24,7 @@ namespace GetyourCrown.UI
         protected override async void Start()
         {
             base.Start();
-
+            _guest.interactable = false;
             _id.characterLimit = 20;
             _password.characterLimit = 16;
 
@@ -55,13 +55,13 @@ namespace GetyourCrown.UI
                 _uiCreateAccount.Show();
             });
 
-            _guest.onClick.AddListener(async() =>
-            {
-                await AuthenticationService.Instance.SignInAnonymouslyAsync();
-                //PhotonManager.instance.SetNickname(AuthenticationService.Instance.PlayerId);
-                DataManager.instance.GuestData();
-                Hide();
-            });
+            //_guest.onClick.AddListener(async() =>
+            //{
+            //    await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            //    DataManager.instance.isGuest = true;
+            //    DataManager.instance.GuestData();
+            //    Hide();
+            //});
 
             _exit.onClick.AddListener(() =>
             {

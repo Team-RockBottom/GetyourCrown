@@ -45,10 +45,6 @@ namespace GetyourCrown.UI
             _uiRoom = FindFirstObjectByType<UI_Room>();
         }
 
-        private void Update()
-        {
-            //MouseDragCharacterRotation();
-        }
         public void Show(UnityAction onConfirmed = null)
         {
             base.Show();

@@ -16,7 +16,7 @@ namespace GetyourCrown.Database
         public PlayerData CurrentPlayerData { get; private set; } = new PlayerData();
 
         [SerializeField] CharacterSpecRepository _characterSpecRepository;
-
+        //public bool isGuset = false;
         private const string NICKNAME_KEY = "Nickname";
         private const string COINS_KEY = "Coins";
         private const string CHARACTER_KEY = "Chracters";
@@ -90,37 +90,31 @@ namespace GetyourCrown.Database
             }
         }
 
-        public void GuestData()
-        {
-            string guestId = "Guest" + UnityEngine.Random.Range(1000, 9999).ToString();
-            var defaultCharacters = new Dictionary<int, bool>();
+        //public void GuestData()
+        //{
+        //    string guestId = "Guest" + UnityEngine.Random.Range(1000, 9999).ToString();
+        //    var defaultCharacters = new Dictionary<int, bool>();
 
-            for (int i = 0; i < _characterSpecRepository.specs.Count; i++)
-            {
-                var characterData = _characterSpecRepository.specs[i];
-                bool isLocked = characterData.id != 0;
-                defaultCharacters.Add(i, isLocked);
-            }
+        //    for (int i = 0; i < _characterSpecRepository.specs.Count; i++)
+        //    {
+        //        var characterData = _characterSpecRepository.specs[i];
+        //        bool isLocked = characterData.id != 0;
+        //        defaultCharacters.Add(i, isLocked);
+        //    }
 
-            CurrentPlayerData = new PlayerData
-            {
-                Nickname = guestId,
-                Coins = 0,
-                LastCharacter = 0,
-                CharactersLocked = defaultCharacters
-            };
+        //    CurrentPlayerData = new PlayerData
+        //    {
+        //        Nickname = guestId,
+        //        Coins = 0,
+        //        LastCharacter = 0,
+        //        CharactersLocked = defaultCharacters
+        //    };
 
-            Nickname = guestId;
-            Coins = 0;
-            LastCharacter = 0;
-            PhotonNetwork.NickName = guestId;
-
-            Debug.Log(Nickname);
-            Debug.Log(Coins);
-            Debug.Log(LastCharacter);
-
-
-        }
+        //    Nickname = guestId;
+        //    Coins = 0;
+        //    LastCharacter = 0;
+        //    PhotonNetwork.NickName = guestId;
+        //}
         
         public async Task SaveNicknameAsync(string newnickname)
         {

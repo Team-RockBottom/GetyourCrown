@@ -130,7 +130,7 @@ namespace GetyourCrown.UI
             }
 
             UpdataCoins(DataManager.instance.Coins);
-
+            
             foreach (int actorNumber in _roomPlayerInfoPairs.Keys.ToList())
             {
                 Destroy(_roomPlayerInfoPairs[actorNumber].slot.gameObject);
@@ -371,7 +371,7 @@ namespace GetyourCrown.UI
                 { PlayerInRoomProperty.CHAT_STATE, isChat == false},
                 { PlayerInRoomProperty.CHAT_MESSAGE, slotMessage = message }
             });
-
+            
             _chatInputField.text = string.Empty;
 
             if (chatCoroutine != null)
