@@ -71,7 +71,7 @@ namespace GetyourCrown.UI
         {
             try
             {
-                await DataManager.instance.SaveNicknameAsync(newNickname);
+                await DataManager.instance. SaveNicknameAsync(newNickname);
                 DataManager.instance.CurrentPlayerData.Nickname = newNickname;
                 PhotonNetwork.NickName = newNickname;
                 return true;

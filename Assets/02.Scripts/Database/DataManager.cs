@@ -1,5 +1,6 @@
 using GetyourCrown.UI;
 using Newtonsoft.Json;
+using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -87,6 +88,38 @@ namespace GetyourCrown.Database
                 Debug.Log(e);
                 ShowConfirmWindow($"사용자의 데이터를 불러오지 못했습니다. 다시 시도해주세요. {e}");
             }
+        }
+
+        public void GuestData()
+        {
+            string guestId = "Guest" + UnityEngine.Random.Range(1000, 9999).ToString();
+            var defaultCharacters = new Dictionary<int, bool>();
+
+            for (int i = 0; i < _characterSpecRepository.specs.Count; i++)
+            {
+                var characterData = _characterSpecRepository.specs[i];
+                bool isLocked = characterData.id != 0;
+                defaultCharacters.Add(i, isLocked);
+            }
+
+            CurrentPlayerData = new PlayerData
+            {
+                Nickname = guestId,
+                Coins = 0,
+                LastCharacter = 0,
+                CharactersLocked = defaultCharacters
+            };
+
+            Nickname = guestId;
+            Coins = 0;
+            LastCharacter = 0;
+            PhotonNetwork.NickName = guestId;
+
+            Debug.Log(Nickname);
+            Debug.Log(Coins);
+            Debug.Log(LastCharacter);
+
+
         }
         
         public async Task SaveNicknameAsync(string newnickname)

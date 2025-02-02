@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CharacterSpecRepository
   m_EditorClassIdentifier: 
   specs:
-  - {fileID: 11400000, guid: f117b1de841998f46bfa65a3a64cc085, type: 2}
-  - {fileID: 11400000, guid: c2ea301a2e3cacf4da1738abea21cba3, type: 2}
   - {fileID: 11400000, guid: 4cd86f9165b63f44bbc01510b28a08ca, type: 2}
+  - {fileID: 11400000, guid: c2ea301a2e3cacf4da1738abea21cba3, type: 2}
+  - {fileID: 11400000, guid: f117b1de841998f46bfa65a3a64cc085, type: 2}
   - {fileID: 11400000, guid: 9f697ab765641f948979f96bf21142ba, type: 2}
   - {fileID: 11400000, guid: 4750db04daf2cf949b313ff0ff19a7d8, type: 2}
   - {fileID: 11400000, guid: 47c47adbad8b5384a92ace1615b8bb27, type: 2}

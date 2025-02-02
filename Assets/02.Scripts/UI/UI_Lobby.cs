@@ -32,8 +32,12 @@ namespace GetyourCrown.UI
             playerInputActions.UI.Click.performed += OnClick;
 
             UpdateUIWithPlayerData();
-            DataManager.instance.OnNicknameChanged += UpdateNicknameUI;
-            DataManager.instance.OnCoinsChanged += UpdateCoinsUI;
+
+            if (DataManager.instance != null)
+            {
+                DataManager.instance.OnNicknameChanged += UpdateNicknameUI;
+                DataManager.instance.OnCoinsChanged += UpdateCoinsUI;
+            }
 
             _createRoom.onClick.AddListener(() =>
             {

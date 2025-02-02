@@ -55,10 +55,10 @@ namespace GetyourCrown.UI
             base.Show();
         }
 
-        public void CharacterInfo(Sprite sprite) //, int price)
+        public void CharacterInfo(Sprite sprite, int price)
         {
             _characterImage.sprite = sprite;
-            //_price.text = price.ToString();
+            _price.text = price.ToString();
         }
     }
 }

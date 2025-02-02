@@ -98,18 +98,9 @@ namespace GetyourCrown.UI
                 slot.gameObject.SetActive(true);
                 slot.CharacterIndex = _characterSpecs[i].id;
                 slot.CharacterImage = _characterSpecs[i].sprite;
-                //slot.CharacterPrice = _characterSpecs[i].price;
+                slot.CharacterPrice = _characterSpecs[i].price;
                 slot.isSelected = false;
-
-                if (DataManager.instance.CurrentPlayerData.CharactersLocked.ContainsKey(slot.CharacterIndex))
-                {
-                    slot.CharacterLocked = DataManager.instance.CurrentPlayerData.CharactersLocked[slot.CharacterIndex];
-                }
-                else
-                {
-                    slot.CharacterLocked = _characterSpecs[i].isLocked;
-                }
-
+                slot.CharacterLocked = DataManager.instance.CurrentPlayerData.CharactersLocked[slot.CharacterIndex];
                 slot.OnCharacterSelect += CharacterSelected;
                 slot.gameObject.SetActive(true);
                 _characterSlots.Add(slot);

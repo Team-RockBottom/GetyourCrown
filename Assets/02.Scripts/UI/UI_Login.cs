@@ -1,6 +1,8 @@
 using GetyourCrown.Database;
 using GetyourCrown.Network;
 using GetyourCrown.UI.UI_Utilities;
+using Photon.Pun;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.Services.Authentication;
@@ -44,7 +46,6 @@ namespace GetyourCrown.UI
 
                 await LogInAsync(_id.text, _password.text);
                 await DataManager.instance.LoadPlayerDataAsync();
-                //await DataManager.instance.LoadCharactersAsync();
                 PhotonManager.instance.SetNickname(DataManager.instance.Nickname);
             });
 
@@ -57,7 +58,8 @@ namespace GetyourCrown.UI
             _guest.onClick.AddListener(async() =>
             {
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
-                PhotonManager.instance.SetNickname(AuthenticationService.Instance.PlayerId);
+                //PhotonManager.instance.SetNickname(AuthenticationService.Instance.PlayerId);
+                DataManager.instance.GuestData();
                 Hide();
             });
 
