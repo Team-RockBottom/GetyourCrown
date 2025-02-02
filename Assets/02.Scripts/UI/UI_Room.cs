@@ -257,7 +257,7 @@ namespace GetyourCrown.UI
             _characterCamera.clearFlags = CameraClearFlags.SolidColor;
             RenderTexture renderTexture = new RenderTexture(512, 512, 32);
             _characterCamera.targetTexture = renderTexture;
-            _characterCamera.Render();  
+            _characterCamera.Render();
             return renderTexture;
         }
 
@@ -291,6 +291,18 @@ namespace GetyourCrown.UI
             {
                 Destroy(pair.slot.gameObject);
                 _roomPlayerInfoPairs.Remove(otherPlayer.ActorNumber);
+            }
+
+            string cameraName = $"CharacterCamera_Slot{otherPlayer.ActorNumber}";
+            GameObject cameraDestroy = GameObject.Find(cameraName);
+            if (cameraDestroy != null)
+            {
+                Destroy(cameraDestroy);
+            }
+            if (_slotCharacterPrefabs.TryGetValue(otherPlayer.ActorNumber, out GameObject characterDestroy))
+            {
+                Destroy(characterDestroy);
+                _slotCharacterPrefabs.Remove(otherPlayer.ActorNumber);
             }
         }
 
