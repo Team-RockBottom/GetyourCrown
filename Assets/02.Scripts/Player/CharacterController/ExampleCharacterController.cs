@@ -593,7 +593,7 @@ namespace GetyourCrown.CharacterContorller
         [SerializeField] LayerMask _crownLayer;
 
 
-
+        private const float CHARACTER_HEIGHT = 1f;
         private const float CHARACTER_RADIUS = 0.5f;
         private const float SPHERCAST_RADIUS = 1f;
         private const float SPHERCAST_MAXDISTANCE = 2f;
@@ -623,7 +623,7 @@ namespace GetyourCrown.CharacterContorller
 
         public void TryAttack()
         {
-            Vector3 castingPosition = transform.position + (Vector3.forward + Vector3.up) * SPHERCAST_RADIUS * rangeMultiple - Vector3.forward*CHARACTER_RADIUS;
+            Vector3 castingPosition = transform.position + (Vector3.forward * SPHERCAST_RADIUS * rangeMultiple - Vector3.forward*CHARACTER_RADIUS) + Vector3.up * (CHARACTER_HEIGHT + CHARACTER_RADIUS);
 
             if (Physics.SphereCast(castingPosition, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE * rangeMultiple, _kingLayer))
             {

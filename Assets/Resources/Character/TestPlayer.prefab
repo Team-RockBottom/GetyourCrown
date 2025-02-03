@@ -2869,6 +2869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _crownPosition: {fileID: 4373345236079628577}
   _augmentIsNotSelected: 1
+  _selectedAugmentId: 0
   _kingLayer:
     serializedVersion: 2
     m_Bits: 131072
