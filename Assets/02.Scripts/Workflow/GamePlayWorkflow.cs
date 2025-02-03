@@ -24,7 +24,7 @@ namespace GetyourCrown.Network
         [SerializeField] TMP_Text _longTimer;
         [SerializeField] Image _eventCountImage;
         [SerializeField] TMP_Text _eventCountText;
-        float _gamePlayTimeCount = 10;
+        float _gamePlayTimeCount = 180;
 
         int _timeCount = 0;
         WaitForSeconds _waitFor1Seconds = new WaitForSeconds(1);
@@ -241,6 +241,7 @@ namespace GetyourCrown.Network
             }
             _uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
             _uI_ConfirmWindow.Show(message);
+            Cursor.lockState = CursorLockMode.Confined;
             _uI_ConfirmWindow.ConfirmInteractable = false;
             _uI_ConfirmWindow.onHide += () => 
             {
