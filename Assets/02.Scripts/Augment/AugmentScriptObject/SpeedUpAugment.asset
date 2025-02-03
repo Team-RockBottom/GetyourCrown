@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: SpeedUpAugment
   m_EditorClassIdentifier: 
   <augmentId>k__BackingField: 1
-  <augmentName>k__BackingField: SpeedUp
-  <augmentDescripction>k__BackingField: If you are not wearing a crown, your movement
-    speed will increase by 5% every 2 seconds, up to a maximum of 25%.
-  <augmentIcon>k__BackingField: {fileID: 21300000, guid: 20a6a1bc5c5c3994a901f4f2d677ae87, type: 3}
+  <augmentName>k__BackingField: More Faster
+  <augmentDescripction>k__BackingField: If you're not wearing Crown, Your speed increase
+    5% for 2second (Maximum 25%)
+  <augmentIcon>k__BackingField: {fileID: 21300000, guid: cb873b07dc75243c1942d89018500c32, type: 3}
   <multiple>k__BackingField: 0
   <speedIncrease>k__BackingField: 5
   <increaseCoolDown>k__BackingField: 0

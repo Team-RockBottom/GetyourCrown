@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Gamble
   m_EditorClassIdentifier: 
   <augmentId>k__BackingField: 5
-  <augmentName>k__BackingField: Gamble
-  <augmentDescripction>k__BackingField: Gamble
-  <augmentIcon>k__BackingField: {fileID: 21300000, guid: 20a6a1bc5c5c3994a901f4f2d677ae87, type: 3}
+  <augmentName>k__BackingField: Score Gamble
+  <augmentDescripction>k__BackingField: If you don't move when you're wearing a crown,
+    Your Score increase twice
+  <augmentIcon>k__BackingField: {fileID: 21300000, guid: aef20f8e21ef14da9ba50e7d8df50510, type: 3}
   <multiple>k__BackingField: 0
   <speedIncrease>k__BackingField: 0
   <increaseCoolDown>k__BackingField: 0

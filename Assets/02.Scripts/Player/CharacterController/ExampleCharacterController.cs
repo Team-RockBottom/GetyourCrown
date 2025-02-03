@@ -66,6 +66,8 @@ namespace GetyourCrown.CharacterContorller
         bool _isStun = false;
         bool _scoreCheckAlreadyStart = false;
 
+        public bool _augmentIsNotSelected = true;
+
         PhotonView _photonView;
         ExampleCharacterController _controller;
         ScoreCounter _scoreCounter;
@@ -658,7 +660,6 @@ namespace GetyourCrown.CharacterContorller
                 default:
                     break;
                 case 1:
-                    //speedMultiple = augment.speedIncrease;
                     _speedUpAugmentActive = true;
                     break;
                 case 2:
@@ -675,6 +676,8 @@ namespace GetyourCrown.CharacterContorller
                     Debug.Log("Switch 5 Call");
                 break;
             }
+
+            _augmentIsNotSelected = false;
         }
         private void ResetSpeedMultiplier()
         {

@@ -35,6 +35,7 @@ namespace GetyourCrown.UI
             {
                 VSyncSelect(currentVSyncCount);
                 FullScreenSelect(currentFullScreen);
+                Cursor.lockState = CursorLockMode.Locked;
                 Hide();
             });
 
@@ -51,6 +52,7 @@ namespace GetyourCrown.UI
                 _fullScreen.isOn = prevIsFullScreen;
 
                 _volum.value = prevAudioVolum;
+                Cursor.lockState = CursorLockMode.Locked;
                 Hide();
             });
         }
