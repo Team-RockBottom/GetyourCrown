@@ -1739,7 +1739,7 @@ MonoBehaviour:
   ObstructionCheckRadius: 0.2
   ObstructionLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
   ObstructionSharpness: 10000
   IgnoredColliders: []
 --- !u!1 &2005409798
@@ -1877,11 +1877,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6697348817880839626, guid: dd6f1eb7248019d49a4015c6a372aea2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.049988
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6697348817880839626, guid: dd6f1eb7248019d49a4015c6a372aea2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 302.1529
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6697348817880839626, guid: dd6f1eb7248019d49a4015c6a372aea2, type: 3}
       propertyPath: m_AnchoredPosition.x
