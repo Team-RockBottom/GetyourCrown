@@ -67,6 +67,7 @@ namespace GetyourCrown.CharacterContorller
         bool _scoreCheckAlreadyStart = false;
 
         public bool _augmentIsNotSelected = true;
+        public int _selectedAugmentId;
 
         PhotonView _photonView;
         ExampleCharacterController _controller;
@@ -677,6 +678,7 @@ namespace GetyourCrown.CharacterContorller
                 break;
             }
 
+            _selectedAugmentId = augmentId;
             _augmentIsNotSelected = false;
         }
         private void ResetSpeedMultiplier()
