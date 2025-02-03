@@ -248,7 +248,6 @@ namespace GetyourCrown.CharacterContorller
         {
             _animator.SetInteger(STATE_HASH, (int)State.Pick);
             _animator.SetBool(IS_DIRTY_HASH, true);
-            Character.TryPickUp();
             yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
             _animator.SetInteger(STATE_HASH, (int)State.Move);
             _isWorking = false;
@@ -266,7 +265,6 @@ namespace GetyourCrown.CharacterContorller
                 _animator.SetInteger(STATE_HASH, (int)State.Attack);
             }
             _animator.SetBool(IS_DIRTY_HASH, true);
-            Character.TryAttack();
             yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
             _animator.SetInteger(STATE_HASH, (int)State.Move);
             _isWorking = false;
@@ -276,7 +274,6 @@ namespace GetyourCrown.CharacterContorller
         {
             _animator.SetInteger(STATE_HASH, (int)State.Kick);
             _animator.SetBool(IS_DIRTY_HASH, true);
-            Character.TryKick();
             yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
             _animator.SetInteger(STATE_HASH, (int)State.Move);
             _isWorking = false;
