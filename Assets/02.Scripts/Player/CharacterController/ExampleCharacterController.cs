@@ -78,6 +78,7 @@ namespace GetyourCrown.CharacterContorller
         [SerializeField] int _augmentId = -1;
         [SerializeField] float rangeMultiple = 1;
         [SerializeField] float speedMultiple = 1;
+        [SerializeField] float _attackCoolDownValue = 1;
         private AugmentRepository _augmentRepository;
 
         private UI_Augment _uiAugment;
@@ -641,12 +642,11 @@ namespace GetyourCrown.CharacterContorller
 
         public void TryAttack()
         {
+            Vector3 castingPosition = transform.position + (Vector3.forward + Vector3.up) * SPHERCAST_RADIUS * rangeMultiple;
 
-            if (Physics.SphereCast(transform.position, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE, _kingLayer))
+            if (Physics.SphereCast(castingPosition, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE * rangeMultiple, _kingLayer))
             {
                 PickableObject pickable = hit.collider.GetComponentInChildren<PickableObject>();
-                ExampleCharacterController player = hit.collider.GetComponent<ExampleCharacterController>();
-                player._hasCrown = false;
                 pickable.Drop();
             }
         }
@@ -688,6 +688,7 @@ namespace GetyourCrown.CharacterContorller
                 case 2:
                     Debug.Log("Switch 2 Call");
                     rangeMultiple = augment.increaseValue;
+                    _attackCoolDownValue = augment.increaseCoolDown;
                     break;
                 case 3:
                     Debug.Log("Switch 3 Call");
