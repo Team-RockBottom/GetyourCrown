@@ -18,7 +18,7 @@ MonoBehaviour:
   <augmentIcon>k__BackingField: {fileID: 21300000, guid: 8c35201ab90e548489bbcec22209ceaf, type: 3}
   <multiple>k__BackingField: 0
   <speedIncrease>k__BackingField: 0
-  <increaseCoolDown>k__BackingField: 0
+  <increaseCoolDown>k__BackingField: 0.2
   <maxSpeedIncrease>k__BackingField: 0
   <scoreIncrease>k__BackingField: 0
-  <increaseValue>k__BackingField: 0
+  <increaseValue>k__BackingField: 1.5
