@@ -174,12 +174,12 @@ namespace GetyourCrown.CharacterContorller
 
             characterInputs.MoveAxisForward = Input.GetAxisRaw(VerticalInput);
             characterInputs.MoveAxisRight = Input.GetAxisRaw(HorizontalInput);
+            characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
             if (_isWorking)
             {
                 Character.SetInputs(ref characterInputs);
                 return;
             }
-            characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
             characterInputs.Run = Input.GetKey(KeyCode.LeftShift);
             characterInputs.JumpDown = Input.GetKeyDown(KeyCode.Space);
             characterInputs.Attack = Input.GetMouseButtonDown(0);
@@ -256,7 +256,15 @@ namespace GetyourCrown.CharacterContorller
 
         IEnumerator Attacking()
         {
-            _animator.SetInteger(STATE_HASH, (int)State.Attack);
+            if (Character._selectedAugmentId == 2)
+            {
+                _animator.SetInteger(AUGMENT, (int)State.Attack);
+                _animator.SetInteger(STATE_HASH, (int)State.Attack);
+            }
+            else
+            {
+                _animator.SetInteger(STATE_HASH, (int)State.Attack);
+            }
             _animator.SetBool(IS_DIRTY_HASH, true);
             Character.TryAttack();
             yield return new WaitForSeconds(DEFAULT_DELAY_TIME);
