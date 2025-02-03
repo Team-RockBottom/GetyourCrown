@@ -2875,6 +2875,7 @@ MonoBehaviour:
   _augmentId: -1
   rangeMultiple: 1
   speedMultiple: 1
+  _attackCoolDownValue: 1
   MaxStableWalkSpeed: 10
   MaxStableRunSpeed: 15
   StableMovementSharpness: 15
