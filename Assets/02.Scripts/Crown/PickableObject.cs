@@ -102,7 +102,21 @@ namespace Crown
                 gameObject.layer = 15;
                 _isPickedUp = false;
                 _isOwned = false;
+                StartCoroutine(C_CrownDropSlowMotionEffect());
             }
+        }
+
+        IEnumerator C_CrownDropSlowMotionEffect()
+        {
+            float timeScaleIncreaseValue = 0;
+            Time.timeScale = 0.5f;
+            while (Time.timeScale < 1)
+            {
+                timeScaleIncreaseValue += 0.05f;
+                Time.timeScale += timeScaleIncreaseValue;
+                yield return new WaitForSeconds(0.5f);
+            }
+            Time.timeScale = 1.0f;
         }
 
         public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
