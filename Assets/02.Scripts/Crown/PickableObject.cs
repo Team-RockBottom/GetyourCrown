@@ -112,12 +112,12 @@ namespace Crown
         IEnumerator C_CrownDropSlowMotionEffect()
         {
             float timeScaleIncreaseValue = 0;
-            Time.timeScale = 0.5f;
+            Time.timeScale = 0.01f;
             while (Time.timeScale < 1)
             {
-                timeScaleIncreaseValue += 0.05f;
+                timeScaleIncreaseValue += 0.1f;
                 Time.timeScale += timeScaleIncreaseValue;
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(timeScaleIncreaseValue);
             }
             Time.timeScale = 1.0f;
         }
