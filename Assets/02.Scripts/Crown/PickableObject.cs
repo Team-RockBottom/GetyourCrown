@@ -15,6 +15,8 @@ namespace Crown
         Coroutine _pickUpRoutine;
         bool _isOwned;
 
+        const int DROP_FORCE = 10;
+
         Collider _collider;
 
         protected override void Awake()
@@ -99,6 +101,7 @@ namespace Crown
                 ExampleCharacterController parentController = GetComponentInParent<ExampleCharacterController>();
                 parentController.gameObject.layer = 0;
                 transform.SetParent(null);
+                _rigidbody.AddForce(Vector3.forward * DROP_FORCE, ForceMode.Impulse);
                 gameObject.layer = 15;
                 _isPickedUp = false;
                 _isOwned = false;
