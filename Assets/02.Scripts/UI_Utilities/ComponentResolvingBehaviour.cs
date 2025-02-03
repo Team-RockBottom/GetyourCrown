@@ -30,6 +30,7 @@ namespace GetyourCrown.UI.UI_Utilities
             { typeof(RectTransform), "" },
             { typeof(GameObject), "" },
             { typeof(RawImage), "" },
+            { typeof(LeaderBoardSlot), "" },
             { typeof(TMP_Text), "Text (TMP) - " },
             { typeof(TextMeshProUGUI), "Text (TMP) - " },
             { typeof(TextMeshPro), "Text (TMP) - " },

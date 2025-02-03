@@ -1,6 +1,7 @@
 using UnityEngine;
 using GetyourCrown.UI.UI_Utilities;
 using TMPro;
+using UnityEngine.UI;
 
 public class LeaderBoardSlot : ComponentResolvingBehaviour
 {
@@ -10,6 +11,11 @@ public class LeaderBoardSlot : ComponentResolvingBehaviour
         set
         {
             _rankValue = value;
+            if(value == 1)
+            {
+                _goldenMedal.gameObject.SetActive(true);
+            }
+
             _rank.text = value.ToString();
         }
     }
@@ -38,6 +44,7 @@ public class LeaderBoardSlot : ComponentResolvingBehaviour
     int _rankValue;
     string _nickNameValue;
     float _crownEquipScoreValue;
+    [Resolve] Image _goldenMedal;
     [Resolve] TMP_Text _rank;
     [Resolve] TMP_Text _nickName;
     [Resolve] TMP_Text _crownEquipScore;

@@ -20,10 +20,11 @@ namespace GetyourCrown.Network
     {
         [Header ("GameTimer")]
         [SerializeField] int timeCountValue = 30;
+        [SerializeField] Image _longTimerImage;
         [SerializeField] TMP_Text _longTimer;
         [SerializeField] Image _eventCountImage;
         [SerializeField] TMP_Text _eventCountText;
-        float _gamePlayTimeCount = 180;
+        float _gamePlayTimeCount = 10;
 
         int _timeCount = 0;
         WaitForSeconds _waitFor1Seconds = new WaitForSeconds(1);
@@ -251,6 +252,7 @@ namespace GetyourCrown.Network
             _uI_ConfirmWindow.onHide += () => 
             {
                 scoreCounter.Show(); 
+                _longTimerImage.gameObject.SetActive(false);
                 _longTimer.gameObject.SetActive(false);
             };
         }
