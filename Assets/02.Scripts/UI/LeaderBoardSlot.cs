@@ -2,6 +2,7 @@ using UnityEngine;
 using GetyourCrown.UI.UI_Utilities;
 using TMPro;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class LeaderBoardSlot : ComponentResolvingBehaviour
 {
@@ -25,6 +26,11 @@ public class LeaderBoardSlot : ComponentResolvingBehaviour
         get => _nickNameValue;
         set
         {
+            if(value == PhotonNetwork.NickName)
+            {
+                _leaderBoardSlot.color = Color.yellow;
+            }
+
             _nickNameValue = value;
             _nickName.text = value;
         }
@@ -45,6 +51,7 @@ public class LeaderBoardSlot : ComponentResolvingBehaviour
     string _nickNameValue;
     float _crownEquipScoreValue;
     [Resolve] Image _goldenMedal;
+    [Resolve] Image _leaderBoardSlot;
     [Resolve] TMP_Text _rank;
     [Resolve] TMP_Text _nickName;
     [Resolve] TMP_Text _crownEquipScore;

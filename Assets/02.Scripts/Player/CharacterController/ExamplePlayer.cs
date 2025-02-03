@@ -6,6 +6,7 @@ using Photon.Pun;
 using GetyourCrown.UI;
 using GetyourCrown.Network;
 using Photon.Realtime;
+using TMPro;
 
 namespace GetyourCrown.CharacterContorller
 {
@@ -49,7 +50,7 @@ namespace GetyourCrown.CharacterContorller
         const float MOVING_WALK = 0.5f;
         const float MOVING_RUN = 1;
         [SerializeField] const float DEFAULT_DELAY_TIME = 1f;
-
+        [SerializeField] TMP_Text _nickName;
 
         public State currentState { get; private set; }
 
@@ -82,6 +83,11 @@ namespace GetyourCrown.CharacterContorller
                 return;
             }
 
+            // 자신의 닉네임을 TextMeshPro UI에 표시
+            _nickName.text = _photonView.Owner.NickName;
+
+            // 다른 플레이어들도 닉네임을 볼 수 있도록 업데이트
+            _photonView.RPC(nameof(UpdateNickName), RpcTarget.AllBuffered, _photonView.Owner.NickName);
 
             CharacterCamera.SetFollowTransform(Character.CameraFollowPoint);
 
@@ -94,10 +100,17 @@ namespace GetyourCrown.CharacterContorller
             _uI_Option.Show();
             _uI_Option.Hide();
 
+
             PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable
             {
                 {PlayerInGamePlayPropertyKey.IS_CHARACTER_SPAWNED, true }
             });
+        }
+
+        [PunRPC]
+        void UpdateNickName(string nickName)
+        {
+            _nickName.text = nickName;
         }
 
         private void Update()
@@ -117,7 +130,7 @@ namespace GetyourCrown.CharacterContorller
 
                 if (_isESC)
                 {
-                    Cursor.lockState = CursorLockMode.Locked;
+                    //Cursor.lockState = CursorLockMode.Locked;
                     _uI_Option.Hide();
                 }
                 else
@@ -126,7 +139,18 @@ namespace GetyourCrown.CharacterContorller
                     _uI_Option.Show();
                 }
             }
+
+
             HandleCharacterInput();
+        }
+
+        [PunRPC]
+        void NickNameRotation()
+        {
+            Vector3 direction = Camera.main.transform.position - _nickName.gameObject.transform.position; //카메라와의 방향 계산
+            direction.y = 0; //Y축 회전을 고정하여 UI가 위아래로 기울어지지 않도록 함
+            Quaternion rotation = Quaternion.LookRotation(-direction); //UI가 카메라를 바라보도록 회전
+            _nickName.gameObject.transform.rotation = rotation; //UIImage 회전 적용
         }
 
         private void LateUpdate()
@@ -146,6 +170,8 @@ namespace GetyourCrown.CharacterContorller
                 CharacterCamera.PlanarDirection = Character.Motor.AttachedRigidbody.GetComponent<PhysicsMover>().RotationDeltaFromInterpolation * CharacterCamera.PlanarDirection;
                 CharacterCamera.PlanarDirection = Vector3.ProjectOnPlane(CharacterCamera.PlanarDirection, Character.Motor.CharacterUp).normalized;
             }
+
+            _photonView.RPC(nameof(NickNameRotation), RpcTarget.All);
 
             HandleCameraInput();
         }

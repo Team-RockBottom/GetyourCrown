@@ -51,6 +51,9 @@ MonoBehaviour:
   - GameStartDisable
   - StateChangeToHit
   - GameEnd
+  - NickNameRotation
+  - SetNickName
+  - UpdateNickName
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
