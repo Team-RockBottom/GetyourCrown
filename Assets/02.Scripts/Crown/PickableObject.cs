@@ -41,8 +41,9 @@ namespace Crown
 
         public void Drop()
         {
-            if (photonView.IsMine == true)
-                return;
+            //if (photonView.IsMine == true)
+            //    return;
+
             if (_isPickedUp == false)
                 return;
 
@@ -99,7 +100,7 @@ namespace Crown
                 controller.pickable = null;
                 _collider.isTrigger = false;
                 ExampleCharacterController parentController = GetComponentInParent<ExampleCharacterController>();
-                parentController.gameObject.layer = 0;
+                parentController.gameObject.layer = 18;
                 transform.SetParent(null);
                 _rigidbody.AddForce(Vector3.forward * DROP_FORCE, ForceMode.Impulse);
                 gameObject.layer = 15;

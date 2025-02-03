@@ -221,7 +221,6 @@ namespace GetyourCrown.UI
             slot.isCharacterSelect = false;
             PlayerCharacterUpdate(slot, newPlayer);
             _roomPlayerInfoPairs.Add(newPlayer.ActorNumber, (newPlayer, slot));
-            Debug.Log($"Player entered room {newPlayer.ActorNumber}");
         }
 
         public void OnPlayerLeftRoom(Player otherPlayer)

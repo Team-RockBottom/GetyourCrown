@@ -160,7 +160,6 @@ namespace GetyourCrown.CharacterContorller
 
         private void Start()
         {
-            Debug.Log("CharacterController Start");
             if (!PhotonNetwork.IsConnected)
             {
                 Debug.LogError("Photon is not connected!");
@@ -646,7 +645,6 @@ namespace GetyourCrown.CharacterContorller
 
         void HandleAugmentSelected(int augmentId)
         {
-            Debug.Log("이벤트 발생해서 캐릭터 컨트롤러에서 호출");
             AugmentSpec augment = _augmentRepository._augmentDic[augmentId];
 
             PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable
@@ -660,12 +658,10 @@ namespace GetyourCrown.CharacterContorller
                 default:
                     break;
                 case 1:
-                    Debug.Log("Switch 1 Call");
                     //speedMultiple = augment.speedIncrease;
                     _speedUpAugmentActive = true;
                     break;
                 case 2:
-                    Debug.Log("Switch 2 Call");
                     rangeMultiple = augment.increaseValue;
                     _attackCoolDownValue = augment.increaseCoolDown;
                     break;
