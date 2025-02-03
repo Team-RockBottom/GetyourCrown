@@ -2884,7 +2884,7 @@ MonoBehaviour:
   _isGround: 0
   MaxAirMoveSpeed: 10
   AirAccelerationSpeed: 30
-  Drag: 11.37
+  Drag: 0
   AllowJumpingWhenSliding: 1
   JumpUpSpeed: 10
   JumpScalableForwardSpeed: 0

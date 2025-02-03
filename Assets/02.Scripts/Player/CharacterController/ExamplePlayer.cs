@@ -161,12 +161,14 @@ namespace GetyourCrown.CharacterContorller
         {
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
 
-/*            if (_isWorking || _isStun)
+            if (_isWorking || _isStun)
             {
                 characterInputs.MoveAxisForward = 0;
                 characterInputs.MoveAxisRight = 0;
+                _animator.SetFloat(SPEED_HASH, MOVING_STOP);
+                Character.SetInputs(ref characterInputs);
                 return;
-            }*/
+            }
 
             characterInputs.MoveAxisForward = Input.GetAxisRaw(VerticalInput);
             characterInputs.MoveAxisRight = Input.GetAxisRaw(HorizontalInput);
