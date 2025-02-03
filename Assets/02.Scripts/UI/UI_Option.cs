@@ -100,6 +100,7 @@ namespace GetyourCrown.UI
         private void OnSlider()
         {
             SoundManager.instance.BGMAudioVolum = _volum.value;
+            SoundManager.instance.SFXAudioVolum = _volum.value;
             double volumNo = Math.Round(_volum.value, 2);
             _volumSize.text = (volumNo * 100f).ToString();
         }
