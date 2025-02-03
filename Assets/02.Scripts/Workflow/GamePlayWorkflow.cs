@@ -241,6 +241,7 @@ namespace GetyourCrown.Network
             }
             _uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
             _uI_ConfirmWindow.Show(message);
+            Cursor.lockState = CursorLockMode.Confined;
             _uI_ConfirmWindow.ConfirmInteractable = false;
             _uI_ConfirmWindow.onHide += () => 
             {
