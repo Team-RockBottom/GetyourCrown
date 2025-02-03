@@ -14,6 +14,7 @@ namespace GetyourCrown.CharacterContorller
     public enum CharacterState
     {
         Default,
+        InterAct,
     }
 
     public enum OrientationMethod
@@ -296,10 +297,6 @@ namespace GetyourCrown.CharacterContorller
 
         public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
         {
-            if (_isStun)
-            {
-                return;
-            }
             switch (CurrentCharacterState)
             {
                 case CharacterState.Default:
@@ -347,11 +344,6 @@ namespace GetyourCrown.CharacterContorller
         
         public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
         {
-            if (_isStun)
-            {
-                return;
-            }
-
             switch (CurrentCharacterState)
             {
                 case CharacterState.Default:
@@ -367,15 +359,6 @@ namespace GetyourCrown.CharacterContorller
                             Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
                             Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
                             Vector3 targetMovementVelocity;
-
-                            //if (!_isRun)
-                            //{
-                            //    targetMovementVelocity = reorientedInput * MaxStableWalkSpeed;
-                            //}
-                            //else
-                            //{
-                            //    targetMovementVelocity = (reorientedInput * MaxStableRunSpeed) * speedMultiple;
-                            //}
 
                             if (_speedUpAugmentActive && !_hasCrown) // 증강 활성화 및 왕관 미착용
                             {
@@ -399,7 +382,6 @@ namespace GetyourCrown.CharacterContorller
                             }
                             else // 증강 비활성화 또는 왕관 착용
                             {
-                                Debug.Log("스피드 증강 없음 또는 왕관 착용");
                                 ResetSpeedMultiplier(); // 배율 초기화
 
                                 if (!_isRun) // 걷기
@@ -447,6 +429,8 @@ namespace GetyourCrown.CharacterContorller
                                 currentVelocity += addedVelocity;
                             }
 
+                            
+
                             currentVelocity += Gravity * deltaTime;
 
                             currentVelocity *= (1f / (1f + (Drag * deltaTime)));
@@ -487,11 +471,6 @@ namespace GetyourCrown.CharacterContorller
 
         public void AfterCharacterUpdate(float deltaTime)
         {
-            if (_isStun)
-            {
-                return;
-            }
-
             switch (CurrentCharacterState)
             {
                 case CharacterState.Default:
@@ -613,11 +592,11 @@ namespace GetyourCrown.CharacterContorller
 
 
 
-
+        private const float CHARACTER_RADIUS = 0.5f;
         private const float SPHERCAST_RADIUS = 1f;
-        private const float SPHERCAST_MAXDISTANCE = 1f;
+        private const float SPHERCAST_MAXDISTANCE = 2f;
         private const float SPHERCAST_KICK_RADIUS = 2;
-        private const float SPHERCAST_KICK_MAXDISTANCE = 2;
+        private const float SPHERCAST_KICK_MAXDISTANCE = 4;
         [SerializeField] private float _kickPower = 3f;
         public void TryKick()
         {
@@ -642,7 +621,7 @@ namespace GetyourCrown.CharacterContorller
 
         public void TryAttack()
         {
-            Vector3 castingPosition = transform.position + (Vector3.forward + Vector3.up) * SPHERCAST_RADIUS * rangeMultiple;
+            Vector3 castingPosition = transform.position + (Vector3.forward + Vector3.up) * SPHERCAST_RADIUS * rangeMultiple - Vector3.forward*CHARACTER_RADIUS;
 
             if (Physics.SphereCast(castingPosition, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE * rangeMultiple, _kingLayer))
             {

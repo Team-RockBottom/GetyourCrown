@@ -12,6 +12,7 @@ namespace GetyourCrown.CharacterContorller
     public class ExamplePlayer : MonoBehaviour, IAnimationController
     {
         PhotonView _photonView;
+        Rigidbody _rigidBody;
 
         ExampleCharacterController Character;
         ExampleCharacterCamera CharacterCamera;
@@ -60,6 +61,7 @@ namespace GetyourCrown.CharacterContorller
             _photonView = GetComponent<PhotonView>();
             Character = GetComponent<ExampleCharacterController>();
             _animator = Character.GetComponent<Animator>();
+            _rigidBody = Character.GetComponent<Rigidbody>();
 
             StateMachineBehaviourBase[] behaviours = _animator.GetBehaviours<StateMachineBehaviourBase>();
 
@@ -101,11 +103,6 @@ namespace GetyourCrown.CharacterContorller
         private void Update()
         {
             if (!_photonView.IsMine)
-            {
-                return;
-            }
-
-            if (_isWorking)
             {
                 return;
             }
@@ -162,13 +159,14 @@ namespace GetyourCrown.CharacterContorller
 
         private void HandleCharacterInput()
         {
-
-            if (_isWorking || _isStun)
-            {
-                return;
-            }
-
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
+
+/*            if (_isWorking || _isStun)
+            {
+                characterInputs.MoveAxisForward = 0;
+                characterInputs.MoveAxisRight = 0;
+                return;
+            }*/
 
             characterInputs.MoveAxisForward = Input.GetAxisRaw(VerticalInput);
             characterInputs.MoveAxisRight = Input.GetAxisRaw(HorizontalInput);

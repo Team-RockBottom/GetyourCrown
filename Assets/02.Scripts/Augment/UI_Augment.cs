@@ -34,7 +34,6 @@ namespace Augment
         /// </summary>
         public void AugmentSlotRefresh()
         {
-            Debug.Log("AugmentSlotRefresh Call");
             int[] beforeAugmentIds = new int[3];
             beforeAugmentIds[0] = 99;
             beforeAugmentIds[1] = 99;
@@ -45,7 +44,6 @@ namespace Augment
                 int index = i;
                 bool duplicate = false;
                 int randomAugmentId = UnityEngine.Random.Range(1, _augmentRepository._augmentDic.Count + 1);
-                Debug.Log($"Random Augment Count : {randomAugmentId}");
 
                 for (int j = 0; j < beforeAugmentIds.Length; j++)
                 {
@@ -76,7 +74,6 @@ namespace Augment
         {
             selectedAugmentId = augmentIndex;
             OnAugmentSelected?.Invoke(selectedAugmentId);
-            Debug.Log($"Selected Augment ID: {selectedAugmentId}");
             gameObject.SetActive(false);
             // 이벤트 발생
         }
