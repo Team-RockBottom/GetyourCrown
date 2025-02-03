@@ -116,7 +116,8 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
             Debug.Log("LB Transfer Call");
             TotalScore score = new TotalScore();
             score.id = PhotonNetwork.LocalPlayer.ActorNumber;
-            score.crownEquipTime = (float)_stackCount;
+            float roundStackCount = Mathf.Round((float)_stackCount);
+            score.crownEquipTime = roundStackCount;
             score.nickName = PhotonNetwork.NickName;
             RaiseEventOptions raiseEventOption = new RaiseEventOptions
             {
