@@ -107,6 +107,11 @@ namespace GetyourCrown.CharacterContorller
                 return;
             }
 
+            if (Character._augmentIsNotSelected)
+            {
+                return ;
+            }
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
 
@@ -127,6 +132,11 @@ namespace GetyourCrown.CharacterContorller
         private void LateUpdate()
         {
             if (!_photonView.IsMine)
+            {
+                return;
+            }
+
+            if (Character._augmentIsNotSelected)
             {
                 return;
             }

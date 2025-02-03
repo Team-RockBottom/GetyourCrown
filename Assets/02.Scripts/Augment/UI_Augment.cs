@@ -74,8 +74,8 @@ namespace Augment
         {
             selectedAugmentId = augmentIndex;
             OnAugmentSelected?.Invoke(selectedAugmentId);
+            Cursor.lockState = CursorLockMode.Locked;
             gameObject.SetActive(false);
-            // 이벤트 발생
         }
     }
 }

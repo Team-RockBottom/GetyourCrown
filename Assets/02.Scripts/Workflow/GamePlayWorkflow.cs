@@ -7,10 +7,8 @@ using TMPro;
 using GetyourCrown.UI;
 using Augment;
 using GetyourCrown.UI.UI_Utilities; 
-using ExitGames.Client.Photon;
 using UnityEngine.UI;
 using System;
-using UnityEngine.SceneManagement;
 using GetyourCrown.CharacterContorller;
 
 namespace GetyourCrown.Network
@@ -18,6 +16,8 @@ namespace GetyourCrown.Network
     [RequireComponent(typeof(PhotonView))]
     public class GamePlayWorkflow : ComponentResolvingBehaviour
     {
+        [SerializeField] GameObject _crown;
+
         [Header ("GameTimer")]
         [SerializeField] int timeCountValue = 30;
         [SerializeField] TMP_Text _longTimer;
@@ -38,6 +38,7 @@ namespace GetyourCrown.Network
         private void Start()
         {
             _view = GetComponent<PhotonView>();
+            _crown.SetActive(false);
             StartCoroutine(C_Workflow());
         }
 
@@ -63,12 +64,6 @@ namespace GetyourCrown.Network
             GameObject testPlayer = PhotonNetwork.Instantiate("Character/TestPlayer",
                                       randomPosition,
                                       Quaternion.identity);
-            //if (PhotonNetwork.IsMasterClient)
-            //{
-            //    GameObject crwon = PhotonNetwork.Instantiate("Crown/Crown",
-            //                              randomPosition * 2,
-            //                              Quaternion.identity);
-            //}
         }
 
         IEnumerator C_WaitUntilAllPlayerCharactersAreSpawned()
@@ -105,8 +100,6 @@ namespace GetyourCrown.Network
         {
             UI_Augment uI_Augment = _augmentCanvas.GetComponent<UI_Augment>();
             uI_Augment.AugmentSlotRefresh();
-            //UI_Augment uI_AugmentSelect = UI_Manager.instance.Resolve<UI_Augment>();
-            //uI_AugmentSelect.Show();
             Cursor.lockState = CursorLockMode.Confined;
 
             int timeCount = timeCountValue;
@@ -147,9 +140,7 @@ namespace GetyourCrown.Network
 
                 if (timeCount <= 0)
                 {
-                    //TODO -> 표시된 증강 3개중 랜덤으로 하나 선택하는 기능
                     _longTimer.text = "준비중";
-
                     break;
                 }
             }
@@ -192,6 +183,8 @@ namespace GetyourCrown.Network
         void GameStart()
         {
             _eventCountText.text = "Start!";
+            _crown.transform.position = new Vector3(0, 10, 0);
+            _crown.SetActive(true);
         }
 
         [PunRPC]
