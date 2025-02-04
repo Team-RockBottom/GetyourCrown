@@ -93,7 +93,7 @@ namespace GetyourCrown.CharacterContorller
         private float _speedMultiplier = 1f;         
         private float _speedUpTimer = 0f;            
         private float _speedUpIncreaseRate = 0.05f;  
-        private const float MaxSpeedMultiplier = 1.25f; 
+        private const float MaxSpeedMultiplier = 1.5f; 
 
 
         [Header("Stable Movement")]
@@ -272,7 +272,11 @@ namespace GetyourCrown.CharacterContorller
 
                         if (inputs.Run)
                         {
-                            _isRun = !_isRun;
+                            _isRun = true;
+                        }
+                        else
+                        {
+                            _isRun = false;
                         }
 
 
@@ -361,6 +365,8 @@ namespace GetyourCrown.CharacterContorller
                             Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
                             Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
                             Vector3 targetMovementVelocity;
+
+                            Debug.Log(_isRun);
 
                             if (_speedUpAugmentActive && !_hasCrown) // 증강 활성화 및 왕관 미착용
                             {
@@ -662,6 +668,7 @@ namespace GetyourCrown.CharacterContorller
                     break;
                 case 1:
                     _speedUpAugmentActive = true;
+                    //_speedMultiplier = augment.speedIncrease;
                     break;
                 case 2:
                     rangeMultiple = augment.increaseValue;
