@@ -305,7 +305,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3294018573999136387}
   - {fileID: 6518610908927301186}
   - {fileID: 4020821380228486099}
   m_Father: {fileID: 0}
@@ -416,17 +415,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8335172151144255257}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7503201229568276550}
+  m_Father: {fileID: 6518610908927301186}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1427.5631, y: 24.444214}
-  m_SizeDelta: {x: 2855.1265, y: 396.4469}
+  m_AnchoredPosition: {x: 1469, y: -135}
+  m_SizeDelta: {x: 3010.8628, y: 396.4469}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6497152788942953490
 CanvasRenderer:
@@ -450,7 +449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -695,6 +694,9 @@ PrefabInstance:
     - {fileID: 6708850947683944445, guid: beca7a4197e583a4085ad9022843d02a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 453637041453278844, guid: beca7a4197e583a4085ad9022843d02a, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 3294018573999136387}
     - targetCorrespondingSourceObject: {fileID: 453637041453278844, guid: beca7a4197e583a4085ad9022843d02a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3257942576581837538}
