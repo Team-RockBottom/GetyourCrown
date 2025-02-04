@@ -612,6 +612,7 @@ namespace GetyourCrown.CharacterContorller
             {
                 KickableObject kickable = hit.collider.GetComponent<KickableObject>();
                 kickable.Kick((hit.point - transform.position) * _kickPower);
+                _scoreCounter.KickCountUp();
             }
         }
 
@@ -635,6 +636,7 @@ namespace GetyourCrown.CharacterContorller
             {
                 PickableObject pickable = hit.collider.GetComponentInChildren<PickableObject>();
                 pickable.Drop();
+                _scoreCounter.SuceedCountUp();
             }
         }
        
