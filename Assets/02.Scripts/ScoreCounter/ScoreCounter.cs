@@ -105,7 +105,8 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
 
                 slot.CrownEquipScore = totalScores[i].crownEquipTime;
                 slot.NickName = totalScores[i].nickName;
-                
+                slot.SuccedingScore = totalScores[i].suceedingCount;
+                slot.KickScore = totalScores[i].kickCrownCount;
                 slot.gameObject.SetActive(true);
             }
 

@@ -45,12 +45,42 @@ public class LeaderBoardSlot : ComponentResolvingBehaviour
             _crownEquipScore.text = value.ToString();
         }
     }
+    public int SuccedingScore
+    {
+        get => _suceedingScoreValue;
+        set
+        {
+            _suceedingScoreValue = value;
+            _suceedingScroe.text = value.ToString();
+        }
+    }
 
-    
+    public int KickScore
+    {
+        get => _kickScoreValue;
+        set
+        {
+            _kickScoreValue = value;
+            _kickScore.text = value.ToString();
+        }
+    }
+
+    public int TotalScore
+    {
+        get => _totalScoreValue = _suceedingScoreValue + _kickScoreValue + (int)_crownEquipScoreValue;
+        set
+        {
+            _totalScoreValue = value;
+            _totalScore.text = value.ToString();
+        }
+    }
 
     int _rankValue;
     string _nickNameValue;
     float _crownEquipScoreValue;
+    int _suceedingScoreValue;
+    int _kickScoreValue;
+    int _totalScoreValue;
     [Resolve] Image _goldenMedal;
     [Resolve] Image _leaderBoardSlot;
     [Resolve] TMP_Text _rank;
