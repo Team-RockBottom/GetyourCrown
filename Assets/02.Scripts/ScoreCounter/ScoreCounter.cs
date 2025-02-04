@@ -22,6 +22,7 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
             public int suceedingCount;
             public int kickCrownCount;
             public string nickName;
+            public int totalscore;
         }
         private List<TotalScore> totalLeaderBoard = new List<TotalScore>();
 
@@ -78,7 +79,7 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
             base.Show();
             _leaderBoard.gameObject.SetActive(true);
 
-            List<TotalScore> totalScores = totalLeaderBoard.OrderByDescending(x => x.crownEquipTime).ToList();
+            List<TotalScore> totalScores = totalLeaderBoard.OrderByDescending(x => x.totalscore).ToList();
             
 
             for(int i = 0; i < totalLeaderBoard.Count; i++)
@@ -104,6 +105,7 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
 
                 slot.CrownEquipScore = totalScores[i].crownEquipTime;
                 slot.NickName = totalScores[i].nickName;
+                
                 slot.gameObject.SetActive(true);
             }
 
@@ -159,12 +161,13 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
             score.nickName = PhotonNetwork.NickName;
             score.kickCrownCount = _kickCount;
             score.suceedingCount = _suceedCount;
+            score.totalscore = (int)(roundStackCount / 10) + _kickCount + _suceedCount;
 
             RaiseEventOptions raiseEventOption = new RaiseEventOptions
             {
                 Receivers = ReceiverGroup.All,
             };
-            object[] content = new object[] {score.id, score.crownEquipTime, score.suceedingCount, score.kickCrownCount, score.nickName};
+            object[] content = new object[] {score.id, score.crownEquipTime, score.suceedingCount, score.kickCrownCount, score.nickName, score.totalscore};
             PhotonNetwork.RaiseEvent(PhotonEventCode.GAMESTOP, content, raiseEventOption, SendOptions.SendReliable);
             
             CountReset();
@@ -185,6 +188,7 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
                 score.suceedingCount = (int)data[2];
                 score.kickCrownCount = (int)data[3];
                 score.nickName = (string)data[4];
+                score.totalscore = (int)data[5];
                 totalLeaderBoard.Add(score);
             }
          }

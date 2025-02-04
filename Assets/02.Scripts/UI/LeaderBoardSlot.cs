@@ -46,6 +46,7 @@ public class LeaderBoardSlot : ComponentResolvingBehaviour
         }
     }
 
+    
 
     int _rankValue;
     string _nickNameValue;
