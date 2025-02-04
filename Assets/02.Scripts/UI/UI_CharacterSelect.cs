@@ -31,6 +31,7 @@ namespace GetyourCrown.UI
         public int _lockedSelectCharacterId;
         private Vector2 _lastMousePosition;
         private bool _isRotating = false;
+        private bool _isFirst = true;
         private Quaternion _currentCharacterRotation;
         private Quaternion _startRotation;
 
@@ -71,7 +72,15 @@ namespace GetyourCrown.UI
 
             LoadCharacterSpecs();
             LoadCharacterSlot();
-            SelectedCharacterPreview(_characterSpecs[DataManager.instance.LastCharacter]);
+            if (_isFirst)
+            {
+                SelectedCharacterPreview(_characterSpecs[DataManager.instance.LastCharacter]);
+                _isFirst = false;
+            }
+            else
+            {
+                SelectedCharacterPreview(_characterSpecs[_selectedCharacterId]);
+            }
         }
 
         private void LoadCharacterSpecs()
