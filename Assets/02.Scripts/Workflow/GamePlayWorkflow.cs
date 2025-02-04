@@ -10,6 +10,7 @@ using GetyourCrown.UI.UI_Utilities;
 using UnityEngine.UI;
 using System;
 using GetyourCrown.CharacterContorller;
+using GetyourCrown.Database;
 
 namespace GetyourCrown.Network
 {
@@ -17,6 +18,8 @@ namespace GetyourCrown.Network
     public class GamePlayWorkflow : ComponentResolvingBehaviour
     {
         [SerializeField] GameObject _crown;
+        [SerializeField] CharacterRepository _characterRepository;
+
 
         [Header ("GameTimer")]
         [SerializeField] int timeCountValue = 30;
@@ -62,9 +65,23 @@ namespace GetyourCrown.Network
         {
             Vector2 xz = UnityEngine.Random.insideUnitCircle * 5f;
             Vector3 randomPosition = new Vector3(xz.x, 0f, xz.y);
-            GameObject testPlayer = PhotonNetwork.Instantiate("Character/TestPlayer",
-                                      randomPosition,
+            
+            
+            if(PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(PlayerInRoomProperty.CHARACTER_ID ,out int id))
+            {
+                CharacterSpec characterSpec = _characterRepository.Get(id);
+                GameObject testPlayer = PhotonNetwork.Instantiate($"Character/{characterSpec.name}",
+                                        randomPosition,
                                       Quaternion.identity);
+            }
+            else
+            {
+                GameObject testPlayer = PhotonNetwork.Instantiate("Character/TestPlayer",
+                                          randomPosition,
+                                          Quaternion.identity);
+
+            }
+
         }
 
         IEnumerator C_WaitUntilAllPlayerCharactersAreSpawned()

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6f655d9b7878854ca7d3a76464bafe8, type: 3}
   m_Name: C07
   m_EditorClassIdentifier: 
+  <name>k__BackingField: GangPlank
   <id>k__BackingField: 7
   <sprite>k__BackingField: {fileID: 21300000, guid: 90b425bfaffcd6548a5309402851b5e9, type: 3}
   <prefab>k__BackingField: {fileID: 2035083545422830241, guid: 080c94b8bab842699aa545af6875006a, type: 3}
