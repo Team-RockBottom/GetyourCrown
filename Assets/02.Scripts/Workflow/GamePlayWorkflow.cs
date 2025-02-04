@@ -64,7 +64,7 @@ namespace GetyourCrown.Network
         void SpawnPlayerCharacterRandomly()
         {
             Vector2 xz = UnityEngine.Random.insideUnitCircle * 5f;
-            Vector3 randomPosition = new Vector3(xz.x, 0f, xz.y);
+            Vector3 randomPosition = new Vector3(-12 + xz.x, 0f,  -2 +xz.y);
             
             
             if(PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(PlayerInRoomProperty.CHARACTER_ID ,out int id))
