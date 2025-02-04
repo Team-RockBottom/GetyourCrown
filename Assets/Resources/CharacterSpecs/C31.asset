@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6f655d9b7878854ca7d3a76464bafe8, type: 3}
   m_Name: C31
   m_EditorClassIdentifier: 
-  <name>k__BackingField: Gragas
+  <name>k__BackingField: 
   <id>k__BackingField: 31
   <sprite>k__BackingField: {fileID: 21300000, guid: de852828eececa74cb30efda2d18ad08, type: 3}
   <prefab>k__BackingField: {fileID: 6271817565264189482, guid: 27f3ae23ac4e49159d184fcc71b85563, type: 3}

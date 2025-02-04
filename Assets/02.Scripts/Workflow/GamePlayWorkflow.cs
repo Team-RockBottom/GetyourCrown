@@ -200,9 +200,11 @@ namespace GetyourCrown.Network
         [PunRPC]
         void GameStart()
         {
+            Debug.Log("GameStart");
             _eventCountText.text = "Start!";
             _crown.transform.position = new Vector3(0, 10, 0);
             _crown.SetActive(true);
+            Debug.Log("Crown SetActive");
         }
 
         [PunRPC]
