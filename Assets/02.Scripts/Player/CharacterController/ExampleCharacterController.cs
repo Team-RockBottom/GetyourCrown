@@ -99,6 +99,8 @@ namespace GetyourCrown.CharacterContorller
         [Header("Stable Movement")]
         public float MaxStableWalkSpeed = 10f;
         public float MaxStableRunSpeed = 15f;
+        public float KingStableWalkSpeed = 9.5f;
+        public float KingStableRunSpeed = 14.5f;
         public float StableMovementSharpness = 15f;
         public float OrientationSharpness = 10f;
         public OrientationMethod OrientationMethod = OrientationMethod.TowardsCamera;
@@ -366,7 +368,6 @@ namespace GetyourCrown.CharacterContorller
                             Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
                             Vector3 targetMovementVelocity;
 
-                            Debug.Log(_isRun);
 
                             if (_speedUpAugmentActive && !_hasCrown) // 증강 활성화 및 왕관 미착용
                             {
@@ -388,10 +389,21 @@ namespace GetyourCrown.CharacterContorller
                                     targetMovementVelocity = reorientedInput * MaxStableRunSpeed * _speedMultiplier;
                                 }
                             }
-                            else // 증강 비활성화 또는 왕관 착용
+                            else if (_speedUpAugmentActive && _hasCrown)// 증강 활성화 왕관 착용
                             {
                                 ResetSpeedMultiplier(); // 배율 초기화
 
+                                if (!_isRun) // 걷기
+                                {
+                                    targetMovementVelocity = reorientedInput * KingStableWalkSpeed;
+                                }
+                                else // 달리기
+                                {
+                                    targetMovementVelocity = reorientedInput * KingStableRunSpeed;
+                                }
+                            }
+                            else if (!_speedUpAugmentActive && !_hasCrown) //증강 비활성화 왕관 없음
+                            {
                                 if (!_isRun) // 걷기
                                 {
                                     targetMovementVelocity = reorientedInput * MaxStableWalkSpeed;
@@ -399,6 +411,17 @@ namespace GetyourCrown.CharacterContorller
                                 else // 달리기
                                 {
                                     targetMovementVelocity = reorientedInput * MaxStableRunSpeed;
+                                }
+                            }
+                            else //증강 비활성화 왕관 착용
+                            {
+                                if (!_isRun) // 걷기
+                                {
+                                    targetMovementVelocity = reorientedInput * KingStableWalkSpeed;
+                                }
+                                else // 달리기
+                                {
+                                    targetMovementVelocity = reorientedInput * KingStableRunSpeed;
                                 }
                             }
 
