@@ -34,6 +34,8 @@ namespace GetyourCrown.UI
         private CharacterSpec[] _characterSpecs;
         const int DEFAULT_CHARACTERSELECT = 0;
         private Coroutine chatCoroutine;
+        private bool isChatActive = false;
+        private float delayTime = 3f;
 
         protected override void Awake()
         {
@@ -369,11 +371,21 @@ namespace GetyourCrown.UI
             bool isChat = _roomPlayerInfoPairs[player.ActorNumber].slot.isChat;
             string slotMessage = _roomPlayerInfoPairs[player.ActorNumber].slot.chatMessage;
 
-            player.SetCustomProperties(new Hashtable()
+            if (!isChatActive)
             {
-                { PlayerInRoomProperty.CHAT_STATE, isChat == false},
-                { PlayerInRoomProperty.CHAT_MESSAGE, slotMessage = message }
-            });
+                player.SetCustomProperties(new Hashtable()
+                {
+                    { PlayerInRoomProperty.CHAT_STATE, isChat == false},
+                    { PlayerInRoomProperty.CHAT_MESSAGE, slotMessage = message }
+                });
+            }
+            else
+            {
+                player.SetCustomProperties(new Hashtable()
+                {
+                    { PlayerInRoomProperty.CHAT_MESSAGE, slotMessage = message }
+                });
+            }
             
             _chatInputField.text = string.Empty;
 
@@ -381,13 +393,15 @@ namespace GetyourCrown.UI
             {
                 StopCoroutine(chatCoroutine);
             }
+
             chatCoroutine = StartCoroutine(ResetChatMessage(player));
+            isChatActive = true;
+            delayTime += 1f;
         }
 
         private IEnumerator ResetChatMessage(Player player)
         {
-            float delay = 3f;
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(delayTime);
             bool isChat = _roomPlayerInfoPairs[player.ActorNumber].slot.isChat;
             string slotMessage = _roomPlayerInfoPairs[player.ActorNumber].slot.chatMessage;
 
@@ -396,6 +410,10 @@ namespace GetyourCrown.UI
                 { PlayerInRoomProperty.CHAT_STATE, isChat == false },
                 { PlayerInRoomProperty.CHAT_MESSAGE, slotMessage = ""},
             });
+
+            isChatActive = false;
+            delayTime = 3f;
+            chatCoroutine = null;
         }
     }
 }
