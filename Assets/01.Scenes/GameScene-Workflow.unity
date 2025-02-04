@@ -6913,14 +6913,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3771096660583224581, guid: dd6f1eb7248019d49a4015c6a372aea2, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 1400
-      objectReference: {fileID: 0}
-    - target: {fileID: 3771096660583224581, guid: dd6f1eb7248019d49a4015c6a372aea2, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7503201229568276550, guid: dd6f1eb7248019d49a4015c6a372aea2, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -8485,7 +8477,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1640464373
 MonoBehaviour:
   m_ObjectHideFlags: 0
