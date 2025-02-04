@@ -289,6 +289,7 @@ namespace GetyourCrown.UI
             slot.isReady = false;
             slot.isCharacterSelect = false;
             slot.isChat = false;
+            //slot.playerCharacter
             PlayerCharacterUpdate(slot, newPlayer);
             _roomPlayerInfoPairs.Add(newPlayer.ActorNumber, (newPlayer, slot));
         }

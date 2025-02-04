@@ -1,6 +1,9 @@
+using ExitGames.Client.Photon;
+using GetyourCrown.Network;
 using GetyourCrown.UI;
 using Newtonsoft.Json;
 using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -81,6 +84,12 @@ namespace GetyourCrown.Database
                 if (loadedData.ContainsKey(LAST_CHARACTER_KEY))
                 {
                     LastCharacter = loadedData[LAST_CHARACTER_KEY].Value.GetAs<int>();
+
+                    Hashtable props = new Hashtable
+                    {
+                        { PlayerInRoomProperty.CHARACTER_ID, LastCharacter }
+                    };
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(props);
                 }
             }
             catch (Exception e)
