@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace GetyourCrown.Network
@@ -39,12 +40,17 @@ namespace GetyourCrown.Network
                 Application.runInBackground = true;
 #endif
                 PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(Random.Range(0, 999999999).ToString());
-                PhotonNetwork.NickName = "Guest " + Random.Range(0, 100).ToString();
+                PhotonNetwork.NickName = "Guest " + Random.Range(0, 999);
                 bool isConnected = PhotonNetwork.ConnectUsingSettings();
                 Debug.Assert(isConnected, $"[{nameof(PhotonManager)}] Failed to connect to photon pun server");
             }
 
             DontDestroyOnLoad(gameObject);
+        }
+
+        private object StartCoroutine(Task task)
+        {
+            throw new System.NotImplementedException();
         }
 
         public override void OnConnectedToMaster()
@@ -60,6 +66,11 @@ namespace GetyourCrown.Network
         {
             base.OnJoinedLobby();
             //Debug.Log($"[{nameof(PhotonManager)}] Joined Lobby");
+        }
+
+        public void SetNickname(string name)
+        {
+            PhotonNetwork.NickName = name;
         }
     }
 }

@@ -1,5 +1,6 @@
 using GetyourCrown.UI.UI_Utilities;
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,12 +32,35 @@ namespace GetyourCrown.UI
             }
         }
 
+        public int CharacterPrice
+        {
+            get => _characterPriceValue;
+            set
+            {
+                _characterPriceValue = value;
+                //_characterPrice.text = _characterPriceValue.ToString();
+            }
+        }
+        
+        public bool CharacterLocked
+        {
+            get => _isLockedValue;
+            set
+            {
+                _isLockedValue = value;
+                _isLocked.gameObject.SetActive(value);
+            }
+        }
+
         public event Action<CharacterSlot> OnCharacterSelect;
 
         bool _isSelectedValue;
-        int _characterId;
+        int _characterPriceValue;
+        bool _isLockedValue;
         [Resolve] Button _characterSelectButton;
         [Resolve] Image _isSelected;
+        //[Resolve] TMP_Text _characterPrice;
+        [Resolve] Image _isLocked;
 
         /// <summary>
         /// 생성 되면서 버튼에 구독
@@ -49,6 +73,13 @@ namespace GetyourCrown.UI
 
         void CharacterSelected()
         {
+            if (_isLockedValue)
+            {
+                UI_CharacterBuy _uiCharacterBuy = UI_Manager.instance.Resolve<UI_CharacterBuy>();
+                _uiCharacterBuy.CharacterInfo(CharacterImage, CharacterPrice);
+                _uiCharacterBuy.Show();
+            }
+
             OnCharacterSelect?.Invoke(this);
         }
     }

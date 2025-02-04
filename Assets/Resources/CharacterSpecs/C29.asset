@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6f655d9b7878854ca7d3a76464bafe8, type: 3}
+  m_Name: C29
+  m_EditorClassIdentifier: 
+  <id>k__BackingField: 29
+  <sprite>k__BackingField: {fileID: 21300000, guid: 7ccef02ed89496b4f81ed4f5c5b7c865, type: 3}
+  <prefab>k__BackingField: {fileID: 6157470204858995813, guid: b81682578ce64cf895602e7f5182ba99, type: 3}
+  <price>k__BackingField: 100
+  <isLocked>k__BackingField: 0
