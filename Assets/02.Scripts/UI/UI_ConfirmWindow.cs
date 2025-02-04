@@ -1,6 +1,5 @@
 using GetyourCrown.UI.UI_Utilities;
 using TMPro;
-using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -33,7 +32,6 @@ namespace GetyourCrown.UI
         public void Show(string message, UnityAction onConfirmed = null)
         {
             base.Show();
-            //Debug.Log($"UI_ConfirmWindow.Show() »£√‚µ : {message}");
 
             _message.text = message;
             _confirm.onClick.RemoveAllListeners();

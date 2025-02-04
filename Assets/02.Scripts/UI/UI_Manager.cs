@@ -83,6 +83,7 @@ namespace GetyourCrown.UI
 
         public void Push(UI_Popup popup)
         {
+            
             int popupIndex = _popupStack.FindLastIndex(ui => ui == popup);
 
             if (popupIndex >= 0)
@@ -110,7 +111,11 @@ namespace GetyourCrown.UI
             int popupIndex = _popupStack.FindLastIndex(ui => ui == popup);
 
             if (popupIndex < 0)
-                throw new Exception($"Failed to remove popup. {popup.name}");
+            {
+                //throw new Exception($"Failed to remove popup. {popup.name}");
+                Debug.Log($"Failed to remove popup. {popup.name}");
+                return;
+            }
 
             if (popupIndex == _popupStack.Count -1)
             {

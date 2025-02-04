@@ -59,10 +59,34 @@ namespace GetyourCrown.UI
             }
         }
 
+        public bool isChat
+        {
+            get => _isChatValue;
+            set
+            {
+                _isChatValue = value;
+                _chat.gameObject.SetActive(value);
+            }
+        }
+
+        public string chatMessage
+        {
+            get => _chatMessageValue;
+            set
+            {
+                if (value == null)
+                    return;
+                _chatMessageValue = value;
+                _chatMessage.text = value;
+            }
+        }
+
         bool _isReadyValue;
         bool _isCharacterSelectOpenValue;
         string _playerNameValue;
         bool _isMasterClientValue;
+        bool _isChatValue;
+        string _chatMessageValue;
         [Resolve] TMP_Text _isReady;
         [Resolve] TMP_Text _playerName;
         [Resolve] TMP_Text _isCharacterSelectOpen;
@@ -70,6 +94,8 @@ namespace GetyourCrown.UI
         [Resolve] Image _readyImage;
         [Resolve] Image _isCharacterSelectOpenImage;
         [Resolve] RawImage _playerCharacter;
+        [Resolve] Image _chat;
+        [Resolve] TMP_Text _chatMessage;
     }
 }
 

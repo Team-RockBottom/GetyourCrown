@@ -1,16 +1,17 @@
-using ExitGames.Client.Photon;
 using ExitGames.Client.Photon.StructWrapping;
 using GetyourCrown.Database;
 using GetyourCrown.Network;
 using GetyourCrown.UI.UI_Utilities;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace GetyourCrown.UI
 {
@@ -25,18 +26,21 @@ namespace GetyourCrown.UI
         [Resolve] Button _leftRoom;
         [Resolve] Button _characterChange;
         [Resolve] TMP_Text _roomName;
-        GameObject _currentCharacterCopy = null;
+        [Resolve] TMP_Text _coin;
+        [Resolve] TMP_InputField _chatInputField;
+        private Dictionary<int, GameObject> _slotCharacterPrefabs;
         Camera _characterCamera;
         public Dictionary<int, (Player player, RoomPlayerInfoSlot slot)> _roomPlayerInfoPairs;
         private CharacterSpec[] _characterSpecs;
         const int DEFAULT_CHARACTERSELECT = 0;
-        bool isFirst = true;
+        private Coroutine chatCoroutine;
 
         protected override void Awake()
         {
             base.Awake();
 
             _roomPlayerInfoPairs = new Dictionary<int, (Player player, RoomPlayerInfoSlot slot)>(16);
+            _slotCharacterPrefabs = new Dictionary<int, GameObject>(16);
         }
 
         private void OnEnable()
@@ -52,12 +56,32 @@ namespace GetyourCrown.UI
         protected override void Start()
         {
             base.Start();
-
+            DataManager.instance.OnCoinsChanged += UpdataCoins;
             _roomPlayerInfoSlot.gameObject.SetActive(false);
             _startGame.onClick.AddListener(() =>
             {
                 SoundManager.instance.StopBGM();
                 SceneManager.LoadScene("GameScene-Workflow");
+
+                //bool allReady = _roomPlayerInfoPairs.Values
+                //    .Where(pair => !pair.slot.isMasterClient)
+                //    .All(pair => pair.slot.isReady);
+
+                //if (_roomPlayerInfoPairs.Count < 2)
+                //{
+                //    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+                //    uI_ConfirmWindow.Show("인원이 적어요!");
+                //    return;
+                //}
+                //else if (allReady)
+                //{
+                //    SceneManager.LoadScene("GameScene-Workflow");
+                //}
+                //else
+                //{
+                //    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+                //    uI_ConfirmWindow.Show("모든 플레이어가 준비되지 않았습니다.");
+                //}
             });
 
             _gameReady.onClick.AddListener(() =>
@@ -89,13 +113,27 @@ namespace GetyourCrown.UI
             _leftRoom.onClick.AddListener(() =>
             {
                 PhotonNetwork.LeaveRoom();
+
+                if (DataManager.instance != null)
+                {
+                    DataManager.instance.OnCoinsChanged -= UpdataCoins;
+                }
             });
+
+            _chatInputField.onSubmit.AddListener(OnChatMessage);
         }
 
         public override void Show()
         {
             base.Show();
 
+            if (DataManager.instance == null)
+            {
+                DataManager.instance.OnCoinsChanged += UpdataCoins;
+            }
+
+            UpdataCoins(DataManager.instance.Coins);
+            
             foreach (int actorNumber in _roomPlayerInfoPairs.Keys.ToList())
             {
                 Destroy(_roomPlayerInfoPairs[actorNumber].slot.gameObject);
@@ -110,8 +148,8 @@ namespace GetyourCrown.UI
                 slot.gameObject.SetActive(true);
                 slot.playerName = player.NickName;
                 slot.actorNumber = player.ActorNumber;
-                slot.playerName = player.NickName;
                 slot.isMasterClient = player.IsMasterClient;
+
                 if (player.CustomProperties.TryGetValue(PlayerInRoomProperty.IS_READY, out bool isReady))
                 {
                     slot.isReady = isReady;
@@ -128,6 +166,25 @@ namespace GetyourCrown.UI
                 else
                 {
                     slot.isCharacterSelect = false;
+                }
+
+                if (player.CustomProperties.TryGetValue(PlayerInRoomProperty.CHAT_STATE, out bool isChat))
+                {
+                    slot.isChat = isChat;
+                }
+                else
+                {
+                    slot.isChat = false;
+                }
+
+                if (player.CustomProperties.TryGetValue(PlayerInRoomProperty.CHAT_MESSAGE, out object chatMessage))
+                {
+                    string slotMessage = chatMessage as string;
+                    slot.chatMessage = slotMessage;
+                }
+                else
+                {
+                    slot.chatMessage = string.Empty;
                 }
 
                 PlayerCharacterUpdate(slot, player);
@@ -161,44 +218,49 @@ namespace GetyourCrown.UI
 
                 if (selectedCharacter != null) // 캐릭터가 선택 되어있다면
                 {
-                    slot.playerCharacter = RenderCharacterToTexture(selectedCharacter.prefab);
+                    RenderTexture slotRenderTexture = new RenderTexture(512, 512, 32);
+                    slot.playerCharacter = RenderCharacterToTexture(selectedCharacter.prefab, player.ActorNumber);
                 }
                 else // 캐릭터 선택을 하지 않았다면
                 {
-                    slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DEFAULT_CHARACTERSELECT].prefab);
+                    RenderTexture slotRenderTexture = new RenderTexture(512, 512, 32);
+                    slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DataManager.instance.LastCharacter].prefab, player.ActorNumber);
                 }
             }
             else // 캐릭터 아이디가 없다면
             {
-                slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DEFAULT_CHARACTERSELECT].prefab);
+                RenderTexture slotRenderTexture = new RenderTexture(512, 512, 32);
+                slot.playerCharacter = RenderCharacterToTexture(_characterSpecs[DataManager.instance.LastCharacter].prefab, player.ActorNumber);
             }
         }
 
-        public Texture RenderCharacterToTexture(GameObject characterPrefab)
+        public Texture RenderCharacterToTexture(GameObject characterPrefab, int slotIndex)
         {
-            if (_currentCharacterCopy != null)
+            string cameraName = $"CharacterCamera_Slot{slotIndex}";
+
+            GameObject lastCamera = GameObject.Find(cameraName);
+            if (lastCamera != null)
             {
-                Destroy(_currentCharacterCopy);
+                Destroy(lastCamera);
+            }
+
+            if (_slotCharacterPrefabs.TryGetValue(slotIndex, out GameObject lastCharacter))
+            {
+                Destroy(lastCharacter);
+                _slotCharacterPrefabs.Remove(slotIndex);
             }
 
             GameObject characterClone = Instantiate(characterPrefab);
-            _currentCharacterCopy = characterClone;
-            characterClone.transform.position = new Vector3(-20, -1, 0);
+            characterClone.transform.position = new Vector3(-20 * slotIndex, -1, 0);
             characterClone.transform.localScale = Vector3.one;
             characterClone.transform.localRotation = Quaternion.Euler(0, 180, 0);
-
-            if (_characterCamera == null)
-            {
-                _characterCamera = new GameObject("RoomInfoCharacterCamera").AddComponent<Camera>();
-                _characterCamera.transform.position = new Vector3(-20, 0, -2.25f);
-            }
-
+            _slotCharacterPrefabs[slotIndex] = characterClone;
+            _characterCamera = new GameObject(cameraName).AddComponent<Camera>();
+            _characterCamera.transform.position = new Vector3(-20 * slotIndex, 0, -2.25f);
+            _characterCamera.clearFlags = CameraClearFlags.SolidColor;
             RenderTexture renderTexture = new RenderTexture(512, 512, 32);
             _characterCamera.targetTexture = renderTexture;
-
-            _characterCamera.clearFlags = CameraClearFlags.SolidColor;
-            _characterCamera.Render();  
-
+            _characterCamera.Render();
             return renderTexture;
         }
 
@@ -207,6 +269,7 @@ namespace GetyourCrown.UI
             KeyValuePair<int, (Player player, RoomPlayerInfoSlot slot)> masterClientPair = _roomPlayerInfoPairs.First(pair => pair.Value.slot.isMasterClient);
             masterClientPair.Value.slot.isMasterClient = false;
             _roomPlayerInfoPairs[newMasterClient.ActorNumber].slot.isMasterClient = true;
+            _roomPlayerInfoPairs[newMasterClient.ActorNumber].slot.isReady = false;
 
             if (newMasterClient.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
                 TogglePlayerButtons(newMasterClient);
@@ -220,6 +283,7 @@ namespace GetyourCrown.UI
             slot.playerName = newPlayer.NickName;
             slot.isReady = false;
             slot.isCharacterSelect = false;
+            slot.isChat = false;
             PlayerCharacterUpdate(slot, newPlayer);
             _roomPlayerInfoPairs.Add(newPlayer.ActorNumber, (newPlayer, slot));
         }
@@ -230,6 +294,18 @@ namespace GetyourCrown.UI
             {
                 Destroy(pair.slot.gameObject);
                 _roomPlayerInfoPairs.Remove(otherPlayer.ActorNumber);
+            }
+
+            string cameraName = $"CharacterCamera_Slot{otherPlayer.ActorNumber}";
+            GameObject cameraDestroy = GameObject.Find(cameraName);
+            if (cameraDestroy != null)
+            {
+                Destroy(cameraDestroy);
+            }
+            if (_slotCharacterPrefabs.TryGetValue(otherPlayer.ActorNumber, out GameObject characterDestroy))
+            {
+                Destroy(characterDestroy);
+                _slotCharacterPrefabs.Remove(otherPlayer.ActorNumber);
             }
         }
 
@@ -250,8 +326,9 @@ namespace GetyourCrown.UI
 
                     if (selectedCharacter != null) // 선택된 캐릭터가 존재하는 경우
                     {
+                        RenderTexture slotRenderTexture = new RenderTexture(512, 512, 32);
                         // 캐릭터 이미지를 설정
-                        pair.slot.playerCharacter = RenderCharacterToTexture(selectedCharacter.prefab); // 선택된 캐릭터의 이미지를 해당 플레이어 슬롯에 표시
+                        pair.slot.playerCharacter = RenderCharacterToTexture(selectedCharacter.prefab, targetPlayer.ActorNumber); // 선택된 캐릭터의 이미지를 해당 플레이어 슬롯에 표시
                     }
                 }
 
@@ -260,11 +337,65 @@ namespace GetyourCrown.UI
                 {
                     pair.slot.isCharacterSelect = isCharacterSelection;
                 }
-            }
+
+                if (changedProps.TryGetValue(PlayerInRoomProperty.CHAT_STATE, out bool isChatMessage))
+                {
+                    pair.slot.isChat = isChatMessage;
+                }
+
+                if (changedProps.TryGetValue(PlayerInRoomProperty.CHAT_MESSAGE, out object slotMessageObj))
+                {
+                    string slotMessage = slotMessageObj as string;
+                    pair.slot.chatMessage = slotMessage;
+                }
+            }   
         }
 
         public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
         {
+        }
+
+        private void UpdataCoins(int coins)
+        {
+            _coin.text = coins.ToString();
+        }
+
+        private void OnChatMessage(string message)
+        {
+            if (string.IsNullOrEmpty(message))
+                return;
+
+            Player player = PhotonNetwork.LocalPlayer;
+            bool isChat = _roomPlayerInfoPairs[player.ActorNumber].slot.isChat;
+            string slotMessage = _roomPlayerInfoPairs[player.ActorNumber].slot.chatMessage;
+
+            player.SetCustomProperties(new Hashtable()
+            {
+                { PlayerInRoomProperty.CHAT_STATE, isChat == false},
+                { PlayerInRoomProperty.CHAT_MESSAGE, slotMessage = message }
+            });
+            
+            _chatInputField.text = string.Empty;
+
+            if (chatCoroutine != null)
+            {
+                StopCoroutine(chatCoroutine);
+            }
+            chatCoroutine = StartCoroutine(ResetChatMessage(player));
+        }
+
+        private IEnumerator ResetChatMessage(Player player)
+        {
+            float delay = 3f;
+            yield return new WaitForSeconds(delay);
+            bool isChat = _roomPlayerInfoPairs[player.ActorNumber].slot.isChat;
+            string slotMessage = _roomPlayerInfoPairs[player.ActorNumber].slot.chatMessage;
+
+            player.SetCustomProperties(new Hashtable()
+            {
+                { PlayerInRoomProperty.CHAT_STATE, isChat == false },
+                { PlayerInRoomProperty.CHAT_MESSAGE, slotMessage = ""},
+            });
         }
     }
 }

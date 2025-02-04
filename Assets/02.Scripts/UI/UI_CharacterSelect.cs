@@ -1,17 +1,20 @@
-using ExitGames.Client.Photon;
 using GetyourCrown.Database;
 using GetyourCrown.Network;
 using GetyourCrown.UI.UI_Utilities;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace GetyourCrown.UI
 {
-    public class UI_CharacterSelect : UI_Popup
+    public class UI_CharacterSelect : UI_Popup, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
         [Resolve] Button _close;
         [Resolve] RectTransform _characterSlotContent;
@@ -24,12 +27,16 @@ namespace GetyourCrown.UI
         Camera _characterCamera;
         RenderTexture _renderTexture;
         UI_Room _uiRoom;
+        public int _selectedCharacterId;
+        public int _lockedSelectCharacterId;
+        private Vector2 _lastMousePosition;
+        private bool _isRotating = false;
+        private Quaternion _currentCharacterRotation;
+        private Quaternion _startRotation;
 
         string _characterSpecFolder = "CharacterSpecs";
-        bool isFirst = true;
 
-        const int DEFAULT_CHARACTERSELECT = 0;
-        const int DEFAULT_CHARACTER_LIST_SIZE = 20;
+        private const int DEFAULT_CHARACTER_LIST_SIZE = 20;
 
         protected override void Start()
         {
@@ -64,21 +71,20 @@ namespace GetyourCrown.UI
 
             LoadCharacterSpecs();
             LoadCharacterSlot();
-
-            if (isFirst)
-            {
-                SelectedCharacterPreview(_characterSpecs[DEFAULT_CHARACTERSELECT]);
-                isFirst = false;
-            }
+            SelectedCharacterPreview(_characterSpecs[DataManager.instance.LastCharacter]);
         }
 
         private void LoadCharacterSpecs()
         {
             _characterSpecs = Resources.LoadAll<CharacterSpec>(_characterSpecFolder);
+            //LoadAll은 리소스에서 무작위로 로드하기때문에 스펙에 넣고 id순으로 정렬
+            _characterSpecs = _characterSpecs.OrderBy(spec => spec.id).ToArray();
         }
 
-        private void LoadCharacterSlot()
+        private async void LoadCharacterSlot()
         {
+            await DataManager.instance.LoadPlayerDataAsync();
+
             if (_characterSlots.Count == _characterSpecs.Length)
                 return;
 
@@ -88,7 +94,9 @@ namespace GetyourCrown.UI
                 slot.gameObject.SetActive(true);
                 slot.CharacterIndex = _characterSpecs[i].id;
                 slot.CharacterImage = _characterSpecs[i].sprite;
+                slot.CharacterPrice = _characterSpecs[i].price;
                 slot.isSelected = false;
+                slot.CharacterLocked = DataManager.instance.CurrentPlayerData.CharactersLocked[slot.CharacterIndex];
                 slot.OnCharacterSelect += CharacterSelected;
                 slot.gameObject.SetActive(true);
                 _characterSlots.Add(slot);
@@ -96,20 +104,27 @@ namespace GetyourCrown.UI
 
             if (_characterSlots.Count > 0)
             {
-                _characterSlots[DEFAULT_CHARACTERSELECT].isSelected = true;
+                _characterSlots[DataManager.instance.LastCharacter].isSelected = true;
             }
         }
 
         private void CharacterSelected(CharacterSlot selectCharacter)
         {
+            if (selectCharacter.CharacterLocked)
+            {
+                int lockedCharacterId = selectCharacter.CharacterIndex;
+                _lockedSelectCharacterId = lockedCharacterId;
+                return; 
+            }
             foreach (var slot in _characterSlots)
             {
                 slot.isSelected = false;
             }
 
             selectCharacter.isSelected = true;
-
             int selectedCharacterId = selectCharacter.CharacterIndex; // 선택된 캐릭터ID 저장
+            _selectedCharacterId = selectedCharacterId;
+
             PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable()
             {
                 { PlayerInRoomProperty.CHARACTER_ID, selectedCharacterId }  // 캐릭터아이디 키로 선택된 캐릭터ID 저장 및 동기화
@@ -155,6 +170,66 @@ namespace GetyourCrown.UI
 
                 // 카메라 렌더링을 실행하여 캐릭터를 RawImage에 표시
                 _characterCamera.Render();
+            }
+        }
+
+        public void UpdateCharacterSlot()
+        {
+            foreach (var slot in _characterSlots)
+            {
+                if (DataManager.instance.CurrentPlayerData.CharactersLocked.ContainsKey(slot.CharacterIndex))
+                {
+                    slot.CharacterLocked = DataManager.instance.CurrentPlayerData.CharactersLocked[slot.CharacterIndex];
+                }
+            }
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if (RectTransformUtility.RectangleContainsScreenPoint(_characterPreview.rectTransform, Input.mousePosition))
+            {
+                _startRotation = _currentCharacter.transform.rotation;
+                _lastMousePosition = Input.mousePosition;
+                _isRotating = true;
+            }
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (_currentCharacter != null)
+                StartCoroutine(C_RotateCharaterSlerp());
+
+            _isRotating = false;
+        }
+
+        private IEnumerator C_RotateCharaterSlerp()
+        {
+            float elapsedTime = 0f;
+            float returnDuration = 0.1f;
+            Quaternion currentRotation = _currentCharacter.transform.rotation;
+
+            while (elapsedTime < returnDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = elapsedTime / returnDuration;
+                _currentCharacter.transform.rotation = Quaternion.Slerp(currentRotation, _startRotation, t);
+                yield return null;
+            }
+
+            _currentCharacter.transform.rotation = _startRotation;
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (_isRotating)
+            {
+                Vector2 delta = (Vector2)Input.mousePosition - _lastMousePosition;
+                float rotationSpeed = 0.2f;
+
+                if (_currentCharacter != null)
+                    _currentCharacter.transform.Rotate(Vector3.up, -delta.x * rotationSpeed, Space.World);
+
+                _lastMousePosition = Input.mousePosition;
             }
         }
     }

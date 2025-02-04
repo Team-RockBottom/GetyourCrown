@@ -8,6 +8,8 @@ using GetyourCrown.UI.UI_Utilities;
 using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Data;
+using GetyourCrown.Database;
 
 namespace GetyourCrown.Network
 { 
@@ -25,9 +27,12 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
 
         private double _stackCount = 0;
         private double _startTime = 0;
-    
+        private int _suceedCount = 0;
+        private int _kickCount = 0;
+
         private bool _augmentOnWork = false;
         public float _augmentScoreCount = 0;
+        private const int GET_COINS = 30;
 
         [Resolve] RectTransform _leaderBoardSlotGrid;
         [Resolve] RectTransform _leaderBoard;
@@ -68,7 +73,7 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
         }
 
 
-        public override void Show()
+        public async override void Show()
         {
             base.Show();
             _leaderBoard.gameObject.SetActive(true);
@@ -80,7 +85,23 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
             {
                 LeaderBoardSlot slot = Instantiate(_leaderBoardSlot, _leaderBoardSlotGrid);
                 slot.gameObject.SetActive(true);
-                slot.Rank = i+1;
+                slot.Rank = i+1;;
+
+                switch (slot.Rank)
+                {
+                    case 1:
+                        await DataManager.instance.UpdatePlayerCoinsAsync(GET_COINS);
+                        break;
+                    case 2:
+                        await DataManager.instance.UpdatePlayerCoinsAsync(GET_COINS / 2);
+                        break; 
+                    case 3:
+                        await DataManager.instance.UpdatePlayerCoinsAsync(GET_COINS / 3);
+                        break;
+                    case 4:
+                        break;
+                }
+
                 slot.CrownEquipScore = totalScores[i].crownEquipTime;
                 slot.NickName = totalScores[i].nickName;
                 slot.gameObject.SetActive(true);
@@ -110,7 +131,23 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
             Debug.Log(timeAdd);
             _startTime = 0;
         }
-    
+
+        public void KickCountUp()
+        {
+            _kickCount += 1;
+        }
+
+        public void SuceedCountUp()
+        {
+            _suceedCount += 1;
+        }
+
+        private void CountReset()
+        {
+            _kickCount = 0;
+            _suceedCount = 0;
+            _stackCount = 0;
+        }
 
         public void ScroeTransferToLeaderBoard()
         {
@@ -120,13 +157,17 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
             float roundStackCount = Mathf.Round((float)_stackCount);
             score.crownEquipTime = roundStackCount;
             score.nickName = PhotonNetwork.NickName;
+            score.kickCrownCount = _kickCount;
+            score.suceedingCount = _suceedCount;
+
             RaiseEventOptions raiseEventOption = new RaiseEventOptions
             {
                 Receivers = ReceiverGroup.All,
             };
             object[] content = new object[] {score.id, score.crownEquipTime, score.suceedingCount, score.kickCrownCount, score.nickName};
             PhotonNetwork.RaiseEvent(PhotonEventCode.GAMESTOP, content, raiseEventOption, SendOptions.SendReliable);
-            _stackCount = 0;
+            
+            CountReset();
         }
 
 

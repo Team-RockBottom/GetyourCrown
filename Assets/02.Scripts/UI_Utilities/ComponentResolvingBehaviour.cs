@@ -38,7 +38,7 @@ namespace GetyourCrown.UI.UI_Utilities
             { typeof(Image), "Image - " },
             { typeof(Button), "Button - " },
             { typeof(Toggle), "Toggle - " },
-            { typeof(Slider), "Slider - " }
+            { typeof(Slider), "Slider - " },
         };
     }
 
