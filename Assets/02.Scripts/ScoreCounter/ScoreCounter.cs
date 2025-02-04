@@ -8,6 +8,8 @@ using GetyourCrown.UI.UI_Utilities;
 using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Data;
+using GetyourCrown.Database;
 
 namespace GetyourCrown.Network
 { 
@@ -28,6 +30,7 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
     
         private bool _augmentOnWork = false;
         public float _augmentScoreCount = 0;
+        private const int GET_COINS = 30;
 
         [Resolve] RectTransform _leaderBoardSlotGrid;
         [Resolve] RectTransform _leaderBoard;
@@ -67,7 +70,7 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
         }
 
 
-        public override void Show()
+        public async override void Show()
         {
             base.Show();
             _leaderBoard.gameObject.SetActive(true);
@@ -79,7 +82,23 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
             {
                 LeaderBoardSlot slot = Instantiate(_leaderBoardSlot, _leaderBoardSlotGrid);
                 slot.gameObject.SetActive(true);
-                slot.Rank = i+1;
+                slot.Rank = i+1;;
+
+                switch (slot.Rank)
+                {
+                    case 1:
+                        await DataManager.instance.UpdatePlayerCoinsAsync(GET_COINS);
+                        break;
+                    case 2:
+                        await DataManager.instance.UpdatePlayerCoinsAsync(GET_COINS / 2);
+                        break; 
+                    case 3:
+                        await DataManager.instance.UpdatePlayerCoinsAsync(GET_COINS / 3);
+                        break;
+                    case 4:
+                        break;
+                }
+
                 slot.CrownEquipScore = totalScores[i].crownEquipTime;
                 slot.NickName = totalScores[i].nickName;
                 slot.gameObject.SetActive(true);

@@ -60,25 +60,27 @@ namespace GetyourCrown.UI
             _roomPlayerInfoSlot.gameObject.SetActive(false);
             _startGame.onClick.AddListener(() =>
             {
-                bool allReady = _roomPlayerInfoPairs.Values
-                    .Where(pair => !pair.slot.isMasterClient)
-                    .All(pair => pair.slot.isReady);
+                SceneManager.LoadScene("GameScene-Workflow");
 
-                if (_roomPlayerInfoPairs.Count < 2)
-                {
-                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
-                    uI_ConfirmWindow.Show("인원이 적어요!");
-                    return;
-                }
-                else if (allReady)
-                {
-                    SceneManager.LoadScene("GameScene-Workflow");
-                }
-                else
-                {
-                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
-                    uI_ConfirmWindow.Show("모든 플레이어가 준비되지 않았습니다.");
-                }
+                //bool allReady = _roomPlayerInfoPairs.Values
+                //    .Where(pair => !pair.slot.isMasterClient)
+                //    .All(pair => pair.slot.isReady);
+
+                //if (_roomPlayerInfoPairs.Count < 2)
+                //{
+                //    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+                //    uI_ConfirmWindow.Show("인원이 적어요!");
+                //    return;
+                //}
+                //else if (allReady)
+                //{
+                //    SceneManager.LoadScene("GameScene-Workflow");
+                //}
+                //else
+                //{
+                //    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+                //    uI_ConfirmWindow.Show("모든 플레이어가 준비되지 않았습니다.");
+                //}
             });
 
             _gameReady.onClick.AddListener(() =>
