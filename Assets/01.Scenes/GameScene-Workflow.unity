@@ -5398,15 +5398,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4059169647392572582, guid: 47ba6167ef9a9f34f86cf84c60cd6a0c, type: 3}
       propertyPath: sceneViewId
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6175867963141901920, guid: 47ba6167ef9a9f34f86cf84c60cd6a0c, type: 3}
       propertyPath: m_Name
       value: Crown
-      objectReference: {fileID: 0}
-    - target: {fileID: 6175867963141901920, guid: 47ba6167ef9a9f34f86cf84c60cd6a0c, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7470905154009909930, guid: 47ba6167ef9a9f34f86cf84c60cd6a0c, type: 3}
       propertyPath: m_LocalPosition.x
