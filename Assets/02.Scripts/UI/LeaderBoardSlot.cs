@@ -67,11 +67,21 @@ public class LeaderBoardSlot : ComponentResolvingBehaviour
 
     public int TotalScore
     {
-        get => _totalScoreValue = _suceedingScoreValue + _kickScoreValue + (int)_crownEquipScoreValue;
+        get => _totalScoreValue;
         set
         {
             _totalScoreValue = value;
             _totalScore.text = value.ToString();
+        }
+    }
+
+    public int GetCoinScore
+    {
+        get => _getCoinScoreValue;
+        set
+        {
+            _getCoinScoreValue = value;
+            _getCoinScore.text = $"+{value.ToString()}";
         }
     }
 
@@ -81,6 +91,7 @@ public class LeaderBoardSlot : ComponentResolvingBehaviour
     int _suceedingScoreValue;
     int _kickScoreValue;
     int _totalScoreValue;
+    int _getCoinScoreValue;
     [Resolve] Image _goldenMedal;
     [Resolve] Image _leaderBoardSlot;
     [Resolve] TMP_Text _rank;
@@ -89,4 +100,5 @@ public class LeaderBoardSlot : ComponentResolvingBehaviour
     [Resolve] TMP_Text _suceedingScroe;
     [Resolve] TMP_Text _kickScore;
     [Resolve] TMP_Text _totalScore;
+    [Resolve] TMP_Text _getCoinScore;
 }

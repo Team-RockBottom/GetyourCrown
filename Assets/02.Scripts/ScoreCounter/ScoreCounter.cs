@@ -92,14 +92,18 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
                 {
                     case 1:
                         await DataManager.instance.UpdatePlayerCoinsAsync(GET_COINS);
+                        slot.GetCoinScore = GET_COINS;
                         break;
                     case 2:
                         await DataManager.instance.UpdatePlayerCoinsAsync(GET_COINS / 2);
+                        slot.GetCoinScore = GET_COINS /2;
                         break; 
                     case 3:
                         await DataManager.instance.UpdatePlayerCoinsAsync(GET_COINS / 3);
+                        slot.GetCoinScore = GET_COINS/ 3;
                         break;
                     case 4:
+                        slot.GetCoinScore = 0;
                         break;
                 }
 
