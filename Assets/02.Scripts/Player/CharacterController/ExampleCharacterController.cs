@@ -630,7 +630,7 @@ namespace GetyourCrown.CharacterContorller
 
         public void TryAttack()
         {
-            Vector3 castingPosition = transform.position + (Vector3.forward * SPHERCAST_RADIUS * rangeMultiple - Vector3.forward*CHARACTER_RADIUS) + Vector3.up * (CHARACTER_HEIGHT + CHARACTER_RADIUS);
+            Vector3 castingPosition = transform.position;
 
             if (Physics.SphereCast(castingPosition, SPHERCAST_RADIUS * rangeMultiple, transform.forward, out RaycastHit hit, SPHERCAST_MAXDISTANCE * rangeMultiple, _kingLayer))
             {
