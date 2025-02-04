@@ -95,6 +95,11 @@ namespace GetyourCrown.UI
                 {
                     { PlayerInRoomProperty.IS_READY, isReady == false},
                 });
+
+                if (!isReady)
+                    _characterChange.interactable = false;
+                else
+                    _characterChange.interactable = true;
             });
 
             _characterChange.onClick.AddListener(() =>
