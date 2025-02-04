@@ -43,6 +43,7 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
 
             _roomBackButton.onClick.AddListener(() =>
             {
+                SoundManager.instance.StopBGM();
                 PhotonNetwork.LoadLevel("MainMenuScene");
             });
 

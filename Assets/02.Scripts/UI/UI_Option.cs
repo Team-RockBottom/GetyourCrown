@@ -2,6 +2,7 @@ using GetyourCrown.UI.UI_Utilities;
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace GetyourCrown.UI
@@ -35,7 +36,8 @@ namespace GetyourCrown.UI
             {
                 VSyncSelect(currentVSyncCount);
                 FullScreenSelect(currentFullScreen);
-                Cursor.lockState = CursorLockMode.Locked;
+                if (SceneManager.GetActiveScene().name == "GameScene-Workflow")
+                    Cursor.lockState = CursorLockMode.Locked;
                 Hide();
             });
 
@@ -52,7 +54,8 @@ namespace GetyourCrown.UI
                 _fullScreen.isOn = prevIsFullScreen;
 
                 _volum.value = prevAudioVolum;
-                Cursor.lockState = CursorLockMode.Locked;
+                if(SceneManager.GetActiveScene().name == "GameScene-Workflow")
+                    Cursor.lockState = CursorLockMode.Locked;
                 Hide();
             });
         }

@@ -68,6 +68,11 @@ namespace GetyourCrown.UI
             }
         }
 
+        private void Start()
+        {
+            PlayBGM("bgm2");
+        }
+
         public void PlayBGM(string name)
         {
             if (_bgmClips.ContainsKey(name))

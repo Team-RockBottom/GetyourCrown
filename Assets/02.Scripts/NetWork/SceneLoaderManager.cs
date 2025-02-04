@@ -40,12 +40,14 @@ public class SceneLoaderManager : MonoBehaviour
             UI_Room uI_Room = UI_Manager.instance.Resolve<UI_Room>();
             uI_Room.Show();
 
+            SoundManager.instance.PlayBGM("bgm2");
+
             PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable
-        {
-            {PlayerInGamePlayPropertyKey.IS_CHARACTER_SPAWNED, false },
-            {PlayerInGamePlayPropertyKey.IS_AUGMENT_SELECTED, false },
-            {PlayerInRoomProperty.IS_READY, false }
-        });
+            {
+                {PlayerInGamePlayPropertyKey.IS_CHARACTER_SPAWNED, false },
+                {PlayerInGamePlayPropertyKey.IS_AUGMENT_SELECTED, false },
+                {PlayerInRoomProperty.IS_READY, false }
+            });
         }
     }
 }
