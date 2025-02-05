@@ -44,7 +44,9 @@ public class SceneLoaderManager : MonoBehaviour
             {
                 {PlayerInGamePlayPropertyKey.IS_CHARACTER_SPAWNED, false },
                 {PlayerInGamePlayPropertyKey.IS_AUGMENT_SELECTED, false },
-                {PlayerInRoomProperty.IS_READY, false }
+                {PlayerInRoomProperty.IS_READY, false },
+                {PlayerInRoomProperty.CHAT_STATE, false },
+                {PlayerInRoomProperty.CHAT_MESSAGE, null}
             });
         }
     }
