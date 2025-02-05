@@ -2880,6 +2880,8 @@ MonoBehaviour:
   rangeMultiple: 1
   speedMultiple: 1
   _attackCoolDownValue: 1
+  _hasCrown: 0
+  _maxSpeed: 0
   MaxStableWalkSpeed: 10
   MaxStableRunSpeed: 15
   KingStableWalkSpeed: 9.5
