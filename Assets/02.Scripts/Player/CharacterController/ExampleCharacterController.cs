@@ -8,6 +8,7 @@ using Crown;
 using Augment;
 using static UnityEngine.Rendering.HableCurve;
 using GetyourCrown.Network;
+using UnityEngine.Rendering;
 
 namespace GetyourCrown.CharacterContorller
 {
@@ -89,11 +90,12 @@ namespace GetyourCrown.CharacterContorller
 
         [Header("SpeedUp Augment")]
         private bool _speedUpAugmentActive = false;  // 스피드업 증강이 활성화
-        private bool _hasCrown = false;              // 왕관 있는지
+        public bool _hasCrown = false;              // 왕관 있는지
         private float _speedMultiplier = 1f;         
         private float _speedUpTimer = 0f;            
         private float _speedUpIncreaseRate = 0.05f;  
-        private const float MaxSpeedMultiplier = 1.5f; 
+        private const float MaxSpeedMultiplier = 1.5f;
+        public bool _maxSpeed = false;
 
 
         [Header("Stable Movement")]
@@ -380,6 +382,12 @@ namespace GetyourCrown.CharacterContorller
                                         _speedUpTimer = 0f; // 타이머 초기화
                                     }
                                 }
+
+                                if (_speedMultiplier >= MaxSpeedMultiplier) //최대 배율 달성시
+                                {
+                                    _maxSpeed = true;
+                                }
+
                                 if (!_isRun) // 걷기
                                 {
                                     targetMovementVelocity = reorientedInput * MaxStableWalkSpeed * _speedMultiplier;
@@ -643,11 +651,14 @@ namespace GetyourCrown.CharacterContorller
         {
             Collider[] cols = Physics.OverlapSphere(transform.position, 1f, _crownLayer);
 
-            if (cols.Length > 0)
+            if (_photonView.IsMine)
             {
-                cols[0].GetComponent<PickableObject>().PickUp();
-                _hasCrown = true;
-                return;
+                if (cols.Length > 0)
+                {
+                    cols[0].GetComponent<PickableObject>().PickUp();
+                    _hasCrown = true;
+                    return;
+                }
             }
         }
 
@@ -717,6 +728,7 @@ namespace GetyourCrown.CharacterContorller
         {
             _speedMultiplier = 1f;
             _speedUpTimer = 0f;
+            _maxSpeed = false;
         }
 
     }
