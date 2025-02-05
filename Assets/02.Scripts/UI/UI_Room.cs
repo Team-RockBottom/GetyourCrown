@@ -63,6 +63,8 @@ namespace GetyourCrown.UI
             _startGame.onClick.AddListener(() =>
             {
                 SoundManager.instance.StopBGM();
+                //SceneManager.LoadScene("GameScene-Workflow");
+
                 bool allReady = _roomPlayerInfoPairs.Values
                     .Where(pair => !pair.slot.isMasterClient)
                     .All(pair => pair.slot.isReady);

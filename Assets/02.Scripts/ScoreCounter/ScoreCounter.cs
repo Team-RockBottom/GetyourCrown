@@ -159,6 +159,7 @@ public class ScoreCounter : UI_Screen, IOnEventCallback
 
         public void ScroeTransferToLeaderBoard()
         {
+            CountUpEnd();
             Debug.Log("LB Transfer Call");
             TotalScore score = new TotalScore();
             score.id = PhotonNetwork.LocalPlayer.ActorNumber;
