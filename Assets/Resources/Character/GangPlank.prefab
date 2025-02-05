@@ -2882,6 +2882,8 @@ MonoBehaviour:
   _attackCoolDownValue: 1
   MaxStableWalkSpeed: 10
   MaxStableRunSpeed: 15
+  KingStableWalkSpeed: 9.5
+  KingStableRunSpeed: 14.5
   StableMovementSharpness: 15
   OrientationSharpness: 20
   OrientationMethod: 1

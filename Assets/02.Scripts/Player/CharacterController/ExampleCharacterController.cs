@@ -643,11 +643,14 @@ namespace GetyourCrown.CharacterContorller
         {
             Collider[] cols = Physics.OverlapSphere(transform.position, 1f, _crownLayer);
 
-            if (cols.Length > 0)
+            if (_photonView.IsMine)
             {
-                cols[0].GetComponent<PickableObject>().PickUp();
-                _hasCrown = true;
-                return;
+                if (cols.Length > 0)
+                {
+                    cols[0].GetComponent<PickableObject>().PickUp();
+                    _hasCrown = true;
+                    return;
+                }
             }
         }
 
