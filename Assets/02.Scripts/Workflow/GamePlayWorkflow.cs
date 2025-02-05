@@ -23,10 +23,10 @@ namespace GetyourCrown.Network
 
         [Header ("GameTimer")]
         [SerializeField] int timeCountValue = 30;
-        [SerializeField] Image _longTimerImage;
-        [SerializeField] TMP_Text _longTimer;
-        [SerializeField] Image _eventCountImage;
-        [SerializeField] TMP_Text _eventCountText;
+        [Resolve] Image _longTimerImage;
+        [Resolve] TMP_Text _longTimer;
+        [Resolve] Image _eventCountImage;
+        [Resolve] TMP_Text _eventCountText;
         float _gamePlayTimeCount = 180;
 
         int _timeCount = 0;
@@ -219,12 +219,12 @@ namespace GetyourCrown.Network
 
         IEnumerator C_WaitUntilGamePlayTime()
         {
-            double gamePlayTimeCount = PhotonNetwork.Time;
+            double gameStartTime = PhotonNetwork.Time;
 
             while (true)
             {
-                double elesedTime = PhotonNetwork.Time - gamePlayTimeCount;
-                int intTime = (int)_gamePlayTimeCount - (int)elesedTime;
+                double elapsedTime = PhotonNetwork.Time - gameStartTime;
+                int intTime = (int)_gamePlayTimeCount - (int)elapsedTime;
 
                 if (intTime == 0)
                 {
@@ -241,7 +241,7 @@ namespace GetyourCrown.Network
                     _view.RPC("ShowGameTimer", RpcTarget.All, intTime);
                 }
 
-                yield return _waitFor1Seconds;
+                yield return new WaitForSeconds(0.5f);
             }
         }
 
