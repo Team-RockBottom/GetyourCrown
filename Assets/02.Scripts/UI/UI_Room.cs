@@ -63,27 +63,27 @@ namespace GetyourCrown.UI
             _startGame.onClick.AddListener(() =>
             {
                 SoundManager.instance.StopBGM();
-                SceneManager.LoadScene("GameScene-Workflow");
+                //SceneManager.LoadScene("GameScene-Workflow");
 
-                //bool allReady = _roomPlayerInfoPairs.Values
-                //    .Where(pair => !pair.slot.isMasterClient)
-                //    .All(pair => pair.slot.isReady);
+                bool allReady = _roomPlayerInfoPairs.Values
+                    .Where(pair => !pair.slot.isMasterClient)
+                    .All(pair => pair.slot.isReady);
 
-                //if (_roomPlayerInfoPairs.Count < 2)
-                //{
-                //    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
-                //    uI_ConfirmWindow.Show("인원이 적어요!");
-                //    return;
-                //}
-                //else if (allReady)
-                //{
-                //    SceneManager.LoadScene("GameScene-Workflow");
-                //}
-                //else
-                //{
-                //    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
-                //    uI_ConfirmWindow.Show("모든 플레이어가 준비되지 않았습니다.");
-                //}
+                if (_roomPlayerInfoPairs.Count < 2)
+                {
+                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+                    uI_ConfirmWindow.Show("인원이 적어요!");
+                    return;
+                }
+                else if (allReady)
+                {
+                    SceneManager.LoadScene("GameScene-Workflow");
+                }
+                else
+                {
+                    UI_ConfirmWindow uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
+                    uI_ConfirmWindow.Show("모든 플레이어가 준비되지 않았습니다.");
+                }
             });
 
             _gameReady.onClick.AddListener(() =>

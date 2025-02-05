@@ -27,7 +27,7 @@ namespace GetyourCrown.Network
         [SerializeField] TMP_Text _longTimer;
         [SerializeField] Image _eventCountImage;
         [SerializeField] TMP_Text _eventCountText;
-        float _gamePlayTimeCount = 5;
+        float _gamePlayTimeCount = 180;
 
         int _timeCount = 0;
         WaitForSeconds _waitFor1Seconds = new WaitForSeconds(1);
