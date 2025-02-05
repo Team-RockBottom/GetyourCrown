@@ -148,10 +148,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1749402330}
   - {fileID: 2046151260}
   - {fileID: 2337140912013111241}
   - {fileID: 1402460663}
-  - {fileID: 1749402330}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &235755855
@@ -247,8 +247,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5664038331233514345, guid: 89a8333e92966bd4e8b6b4072abd9771, type: 3}
-      propertyPath: m_SortingOrder
+      propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5664038331233514345, guid: 89a8333e92966bd4e8b6b4072abd9771, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1147,6 +1151,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6406563635814168143, guid: ee5a367a1cab9a444903575649b5ecce, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1239,18 +1247,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3472597709146000550, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 49658
+      value: 59416
       objectReference: {fileID: 0}
     - target: {fileID: 3472597709146000550, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1768700
+      value: 2094800
       objectReference: {fileID: 0}
     - target: {fileID: 4707465121724865844, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
       propertyPath: m_Size
+      value: 0.984145
+      objectReference: {fileID: 0}
+    - target: {fileID: 4707465121724865844, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
+      propertyPath: m_Value
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4753225854626363013, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
       propertyPath: m_Size
+      value: 0.3614304
+      objectReference: {fileID: 0}
+    - target: {fileID: 4753225854626363013, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}
+      propertyPath: m_Value
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4766801461889660781, guid: ef4e1b8362260c94db5cac426e560f27, type: 3}

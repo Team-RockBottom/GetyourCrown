@@ -20,6 +20,7 @@ namespace GetyourCrown.UI
         [Resolve] Button _create;
         [Resolve] Button _guest;
         [Resolve] Button _exit;
+        private const string IS_LOGIIN = "IsLogIn";
 
         protected override async void Start()
         {
@@ -44,9 +45,12 @@ namespace GetyourCrown.UI
                     return;
                 }
 
-                await LogInAsync(_id.text, _password.text);
-                await DataManager.instance.LoadPlayerDataAsync();
-                PhotonManager.instance.SetNickname(DataManager.instance.Nickname);
+                bool checkLogin = await LogInAsync(_id.text, _password.text);
+                if (checkLogin)
+                {
+                    await DataManager.instance.LoadPlayerDataAsync();
+                    PhotonManager.instance.SetNickname(DataManager.instance.Nickname);
+                }
             });
 
             _create.onClick.AddListener(() =>
@@ -80,12 +84,15 @@ namespace GetyourCrown.UI
             uI_ConfirmWindow.Show(message);
         }
 
-        async Task LogInAsync(string id, string password)
+        async Task<bool> LogInAsync(string id, string password)
         {
             try
             {
                 await AuthenticationService.Instance.SignInWithUsernamePasswordAsync(_id.text, _password.text);
                 Hide();
+                PlayerPrefs.SetInt(IS_LOGIIN, 1);
+                PlayerPrefs.Save();
+                return true;
             }
             catch (RequestFailedException e)
             {
@@ -106,6 +113,7 @@ namespace GetyourCrown.UI
                     ConfirmWindowShow($"알 수 없는 오류가 발생했습니다.\n다시 시도 해주세요.\nErrorCode: {e.ErrorCode}");
                     Debug.Log($"{e.ErrorCode}");
                 }
+                return false;
             }
         }
     }

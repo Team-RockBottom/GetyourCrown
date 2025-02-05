@@ -36,13 +36,8 @@ public class SceneLoaderManager : MonoBehaviour
         {
             UI_MainMenu uI_MainMenu = UI_Manager.instance.Resolve<UI_MainMenu>();
             uI_MainMenu.Hide();
-
             UI_Room uI_Room = UI_Manager.instance.Resolve<UI_Room>();
             uI_Room.Show();
-
-            UI_Login uI_Login = UI_Manager.instance.Resolve<UI_Login>();
-            uI_Login.Hide();
-
             SoundManager.instance.PlayBGM("bgm2");
 
             PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable

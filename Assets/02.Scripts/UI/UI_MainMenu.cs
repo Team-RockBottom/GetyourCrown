@@ -3,6 +3,7 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace GetyourCrown.UI
 {
@@ -11,10 +12,18 @@ namespace GetyourCrown.UI
         [Resolve] Button _start;
         [Resolve] Button _option;
         [Resolve] Button _exit;
+        private const string IS_LOGIIN = "IsLogIn";
 
         protected override void Start()
         {
             base.Start();
+
+            bool isLogIn = PlayerPrefs.GetInt(IS_LOGIIN, 0) == 1;
+            if (!isLogIn)
+            {
+                UI_Login uI_Login = UI_Manager.instance.Resolve<UI_Login>();
+                uI_Login.Show();
+            }
 
             _start.onClick.AddListener(() =>
             {
