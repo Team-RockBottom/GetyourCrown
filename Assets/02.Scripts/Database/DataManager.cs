@@ -1,4 +1,5 @@
 using ExitGames.Client.Photon;
+using GetyourCrown.Network;
 using GetyourCrown.UI;
 using Newtonsoft.Json;
 using Photon.Pun;
@@ -17,11 +18,13 @@ namespace GetyourCrown.Database
         public PlayerData CurrentPlayerData { get; private set; } = new PlayerData();
 
         [SerializeField] CharacterSpecRepository _characterSpecRepository;
-        //public bool isGuset = false;
+        //public bool _isGuset = false;
+        private bool _isFirst = true;
         private const string NICKNAME_KEY = "Nickname";
         private const string COINS_KEY = "Coins";
         private const string CHARACTER_KEY = "Chracters";
         private const string LAST_CHARACTER_KEY = "LastCharacter";
+
 
         public event Action<string> OnNicknameChanged;
         public event Action<int> OnCoinsChanged;
@@ -82,6 +85,16 @@ namespace GetyourCrown.Database
                 if (loadedData.ContainsKey(LAST_CHARACTER_KEY))
                 {
                     LastCharacter = loadedData[LAST_CHARACTER_KEY].Value.GetAs<int>();
+
+                    if (_isFirst)
+                    {
+                        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable()
+                        {
+                            { PlayerInRoomProperty.CHARACTER_ID, LastCharacter }
+                        });
+                        _isFirst = false;
+                    }
+                    
                 }
             }
             catch (Exception e)
