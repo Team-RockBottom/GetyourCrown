@@ -201,6 +201,12 @@ namespace GetyourCrown.UI
 
             _roomName.text = PhotonNetwork.CurrentRoom.Name;
             TogglePlayerButtons(PhotonNetwork.LocalPlayer);
+
+
+            if (DataManager.instance == null)
+            {
+                DataManager.instance.OnCoinsChanged += UpdataCoins;
+            }
         }
 
         void TogglePlayerButtons(Player player)
