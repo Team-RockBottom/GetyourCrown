@@ -47,8 +47,9 @@ namespace GetyourCrown.CharacterContorller
         readonly int AUGMENT = Animator.StringToHash("Augment");
 
         const float MOVING_STOP = 0;
-        const float MOVING_WALK = 0.5f;
-        const float MOVING_RUN = 1;
+        const float MOVING_WALK = 0.3f;
+        const float MOVING_RUN = 0.6f;
+        const float MOVING_RUN_AUGMENT  = 1f;
         [SerializeField] const float DEFAULT_DELAY_TIME = 1f;
         [SerializeField] TMP_Text _nickName;
 
@@ -222,9 +223,20 @@ namespace GetyourCrown.CharacterContorller
             else if (axisCheck > 0)
             {
                 if (characterInputs.Run)
-                    _animator.SetFloat(SPEED_HASH, MOVING_RUN);
+                {
+                    if (Character._selectedAugmentId == 1 && Character._maxSpeed)
+                    {
+                        _animator.SetFloat(SPEED_HASH, MOVING_RUN_AUGMENT);
+                    }
+                    else
+                    {
+                        _animator.SetFloat(SPEED_HASH, MOVING_RUN);
+                    }
+                }
                 else
+                {
                     _animator.SetFloat(SPEED_HASH, MOVING_WALK);
+                }
             }
 
             if (characterInputs.JumpDown)

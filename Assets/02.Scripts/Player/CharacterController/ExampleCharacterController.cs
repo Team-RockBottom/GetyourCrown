@@ -93,7 +93,8 @@ namespace GetyourCrown.CharacterContorller
         private float _speedMultiplier = 1f;         
         private float _speedUpTimer = 0f;            
         private float _speedUpIncreaseRate = 0.05f;  
-        private const float MaxSpeedMultiplier = 1.5f; 
+        private const float MaxSpeedMultiplier = 1.5f;
+        public bool _maxSpeed = false;
 
 
         [Header("Stable Movement")]
@@ -380,6 +381,16 @@ namespace GetyourCrown.CharacterContorller
                                         _speedUpTimer = 0f; // 타이머 초기화
                                     }
                                 }
+
+                                if (_speedMultiplier >= MaxSpeedMultiplier) //최대 배율 달성시
+                                {
+                                    _maxSpeed = true;
+                                }
+                                else
+                                {
+                                    _maxSpeed = false;
+                                }
+
                                 if (!_isRun) // 걷기
                                 {
                                     targetMovementVelocity = reorientedInput * MaxStableWalkSpeed * _speedMultiplier;
