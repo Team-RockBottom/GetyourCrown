@@ -90,7 +90,7 @@ namespace GetyourCrown.CharacterContorller
 
         [Header("SpeedUp Augment")]
         private bool _speedUpAugmentActive = false;  // 스피드업 증강이 활성화
-        private bool _hasCrown = false;              // 왕관 있는지
+        public bool _hasCrown = false;              // 왕관 있는지
         private float _speedMultiplier = 1f;         
         private float _speedUpTimer = 0f;            
         private float _speedUpIncreaseRate = 0.05f;  
