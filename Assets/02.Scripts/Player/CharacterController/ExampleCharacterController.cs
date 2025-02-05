@@ -8,6 +8,7 @@ using Crown;
 using Augment;
 using static UnityEngine.Rendering.HableCurve;
 using GetyourCrown.Network;
+using UnityEngine.Rendering;
 
 namespace GetyourCrown.CharacterContorller
 {
@@ -386,10 +387,6 @@ namespace GetyourCrown.CharacterContorller
                                 {
                                     _maxSpeed = true;
                                 }
-                                else
-                                {
-                                    _maxSpeed = false;
-                                }
 
                                 if (!_isRun) // 걷기
                                 {
@@ -731,6 +728,7 @@ namespace GetyourCrown.CharacterContorller
         {
             _speedMultiplier = 1f;
             _speedUpTimer = 0f;
+            _maxSpeed = false;
         }
 
     }
