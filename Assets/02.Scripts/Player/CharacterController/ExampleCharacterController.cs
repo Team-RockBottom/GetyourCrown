@@ -193,7 +193,7 @@ namespace GetyourCrown.CharacterContorller
                     _scoreCounter.CountUpStart();
                 }
 
-                if (gameObject.layer == 0 && _scoreCheckAlreadyStart == true)
+                if (gameObject.layer == 18 && _scoreCheckAlreadyStart == true)
                 {
                     _scoreCheckAlreadyStart = false;
                     _scoreCounter.CountUpEnd();
