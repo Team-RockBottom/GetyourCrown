@@ -259,7 +259,7 @@ namespace GetyourCrown.Network
         {
             foreach (int num in ExampleCharacterController.controllers.Keys)
             {
-                ExampleCharacterController.controllers[num].gameObject.layer = 0;
+                ExampleCharacterController.controllers[num].gameObject.layer = 18;
             }
             _uI_ConfirmWindow = UI_Manager.instance.Resolve<UI_ConfirmWindow>();
             _uI_ConfirmWindow.Show(message);
