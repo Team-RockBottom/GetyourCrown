@@ -33,7 +33,8 @@ namespace GetyourCrown.UI
         private bool _isRotating = false;
         private Quaternion _currentCharacterRotation;
         private Quaternion _startRotation;
-
+        private bool _isFirst = true;
+        private bool _isCharacterSelectFirst = true;
         string _characterSpecFolder = "CharacterSpecs";
 
         private const int DEFAULT_CHARACTER_LIST_SIZE = 20;
@@ -71,7 +72,16 @@ namespace GetyourCrown.UI
 
             LoadCharacterSpecs();
             LoadCharacterSlot();
-            SelectedCharacterPreview(_characterSpecs[DataManager.instance.LastCharacter]);
+
+            if (_isFirst || _isCharacterSelectFirst)
+            {
+                SelectedCharacterPreview(_characterSpecs[DataManager.instance.LastCharacter]);
+                _isFirst = false;
+            }
+            else
+            {
+                SelectedCharacterPreview(_characterSpecs[_selectedCharacterId]);
+            }
         }
 
         private void LoadCharacterSpecs()
@@ -116,6 +126,7 @@ namespace GetyourCrown.UI
                 _lockedSelectCharacterId = lockedCharacterId;
                 return; 
             }
+
             foreach (var slot in _characterSlots)
             {
                 slot.isSelected = false;
@@ -123,6 +134,7 @@ namespace GetyourCrown.UI
 
             selectCharacter.isSelected = true;
             int selectedCharacterId = selectCharacter.CharacterIndex; // 선택된 캐릭터ID 저장
+
             _selectedCharacterId = selectedCharacterId;
 
             PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable()
@@ -132,6 +144,7 @@ namespace GetyourCrown.UI
 
             CharacterSpec selectedCharacter = _characterSpecs[selectCharacter.CharacterIndex];
             SelectedCharacterPreview(selectedCharacter);
+            _isCharacterSelectFirst = false;
         }
 
         private void SelectedCharacterPreview(CharacterSpec spec)
