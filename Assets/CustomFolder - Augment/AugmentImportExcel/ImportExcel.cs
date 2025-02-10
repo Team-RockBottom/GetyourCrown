@@ -7,13 +7,15 @@ using System.IO;
 using Augment;
 public class ImportExcel : AssetPostprocessor
 {
-    static readonly string filePath = "Asset/CustomFolder - Augment/AugmentData.xlsx";
+    static readonly string filePath = "Assets/CustomFolder - Augment/AugmentData.xlsx";
     static readonly string augmentExportPath = "Assets/Resources/Data/AugmentData.asset";
+    [MenuItem("DataImport/Import Augment Data")]
     static void ExcelImport()
     {
         Debug.Log("Excel data covert start.");
 
-
+        MakeAugmentData();
+ 
         Debug.Log("Excel data covert complete.");
     }
 
