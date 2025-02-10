@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DataManager : MonoBehaviour
+public class AugmentDataManager : MonoBehaviour
 {
-	static DataManager instance;
+	static AugmentDataManager instance;
 	
 	public PlayerLevelData playerLevelData;
 	public MonsterLevelData monsterLevelData;
 	
-	public static DataManager Instance
+	public static AugmentDataManager Instance
 	{
 		get
 		{
