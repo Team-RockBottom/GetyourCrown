@@ -2,7 +2,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-public class ExampleCodegenerator : MonoBehaviour
+public class CodeGenerator : MonoBehaviour
 {
     /// <summary>
     /// AugmentData 스크립트 코드를 생성하여 지정된 디렉토리에 .cs 파일로 저장합니다.
