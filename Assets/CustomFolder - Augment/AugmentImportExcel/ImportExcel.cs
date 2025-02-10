@@ -9,10 +9,10 @@ public class ImportExcel : AssetPostprocessor
 {
     static readonly string filePath = "Asset/CustomFolder - Augment/AugmentData.xlsx";
     static readonly string augmentExportPath = "Assets/Resources/Data/AugmentData.asset";
-    static void ExcelImport()
+    public static void ExcelImport()
     {
         Debug.Log("Excel data covert start.");
-
+        MakeAugmentData();
 
         Debug.Log("Excel data covert complete.");
     }
