@@ -7,13 +7,16 @@ using System.IO;
 using Augment;
 public class ImportExcel : AssetPostprocessor
 {
-    static readonly string filePath = "Asset/CustomFolder - Augment/AugmentData.xlsx";
+    static readonly string filePath = "Assets/CustomFolder - Augment/AugmentData.xlsx";
     static readonly string augmentExportPath = "Assets/Resources/Data/AugmentData.asset";
+
+    [MenuItem("DataImport/Import Augment Data")]
     public static void ExcelImport()
     {
         Debug.Log("Excel data covert start.");
-        MakeAugmentData();
 
+        MakeAugmentData();
+ 
         Debug.Log("Excel data covert complete.");
     }
 
@@ -72,9 +75,10 @@ public class ImportExcel : AssetPostprocessor
                 data.list.Add(augment);
             }
 
-            ScriptableObject obj = AssetDatabase.LoadAssetAtPath(augmentExportPath, typeof(ScriptableObject)) as ScriptableObject;
-            EditorUtility.SetDirty(obj);
+            stream.Close();
         }
+        ScriptableObject obj = AssetDatabase.LoadAssetAtPath(augmentExportPath, typeof(ScriptableObject)) as ScriptableObject;
+        EditorUtility.SetDirty(obj);
     }
 
  
