@@ -47,16 +47,16 @@ public class ImportExcel : AssetPostprocessor
         AugmentData data = ScriptableObject.CreateInstance<AugmentData>();
         AssetDatabase.CreateAsset((ScriptableObject)data, augmentExportPath);
 
-        //data.list.Clear();
+        data.list.Clear();
         
         using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
         {
 
             IWorkbook book = new XSSFWorkbook(stream);
 
-            ISheet sheet = book.GetSheetAt(1);
+            ISheet sheet = book.GetSheetAt(0);
 
-            for (int i = 2; i < sheet.LastRowNum; i++)
+            for (int i = 1; i <= sheet.LastRowNum; i++)
             {
                 IRow row = sheet.GetRow(i);
                 
@@ -65,7 +65,7 @@ public class ImportExcel : AssetPostprocessor
                 augment.id = (int)row.GetCell(0).NumericCellValue;
                 augment.name = (string)row.GetCell(1).StringCellValue;
                 augment.description = (string)row.GetCell(2).StringCellValue;
-                augment.iconPath = (string)row.GetCell(3).StringCellValue;
+                //augment.iconPath = (string)row.GetCell(3).StringCellValue;
                 augment.speed = (float)row.GetCell(4).NumericCellValue;
                 augment.increaseDelay = (float)row.GetCell(5).NumericCellValue;
                 augment.maxSpeed = (float)row.GetCell(6).NumericCellValue;
