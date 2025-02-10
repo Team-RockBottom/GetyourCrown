@@ -1,9 +1,13 @@
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System.IO;
 using System.Text;
 using UnityEngine;
 
 public class CodeGenerator : MonoBehaviour
 {
+    static readonly string filePath = "Assets/CustomFolder - Augment/AugmentData.xlsx";
+
     /// <summary>
     /// AugmentData 스크립트 코드를 생성하여 지정된 디렉토리에 .cs 파일로 저장합니다.
     /// </summary>
@@ -22,15 +26,9 @@ public class CodeGenerator : MonoBehaviour
         codeBuilder.AppendLine("    [System.Serializable]");
         codeBuilder.AppendLine("    public class Attribute");
         codeBuilder.AppendLine("    {");
-        codeBuilder.AppendLine("        public int id;");
-        codeBuilder.AppendLine("        public string name;");
-        codeBuilder.AppendLine("        public string description;");
-        codeBuilder.AppendLine("        public string iconPath;");
-        codeBuilder.AppendLine("        public float speed;");
-        codeBuilder.AppendLine("        public float increaseDelay;");
-        codeBuilder.AppendLine("        public float maxSpeed;");
-        codeBuilder.AppendLine("        public float increaseValue;");
-        codeBuilder.AppendLine("        public float coolDown;");
+
+        ReadExcelData(codeBuilder);
+
         codeBuilder.AppendLine("    }");
         codeBuilder.AppendLine("");
         codeBuilder.AppendLine("    public List<Attribute> list = new List<Attribute>();");
@@ -46,6 +44,27 @@ public class CodeGenerator : MonoBehaviour
         File.WriteAllText(outputFilePath, codeBuilder.ToString());
 
         Debug.Log($"스크립트 'AugmentData.cs'가 성공적으로 생성되었습니다: {outputFilePath}");
+    }
+
+    private static void ReadExcelData(StringBuilder codeBuilder)
+    {
+        using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+        {
+
+            IWorkbook book = new XSSFWorkbook(stream);
+
+            ISheet sheet = book.GetSheetAt(0);
+
+            IRow nameRow = sheet.GetRow(0);
+            IRow typeRow = sheet.GetRow(1);
+
+            for (int i = 0; i <= nameRow.LastCellNum; i++)
+            {
+                codeBuilder.AppendLine($"        public {typeRow.GetCell(i).StringCellValue} {nameRow.GetCell(i).StringCellValue}");
+            }
+
+            stream.Close();
+        }
     }
 }
 
