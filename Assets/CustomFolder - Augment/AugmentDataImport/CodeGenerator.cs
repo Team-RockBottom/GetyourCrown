@@ -50,7 +50,7 @@ public class CodeGenerator : MonoBehaviour
         string outputFilePath = Path.Combine(outputDirectory, "AugmentDataGenerated.cs");
         File.WriteAllText(outputFilePath, codeBuilder.ToString());
 
-        Debug.Log($"스크립트 {outputFilePath}를 생성 중입니다.");
+        Debug.Log($"스크립트 {outputFilePath}를 생성 완료하였습니다.");
     }
 
     private static void ReadExcelData(StringBuilder codeBuilder)
