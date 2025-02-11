@@ -44,7 +44,7 @@ public class ImportExcelGenerated : AssetPostprocessor
 
     static void MakeAugmentData()
     {
-        AugmentData data = ScriptableObject.CreateInstance<AugmentData>();
+        AugmentDataGenerated data = ScriptableObject.CreateInstance<AugmentDataGenerated>();
         AssetDatabase.CreateAsset((ScriptableObject)data, augmentExportPath);
 
         data.list.Clear();
@@ -60,16 +60,16 @@ public class ImportExcelGenerated : AssetPostprocessor
             {
                 IRow row = sheet.GetRow(i);
                 
-                AugmentData.Attribute augment =  new AugmentData.Attribute();
-                //augment.Id = (int)row.GetCell(0).NumericCellValue;
-               //augment.Name = (string)row.GetCell(1).StringCellValue;
-               //augment.Description = (string)row.GetCell(2).StringCellValue;
-               //augment.Icon = (string)row.GetCell(3).StringCellValue;
-               //augment.speed = (float)row.GetCell(4).NumericCellValue;
-               //augment.Increasedelay = (float)row.GetCell(5).NumericCellValue;
-               //augment.MaxSpeed = (float)row.GetCell(6).NumericCellValue;
-               //augment.IncreaseValue = (float)row.GetCell(7).NumericCellValue;
-               //augment.CoolDown = (float)row.GetCell(8).NumericCellValue;
+                AugmentDataGenerated.Attribute augment =  new AugmentDataGenerated.Attribute();
+                augment.Id = (int)row.GetCell(0).NumericCellValue;
+               augment.Name = (string)row.GetCell(1).StringCellValue;
+               augment.Description = (string)row.GetCell(2).StringCellValue;
+               augment.Icon = (string)row.GetCell(3).StringCellValue;
+               augment.speed = (float)row.GetCell(4).NumericCellValue;
+               augment.Increasedelay = (float)row.GetCell(5).NumericCellValue;
+               augment.MaxSpeed = (float)row.GetCell(6).NumericCellValue;
+               augment.IncreaseValue = (float)row.GetCell(7).NumericCellValue;
+               augment.CoolDown = (float)row.GetCell(8).NumericCellValue;
 
                 data.list.Add(augment);
             }

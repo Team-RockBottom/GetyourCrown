@@ -10,7 +10,7 @@ public class CodeGenerator : MonoBehaviour
 
     private void Start()
     {
-        GenerateAugmentDataScript("Assets/CustomFolder - System");
+        GenerateAugmentDataScript("Assets/CustomFolder - Augment");
         GenerateImportExcelScript("Assets/CustomFolder - Augment/AugmentimportExcel");
     }
 
@@ -105,7 +105,7 @@ public class CodeGenerator : MonoBehaviour
                             "\r\n" +
                             "    static void MakeAugmentData()\r\n" +
                             "    {\r\n" +
-                            "        AugmentData data = ScriptableObject.CreateInstance<AugmentData>();\r\n" +
+                            "        AugmentDataGenerated data = ScriptableObject.CreateInstance<AugmentDataGenerated>();\r\n" +
                             "        AssetDatabase.CreateAsset((ScriptableObject)data, augmentExportPath);\r\n" +
                             "\r\n" +
                             "        data.list.Clear();\r\n" +
@@ -120,7 +120,7 @@ public class CodeGenerator : MonoBehaviour
                             "            {\r\n" +
                             "                IRow row = sheet.GetRow(i);\r\n" +
                             "                \r\n" +
-                            "                AugmentData.Attribute augment =  new AugmentData.Attribute();\r\n ");
+                            "                AugmentDataGenerated.Attribute augment =  new AugmentDataGenerated.Attribute();\r\n ");
 
         ReadExcelDataToImportExcel(codeBuilder);
 
