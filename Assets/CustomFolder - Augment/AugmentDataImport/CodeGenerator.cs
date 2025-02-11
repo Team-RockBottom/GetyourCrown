@@ -10,7 +10,7 @@ public class CodeGenerator : MonoBehaviour
 
     private void Start()
     {
-        GenerateAugmentDataScript("Asset/CustomFolder - System");
+        GenerateAugmentDataScript("Assets/CustomFolder - System");
     }
 
 
@@ -28,7 +28,7 @@ public class CodeGenerator : MonoBehaviour
         codeBuilder.AppendLine("using System.Collections.Generic;");
         codeBuilder.AppendLine("");
         codeBuilder.AppendLine("[CreateAssetMenu(fileName = \"AugmentData\", menuName = \"Scriptable Objects/Augment Data\")]");
-        codeBuilder.AppendLine("public class AugmentData : ScriptableObject");
+        codeBuilder.AppendLine("public class AugmentDataGenerated : ScriptableObject");
         codeBuilder.AppendLine("{");
         codeBuilder.AppendLine("    [System.Serializable]");
         codeBuilder.AppendLine("    public class Attribute");
@@ -50,7 +50,7 @@ public class CodeGenerator : MonoBehaviour
         string outputFilePath = Path.Combine(outputDirectory, "AugmentDataGenerated.cs");
         File.WriteAllText(outputFilePath, codeBuilder.ToString());
 
-        Debug.Log($"스크립트 'AugmentData.cs'가 성공적으로 생성되었습니다: {outputFilePath}");
+        Debug.Log($"스크립트 {outputFilePath}를 생성 중입니다.");
     }
 
     private static void ReadExcelData(StringBuilder codeBuilder)
@@ -67,7 +67,7 @@ public class CodeGenerator : MonoBehaviour
 
             for (int i = 0; i < nameRow.LastCellNum-1; i++)
             {
-                codeBuilder.AppendLine($"        public {typeRow.GetCell(i).StringCellValue} {nameRow.GetCell(i).StringCellValue}");
+                codeBuilder.AppendLine($"        public {typeRow.GetCell(i).StringCellValue} {nameRow.GetCell(i).StringCellValue};");
             }
 
             stream.Close();
