@@ -35,7 +35,7 @@ public class CodeGenerator : MonoBehaviour
         codeBuilder.AppendLine("    public class Attribute");
         codeBuilder.AppendLine("    {");
 
-        ReadExcelData(codeBuilder);
+        ReadExcelDataForAugmentDataAttribute(codeBuilder);
 
         codeBuilder.AppendLine("    }");
         codeBuilder.AppendLine("");
@@ -148,7 +148,7 @@ public class CodeGenerator : MonoBehaviour
         Debug.Log($"스크립트 {outputFilePath}를 생성 완료하였습니다.");
     }
 
-    private static void ReadExcelData(StringBuilder codeBuilder)
+    private static void ReadExcelDataForAugmentDataAttribute(StringBuilder codeBuilder)
     {
         using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
         {
