@@ -5,7 +5,7 @@ using NPOI.SS.UserModel;
 using UnityEditor;
 using System.IO;
 using Augment;
-public class ImportExcel : AssetPostprocessor
+public class ImportExcelGenerated : AssetPostprocessor
 {
     static readonly string filePath = "Assets/CustomFolder - Augment/AugmentData.xlsx";
     static readonly string augmentExportPath = "Assets/Resources/Data/AugmentData.asset";
@@ -21,17 +21,17 @@ public class ImportExcel : AssetPostprocessor
     }
 
     /// <summary>
-    /// ¿¡¼ÂÀÌ À¯´ÏÆ¼ ¿£Áø¿¡ Ãß°¡µÇ¸é ½ÇÇàµÇ´Â ¿£Áø ÇÔ¼ö
+    /// ì—ì…‹ì´ ìœ ë‹ˆí‹° ì—”ì§„ì— ì¶”ê°€ë˜ë©´ ì‹¤í–‰ë˜ëŠ” ì—”ì§„ í•¨ìˆ˜
     /// </summary>
     static void OnPostprocessAllAssets(
         string[] importedAssets, string[] deletedAssets,
         string[] movedAssets, string[] movedFromAssetPaths)
     {
 
-        //ÀÓÆ÷Æ® µÈ ¸ğµç ÆÄÀÏÀ» °Ë»öÇÔ
+        //ì„í¬íŠ¸ ëœ ëª¨ë“  íŒŒì¼ì„ ê²€ìƒ‰í•¨
         foreach (string s in importedAssets)
         {
-            //¿ì¸®°¡ ¿øÇÏ´Â ÆÄÀÏ ÀÏ¶§¸¸ ¼öÇà
+            //ìš°ë¦¬ê°€ ì›í•˜ëŠ” íŒŒì¼ ì¼ë•Œë§Œ ìˆ˜í–‰
             if (s == filePath)
             {
                 Debug.Log("Excel data covert start.");
@@ -61,17 +61,16 @@ public class ImportExcel : AssetPostprocessor
                 IRow row = sheet.GetRow(i);
                 
                 AugmentData.Attribute augment =  new AugmentData.Attribute();
-                
-                augment.id = (int)row.GetCell(0).NumericCellValue;
-                augment.name = (string)row.GetCell(1).StringCellValue;
-                augment.description = (string)row.GetCell(2).StringCellValue;
-                //augment.iconPath = (string)row.GetCell(3).StringCellValue;
-                augment.speed = (float)row.GetCell(4).NumericCellValue;
-                augment.increaseDelay = (float)row.GetCell(5).NumericCellValue;
-                augment.maxSpeed = (float)row.GetCell(6).NumericCellValue;
-                augment.increaseValue = (float)row.GetCell(7).NumericCellValue;
-                augment.coolDown = (float)row.GetCell(8).NumericCellValue;
-                
+                augment.Id = (int)row.GetCell(0).NumericCellValue;
+               augment.Name = (string)row.GetCell(1).StringCellValue;
+               augment.Description = (string)row.GetCell(2).StringCellValue;
+               augment.Icon = (string)row.GetCell(3).StringCellValue;
+               augment.speed = (float)row.GetCell(4).NumericCellValue;
+               augment.Increasedelay = (float)row.GetCell(5).NumericCellValue;
+               augment.MaxSpeed = (float)row.GetCell(6).NumericCellValue;
+               augment.IncreaseValue = (float)row.GetCell(7).NumericCellValue;
+               augment.CoolDown = (float)row.GetCell(8).NumericCellValue;
+
                 data.list.Add(augment);
             }
 
@@ -80,8 +79,4 @@ public class ImportExcel : AssetPostprocessor
         ScriptableObject obj = AssetDatabase.LoadAssetAtPath(augmentExportPath, typeof(ScriptableObject)) as ScriptableObject;
         EditorUtility.SetDirty(obj);
     }
-
- 
-
-   
 }
