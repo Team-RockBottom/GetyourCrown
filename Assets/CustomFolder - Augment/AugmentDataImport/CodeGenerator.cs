@@ -10,7 +10,7 @@ public class CodeGenerator : MonoBehaviour
 
     private void Start()
     {
-        GenerateAugmentDataScript("Assets/CustomFolder - System");
+        GenerateAugmentDataScript("Assets/CustomFolder - Augment");
         GenerateImportExcelScript("Assets/CustomFolder - Augment/AugmentimportExcel");
     }
 
@@ -105,7 +105,7 @@ public class CodeGenerator : MonoBehaviour
                             "\r\n" +
                             "    static void MakeAugmentData()\r\n" +
                             "    {\r\n" +
-                            "        AugmentData data = ScriptableObject.CreateInstance<AugmentData>();\r\n" +
+                            "        AugmentDataGenerated data = ScriptableObject.CreateInstance<AugmentDataGenerated>();\r\n" +
                             "        AssetDatabase.CreateAsset((ScriptableObject)data, augmentExportPath);\r\n" +
                             "\r\n" +
                             "        data.list.Clear();\r\n" +
@@ -120,9 +120,9 @@ public class CodeGenerator : MonoBehaviour
                             "            {\r\n" +
                             "                IRow row = sheet.GetRow(i);\r\n" +
                             "                \r\n" +
-                            "                AugmentData.Attribute augment =  new AugmentData.Attribute();\r\n ");
+                            "                AugmentDataGenerated.Attribute augment =  new AugmentDataGenerated.Attribute();\r\n ");
 
-        ///TODO -> 어트리뷰트 라인 추가
+        ReadExcelDataToImportExcel(codeBuilder);
 
         codeBuilder.AppendLine("\r\n" +
                                 "                data.list.Add(augment);\r\n" +
@@ -166,6 +166,36 @@ public class CodeGenerator : MonoBehaviour
             }
 
             stream.Close();
+        }
+    }
+
+    private static void ReadExcelDataToImportExcel(StringBuilder codeBuilder)
+    {
+        using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+        {
+            IWorkbook book = new XSSFWorkbook(stream);
+
+            ISheet sheet = book.GetSheetAt(0);
+
+            IRow nameRow = sheet.GetRow(0);
+            IRow typeRow = sheet.GetRow(1);
+
+            for (int i = 0; i < nameRow.LastCellNum - 1; i++)
+            {
+                codeBuilder.AppendLine($"               augment.{nameRow.GetCell(i).StringCellValue} = ({typeRow.GetCell(i)})row.GetCell({i}).{NumericOrString(typeRow.GetCell(i).ToString())}");
+            }
+        }
+    }
+
+    private static string NumericOrString(string typeRow)
+    {
+        if(typeRow == "string")
+        {
+            return "StringCellValue;";
+        }
+        else
+        {
+            return "NumericCellValue;";
         }
     }
 }
