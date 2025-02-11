@@ -402,6 +402,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1395605017}
   - component: {fileID: 1395605018}
+  - component: {fileID: 1395605019}
   m_Layer: 0
   m_Name: Testing - AugmentDataImport
   m_TagString: Untagged
@@ -434,6 +435,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d21e12abdbdde48409c28c6fdc4080b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1395605019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395605016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fbc4f8704be00f4ca4f782061651083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1489751258

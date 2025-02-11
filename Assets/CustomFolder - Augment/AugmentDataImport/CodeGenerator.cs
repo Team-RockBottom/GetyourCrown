@@ -8,6 +8,13 @@ public class CodeGenerator : MonoBehaviour
 {
     static readonly string filePath = "Assets/CustomFolder - Augment/AugmentData.xlsx";
 
+    private void Start()
+    {
+        GenerateAugmentDataScript("Asset/CustomFolder - System");
+    }
+
+
+
     /// <summary>
     /// AugmentData 스크립트 코드를 생성하여 지정된 디렉토리에 .cs 파일로 저장합니다.
     /// </summary>
@@ -40,7 +47,7 @@ public class CodeGenerator : MonoBehaviour
         }
 
         // 생성된 스크립트를 .cs 파일로 저장
-        string outputFilePath = Path.Combine(outputDirectory, "AugmentData.cs");
+        string outputFilePath = Path.Combine(outputDirectory, "AugmentDataGenerated.cs");
         File.WriteAllText(outputFilePath, codeBuilder.ToString());
 
         Debug.Log($"스크립트 'AugmentData.cs'가 성공적으로 생성되었습니다: {outputFilePath}");
@@ -58,7 +65,7 @@ public class CodeGenerator : MonoBehaviour
             IRow nameRow = sheet.GetRow(0);
             IRow typeRow = sheet.GetRow(1);
 
-            for (int i = 0; i <= nameRow.LastCellNum; i++)
+            for (int i = 0; i < nameRow.LastCellNum-1; i++)
             {
                 codeBuilder.AppendLine($"        public {typeRow.GetCell(i).StringCellValue} {nameRow.GetCell(i).StringCellValue}");
             }
