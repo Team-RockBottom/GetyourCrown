@@ -11,6 +11,7 @@ public class CodeGenerator : MonoBehaviour
     private void Start()
     {
         GenerateAugmentDataScript("Assets/CustomFolder - System");
+        GenerateImportExcelScript("Assets/CustomFolder - Augment/AugmentimportExcel");
     }
 
 
@@ -48,6 +49,100 @@ public class CodeGenerator : MonoBehaviour
 
         // 생성된 스크립트를 .cs 파일로 저장
         string outputFilePath = Path.Combine(outputDirectory, "AugmentDataGenerated.cs");
+        File.WriteAllText(outputFilePath, codeBuilder.ToString());
+
+        Debug.Log($"스크립트 {outputFilePath}를 생성 완료하였습니다.");
+    }
+
+    public static void GenerateImportExcelScript(string outputDirectory)
+    {
+        // C# 스크립트 코드 문자열을 생성
+        var codeBuilder = new StringBuilder();
+
+        codeBuilder.Append("using UnityEngine;\r\n" +
+                            "using NPOI.HSSF.UserModel;\r\n" +
+                            "using NPOI.XSSF.UserModel;\r\n" +
+                            "using NPOI.SS.UserModel;\r\n" +
+                            "using UnityEditor;\r\n" +
+                            "using System.IO;\r\n" +
+                            "using Augment;\r\n" +
+                            "public class ImportExcelGenerated : AssetPostprocessor\r\n" +
+                            "{\r\n" +
+                            "    static readonly string filePath = \"Assets/CustomFolder - Augment/AugmentData.xlsx\";\r\n" +
+                            "    static readonly string augmentExportPath = \"Assets/Resources/Data/AugmentData.asset\";\r\n" +
+                            "\r\n" +
+                            "    [MenuItem(\"DataImport/Import Augment Data\")]\r\n" +
+                            "    public static void ExcelImport()\r\n" +
+                            "    {\r\n" +
+                            "        Debug.Log(\"Excel data covert start.\");\r\n" +
+                            "\r\n" +
+                            "        MakeAugmentData();\r\n" +
+                            " \r\n" +
+                            "        Debug.Log(\"Excel data covert complete.\");\r\n" +
+                            "    }\r\n" +
+                            "\r\n" +
+                            "    /// <summary>\r\n" +
+                            "    /// 에셋이 유니티 엔진에 추가되면 실행되는 엔진 함수\r\n" +
+                            "    /// </summary>\r\n" +
+                            "    static void OnPostprocessAllAssets(\r\n" +
+                            "        string[] importedAssets, string[] deletedAssets,\r\n" +
+                            "        string[] movedAssets, string[] movedFromAssetPaths)\r\n" +
+                            "    {\r\n" +
+                            "\r\n" +
+                            "        //임포트 된 모든 파일을 검색함\r\n" +
+                            "        foreach (string s in importedAssets)\r\n" +
+                            "        {\r\n" +
+                            "            //우리가 원하는 파일 일때만 수행\r\n" +
+                            "            if (s == filePath)\r\n" +
+                            "            {\r\n" +
+                            "                Debug.Log(\"Excel data covert start.\");\r\n" +
+                            "\r\n" +
+                            "                MakeAugmentData();\r\n" +
+                            "                Debug.Log(\"Excel data covert complete.\");\r\n" +
+                            "            }\r\n" +
+                            "        }\r\n" +
+                            "    }\r\n" +
+                            "\r\n" +
+                            "    static void MakeAugmentData()\r\n" +
+                            "    {\r\n" +
+                            "        AugmentData data = ScriptableObject.CreateInstance<AugmentData>();\r\n" +
+                            "        AssetDatabase.CreateAsset((ScriptableObject)data, augmentExportPath);\r\n" +
+                            "\r\n" +
+                            "        data.list.Clear();\r\n" +
+                            "        \r\n" +
+                            "        using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))\r\n" +
+                            "        {\r\n" +
+                            "\r\n" +
+                            "            IWorkbook book = new XSSFWorkbook(stream);\r\n" +
+                            "\r\n" +
+                            "            ISheet sheet = book.GetSheetAt(0);\r\n" +
+                            "\r\n            for (int i = 1; i <= sheet.LastRowNum; i++)\r\n" +
+                            "            {\r\n" +
+                            "                IRow row = sheet.GetRow(i);\r\n" +
+                            "                \r\n" +
+                            "                AugmentData.Attribute augment =  new AugmentData.Attribute();\r\n ");
+
+        ///TODO -> 어트리뷰트 라인 추가
+
+        codeBuilder.AppendLine("\r\n" +
+                                "                data.list.Add(augment);\r\n" +
+                                "            }\r\n" +
+                                "\r\n" +
+                                "            stream.Close();\r\n" +
+                                "        }\r\n" +
+                                "        ScriptableObject obj = AssetDatabase.LoadAssetAtPath(augmentExportPath, typeof(ScriptableObject)) as ScriptableObject;\r\n" +
+                                "        EditorUtility.SetDirty(obj);\r\n" +
+                                "    }\r\n" +
+                                "}");
+        
+        // 출력 디렉터리가 없으면 생성
+        if (!Directory.Exists(outputDirectory))
+        {
+            Directory.CreateDirectory(outputDirectory);
+        }
+
+        // 생성된 스크립트를 .cs 파일로 저장
+        string outputFilePath = Path.Combine(outputDirectory, "ImportExcelGenerated.cs");
         File.WriteAllText(outputFilePath, codeBuilder.ToString());
 
         Debug.Log($"스크립트 {outputFilePath}를 생성 완료하였습니다.");
